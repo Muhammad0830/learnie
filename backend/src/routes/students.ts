@@ -4,36 +4,39 @@ import { RowDataPacket, ResultSetHeader } from "mysql2";
 
 const studentsRouter = express.Router();
 
-const students = [
-  {
-    id: 1,
-    title: "Student 1",
-    content: "This is the first Student.",
-  },
-  {
-    id: 2,
-    title: "Student 2",
-    content: "This is the second Student.",
-  },
-];
+studentsRouter.get("/", async (req, res) => {
+  try {
+    const schemaName = req.headers["x-university-schema"] as string;
+    if (!schemaName) {
+      return res.status(400).json({ error: "Missing university schema" });
+    }
 
-studentsRouter.get("/", async (request, response) => {
-  response.json(students);
+    console.log("working");
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      "SELECT * FROM students"
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
-studentsRouter.get("/all", async (request, response) => {
+studentsRouter.get("/all", async (req, res) => {
   try {
     const rows = await queryGlobal<RowDataPacket[]>("SELECT * FROM students");
 
     if (rows.length === 0) {
-      response.status(404).json({ error: "No students found" });
+      res.status(404).json({ error: "No students found" });
       return;
     }
 
     console.log("students", rows);
-    response.status(200).json(rows);
+    res.status(200).json(rows);
   } catch (error) {
-    response.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
