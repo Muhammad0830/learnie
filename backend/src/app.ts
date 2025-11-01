@@ -3,6 +3,7 @@ import unknownEndpoint from "./middlewares/middleware";
 import cors from "cors";
 
 import express from "express";
+import coursesRouter from "./routes/courses";
 const app = express();
 
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use(
 );
 
 app.use("/students", studentsRouter);
+app.use("/courses", coursesRouter);
 
 app.use(unknownEndpoint);
 

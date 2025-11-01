@@ -2,6 +2,13 @@ GET http://localhost:3001/students/
 x-university-schema: harvard_university
 
 ###
-
 GET http://localhost:3001/students/123123
+x-university-schema: harvard_university
+
+###
+GET http://localhost:3001/courses/
+x-university-schema: harvard_university
+
+###
+GET http://localhost:3001/courses/1
 x-university-schema: harvard_university
