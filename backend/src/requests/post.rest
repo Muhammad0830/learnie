@@ -1,0 +1,10 @@
+POST http://localhost:3001/students/
+x-university-schema: harvard_university
+Content-Type: application/json
+
+{
+    "name": "Eshmat O'g'lonov",
+    "email": "eshmat@gmail.com",
+    "phoneNumber": "94410156251",
+    "studentId": "123126"
+}
