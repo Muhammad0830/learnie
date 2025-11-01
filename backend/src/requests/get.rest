@@ -1,0 +1,2 @@
+GET http://localhost:3001/students/
+x-university-schema: camgridge_university
