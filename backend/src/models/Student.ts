@@ -1,24 +1,16 @@
-import express from "express";
 import { queryGlobal, queryUniversity } from "../utils/helper";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 
-export async function getStudents(req: express.Request, res: express.Response) {
+export async function getStudents({ schemaName }: { schemaName: string }) {
   try {
-    const schemaName = req.headers["x-university-schema"] as string;
-    if (!schemaName) {
-      return res.status(400).json({ error: "Missing university schema" });
-    }
-
-    console.log("working");
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,
       "SELECT * FROM students"
     );
 
-    res.json(rows);
+    return rows;
   } catch (error) {
     console.error("Error fetching students:", error);
-    res.status(500).json({ error: "Internal Server Error" });
   }
 }
 
