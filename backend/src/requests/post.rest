@@ -8,3 +8,14 @@ Content-Type: application/json
     "phoneNumber": "94410156251",
     "studentId": "123126"
 }
+
+###
+
+POST http://localhost:3001/courses/
+x-university-schema: harvard_university
+Content-Type: application/json
+
+{
+    "name": "Programming",
+    "description": "Programming is the art of creating software."
+}
