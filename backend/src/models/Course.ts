@@ -24,7 +24,10 @@ export async function getEachCourse({
   try {
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      `SELECT * FROM courses WHERE id = :id`,
+      `SELECT c.*, sc.student_id, s.name as student_name FROM courses as c
+        LEFT JOIN student_courses as sc ON c.id = sc.course_id
+        LEFT JOIN students as s ON sc.student_id = s.id
+        WHERE c.id = :id`,
       { id }
     );
 

@@ -1,7 +1,9 @@
 import express from "express";
-import { queryGlobal, queryUniversity } from "../utils/helper";
-import { RowDataPacket, ResultSetHeader } from "mysql2";
-import { createStudent, getStudent, getStudents } from "../models/Student";
+import {
+  createStudent,
+  getEachStudent,
+  getStudentsList,
+} from "../models/Student";
 
 const studentsRouter = express.Router();
 
@@ -12,7 +14,7 @@ studentsRouter.get("/", async (req, res) => {
       return res.status(400).json({ error: "Missing university schema" });
     }
 
-    const result = await getStudents({ schemaName });
+    const result = await getStudentsList({ schemaName });
 
     res.json(result);
   } catch (error) {
@@ -28,7 +30,7 @@ studentsRouter.post("/", async (req, res) => {
       return res.status(400).json({ error: "Missing university schema" });
     }
 
-    const { name, age, email, phoneNumber, studentId } = req.body;
+    const { name, age, email, phoneNumber, studentId, courseIds } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: "Missing name" });
@@ -47,6 +49,7 @@ studentsRouter.post("/", async (req, res) => {
       email,
       phoneNumber,
       studentId,
+      courseIds,
     });
 
     res.status(201).json({
@@ -70,7 +73,7 @@ studentsRouter.get("/:studentId", async (req, res) => {
       return res.status(400).json({ error: "Missing studentId" });
     }
 
-    const result = await getStudent({ id: studentId, schemaName });
+    const result = await getEachStudent({ id: studentId, schemaName });
 
     if (result.length === 0) {
       res.status(404).json({ error: "Student not found" });

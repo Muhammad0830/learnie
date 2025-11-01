@@ -3,10 +3,11 @@ x-university-schema: harvard_university
 Content-Type: application/json
 
 {
-    "name": "Eshmat O'g'lonov",
-    "email": "eshmat@gmail.com",
-    "phoneNumber": "94410156251",
-    "studentId": "123126"
+    "name": "Sulton Eshmatov",
+    "email": "Sulton@gmail.com",
+    "phoneNumber": "94450155251",
+    "studentId": "122626",
+    "courseIds": ["1"]
 }
 
 ###
@@ -17,5 +18,5 @@ Content-Type: application/json
 
 {
     "name": "Programming",
-    "description": "Programming is the art of creating software."
+    "description": "Programming is the art of creating software.",
 }
