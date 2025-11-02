@@ -1,22 +1,25 @@
 GET http://localhost:3001/students/
-x-university-schema: harvard_university
+x-university-schema: university_harvard_university
 
 ###
-GET http://localhost:3001/students/5
-x-university-schema: harvard_university
+GET http://localhost:3001/students/1
+x-university-schema: university_harvard_university
 
 ###
 GET http://localhost:3001/courses/
-x-university-schema: harvard_university
+x-university-schema: university_harvard_university
 
 ###
 GET http://localhost:3001/courses/1
-x-university-schema: harvard_university
+x-university-schema: university_harvard_university
 
 ###
 GET http://localhost:3001/teachers/
-x-university-schema: harvard_university
+x-university-schema: university_harvard_university
 
 ###
-GET http://localhost:3001/teachers/3
-x-university-schema: harvard_university
+GET http://localhost:3001/teachers/2
+x-university-schema: university_harvard_university
+
+###
+GET http://localhost:3001/university/

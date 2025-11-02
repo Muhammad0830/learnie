@@ -9,8 +9,8 @@ export async function getCoursesList({ schemaName }: { schemaName: string }) {
     );
 
     return rows;
-  } catch (error) {
-    console.error("Error fetching courses:", error);
+  } catch (error: any) {
+    throw new Error(error.message || "Error fetching courses:");
   }
 }
 
@@ -47,7 +47,7 @@ export async function getEachCourse({
 
     return { ...rows, teachers: teachers, students: students };
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err.message || "Error fetching course:");
   }
 }
 
@@ -74,7 +74,7 @@ export async function createCourse({
       description,
     };
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err.message || "Error inserting course:");
   }
 }
 
@@ -104,6 +104,6 @@ export async function updateCourse({
       description,
     };
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err.message || "Error updating course:");
   }
 }

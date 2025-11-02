@@ -1,5 +1,10 @@
 import { globalPool, getUniversityPool } from "../db/mysql";
-import { RowDataPacket, FieldPacket, ResultSetHeader } from "mysql2/promise";
+import {
+  RowDataPacket,
+  FieldPacket,
+  ResultSetHeader,
+  PoolConnection,
+} from "mysql2/promise";
 
 function sqlWithNamedParams(sql: string, params: Record<string, any>) {
   const values: any[] = [];
@@ -14,9 +19,9 @@ function sqlWithNamedParams(sql: string, params: Record<string, any>) {
 }
 
 async function runQuery<T extends RowDataPacket[] | ResultSetHeader>(
-  poolOrConn: {
-    query: (sql: string, params?: any) => Promise<[any, FieldPacket[]]>;
-  },
+  poolOrConn:
+    | { query: (sql: string, params?: any) => Promise<[any, FieldPacket[]]> }
+    | PoolConnection,
   sql: string,
   params?: any
 ): Promise<T> {
@@ -51,4 +56,10 @@ export async function queryUniversity<
 >(schemaName: string, sql: string, params?: any): Promise<T> {
   const pool = getUniversityPool(schemaName);
   return runQuery<T>(pool, sql, params);
+}
+
+export async function queryInTransaction<
+  T extends RowDataPacket[] | ResultSetHeader
+>(conn: PoolConnection, sql: string, params?: any): Promise<T> {
+  return runQuery<T>(conn, sql, params);
 }

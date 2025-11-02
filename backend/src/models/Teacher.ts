@@ -1,3 +1,4 @@
+import { checkCoursesExistance } from "../utils/checkCoursesExistance";
 import { queryGlobal, queryUniversity } from "../utils/helper";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 
@@ -10,7 +11,7 @@ export async function getTeachersList({ schemaName }: { schemaName: string }) {
 
     return rows;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.message || "Error fetching teachers:");
   }
 }
 
@@ -30,6 +31,15 @@ export async function createTeacher({
   courseIds?: string[];
 }) {
   try {
+    if (Array.isArray(courseIds) && courseIds.length > 0) {
+      const allCoursesExists = await checkCoursesExistance(
+        courseIds,
+        schemaName
+      );
+      if (!allCoursesExists)
+        throw new Error("One or more courses do not exist");
+    }
+
     const rows = await queryUniversity<ResultSetHeader>(
       schemaName,
       `INSERT INTO teachers (name, age, email, phoneNumber) 
@@ -56,7 +66,7 @@ export async function createTeacher({
       phoneNumber,
     };
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err.message || "Error inserting teacher:");
   }
 }
 
@@ -84,7 +94,7 @@ export async function getEachTeacher({
 
     return { ...rows, courses: courses };
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err.message || "Error fetching teacher:");
   }
 }
 
@@ -106,6 +116,15 @@ export async function updateTeacher({
   courseIds?: string[];
 }) {
   try {
+    if (Array.isArray(courseIds) && courseIds.length > 0) {
+      const allCoursesExists = await checkCoursesExistance(
+        courseIds,
+        schemaName
+      );
+      if (!allCoursesExists)
+        throw new Error("One or more courses do not exist");
+    }
+
     const teacherRows = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT id FROM teachers WHERE id = :id`,
