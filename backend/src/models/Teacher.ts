@@ -1,26 +1,25 @@
 import { queryGlobal, queryUniversity } from "../utils/helper";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 
-export async function getStudentsList({ schemaName }: { schemaName: string }) {
+export async function getTeachersList({ schemaName }: { schemaName: string }) {
   try {
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      "SELECT * FROM students"
+      "SELECT * FROM teachers"
     );
 
     return rows;
-  } catch (error) {
-    console.error("Error fetching students:", error);
+  } catch (error: any) {
+    throw new Error(error);
   }
 }
 
-export async function createStudent({
+export async function createTeacher({
   schemaName,
   name,
   age,
   email,
   phoneNumber,
-  studentId,
   courseIds,
 }: {
   schemaName: string;
@@ -28,26 +27,23 @@ export async function createStudent({
   age: string | null;
   email: string;
   phoneNumber: string;
-  studentId: string;
   courseIds?: string[];
 }) {
   try {
     const rows = await queryUniversity<ResultSetHeader>(
       schemaName,
-      `INSERT INTO students (name, age, email, phoneNumber, studentId) 
-        VALUES (:name, :age, :email, :phoneNumber, :studentId)`,
-      { name, age: age ?? null, email, phoneNumber, studentId }
+      `INSERT INTO teachers (name, age, email, phoneNumber) 
+        VALUES (:name, :age, :email, :phoneNumber)`,
+      { name, age: age ?? null, email, phoneNumber }
     );
-
-    const insertId = rows.insertId;
 
     if (courseIds) {
       for (const courseId of courseIds) {
         await queryUniversity<ResultSetHeader>(
           schemaName,
-          `INSERT INTO student_courses (student_id, course_id) 
-          VALUES (:student_id, :course_id)`,
-          { course_id: courseId, student_id: insertId }
+          `INSERT INTO teacher_courses (teacher_id, course_id) 
+            VALUES (:teacher_id, :course_id)`,
+          { course_id: courseId, teacher_id: rows.insertId }
         );
       }
     }
@@ -58,14 +54,13 @@ export async function createStudent({
       age: age ?? null,
       email,
       phoneNumber,
-      studentId,
     };
   } catch (err: any) {
     throw new Error(err);
   }
 }
 
-export async function getEachStudent({
+export async function getEachTeacher({
   id,
   schemaName,
 }: {
@@ -75,14 +70,15 @@ export async function getEachStudent({
   try {
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      `SELECT * FROM students WHERE id = :id`,
+      `SELECT * FROM teachers
+        WHERE id = :id`,
       { id }
     );
 
     const courses = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT c.id, c.name FROM courses as c
-        WHERE c.id IN (SELECT course_id FROM student_courses WHERE student_id = :id)`,
+        WHERE c.id IN (SELECT course_id FROM teacher_courses WHERE teacher_id = :id)`,
       { id }
     );
 

@@ -12,3 +12,11 @@ x-university-schema: harvard_university
 ###
 GET http://localhost:3001/courses/1
 x-university-schema: harvard_university
+
+###
+GET http://localhost:3001/teachers/
+x-university-schema: harvard_university
+
+###
+GET http://localhost:3001/teachers/3
+x-university-schema: harvard_university

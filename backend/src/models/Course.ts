@@ -24,14 +24,28 @@ export async function getEachCourse({
   try {
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      `SELECT c.*, sc.student_id, s.name as student_name FROM courses as c
-        LEFT JOIN student_courses as sc ON c.id = sc.course_id
-        LEFT JOIN students as s ON sc.student_id = s.id
-        WHERE c.id = :id`,
+      `SELECT * FROM courses
+        WHERE id = :id`,
       { id }
     );
 
-    return rows;
+    const teachers = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT t.id, t.name FROM teachers as t
+        LEFT JOIN teacher_courses as tc ON t.id = tc.teacher_id
+        WHERE tc.course_id = :id`,
+      { id }
+    );
+
+    const students = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT s.id, s.name FROM students as s
+        LEFT JOIN student_courses as sc ON s.id = sc.student_id
+        WHERE sc.course_id = :id`,
+      { id }
+    );
+
+    return { ...rows, teachers: teachers, students: students };
   } catch (err: any) {
     throw new Error(err);
   }

@@ -11,12 +11,23 @@ Content-Type: application/json
 }
 
 ###
-
 POST http://localhost:3001/courses/
 x-university-schema: harvard_university
 Content-Type: application/json
 
 {
-    "name": "Programming",
-    "description": "Programming is the art of creating software.",
+    "name": "something",
+    "description": "something else",
+}
+
+###
+POST http://localhost:3001/teachers/
+x-university-schema: harvard_university
+Content-Type: application/json
+
+{
+    "name": "Teacher Eshmatov",
+    "email": "Teacher@gmail.com",
+    "phoneNumber": "9445044251",
+    "courseIds": ["1", "3"]
 }

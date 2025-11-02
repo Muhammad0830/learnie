@@ -4,6 +4,7 @@ import cors from "cors";
 
 import express from "express";
 import coursesRouter from "./routes/courses";
+import teachersRouter from "./routes/teachers";
 const app = express();
 
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use(
 
 app.use("/students", studentsRouter);
 app.use("/courses", coursesRouter);
+app.use("/teachers", teachersRouter);
 
 app.use(unknownEndpoint);
 
