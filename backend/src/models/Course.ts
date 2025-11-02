@@ -107,3 +107,35 @@ export async function updateCourse({
     throw new Error(err.message || "Error updating course:");
   }
 }
+
+export async function deleteCourse({
+  schemaName,
+  courseId: id,
+}: {
+  schemaName: string;
+  courseId: string;
+}) {
+  try {
+    const course = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM courses WHERE id = :id`,
+      { id }
+    );
+
+    if (course.length === 0) {
+      throw new Error("Course not found");
+    }
+
+    const rows = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `DELETE FROM courses WHERE id = :id`,
+      { id }
+    );
+
+    return {
+      id,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error deleting course:");
+  }
+}

@@ -1,0 +1,10 @@
+DELETE http://localhost:3001/students/5
+x-university-schema: university_harvard_university
+
+###
+DELETE http://localhost:3001/courses/2
+x-university-schema: university_harvard_university
+
+###
+DELETE http://localhost:3001/teachers/2
+x-university-schema: university_harvard_university

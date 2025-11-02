@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createStudent,
+  deleteStudent,
   getEachStudent,
   getStudentsList,
   updateStudent,
@@ -129,4 +130,30 @@ studentsRouter.put(
     }
   }
 );
+
+studentsRouter.delete(
+  "/:studentId",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
+
+      const studentId = req.params.studentId;
+
+      const updated = await deleteStudent({
+        schemaName,
+        studentId,
+      });
+
+      res.json({
+        message: "Student deleted successfully",
+        id: updated.id,
+      });
+    } catch (err: any) {
+      console.error("Error updating student:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
+    }
+  }
+);
+
 export default studentsRouter;

@@ -1,5 +1,5 @@
 import express from "express";
-import { createCourse, getCoursesList, getEachCourse, updateCourse } from "../models/Course";
+import { createCourse, deleteCourse, getCoursesList, getEachCourse, updateCourse } from "../models/Course";
 
 const coursesRouter = express.Router();
 
@@ -107,5 +107,31 @@ coursesRouter.put("/:courseId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+coursesRouter.delete("/:courseId", async (req, res) => {
+  try {
+    const schemaName = req.headers["x-university-schema"] as string;
+    if (!schemaName) {
+      return res.status(400).json({ error: "Missing university schema" });
+    }
+
+    const courseId = req.params.courseId;
+    if (!courseId) {
+      return res.status(400).json({ error: "Missing courseId" });
+    }
+
+    const result = await deleteCourse({ schemaName, courseId });
+
+    res.json({
+      message: "Course deleted successfully",
+      id: result.id,
+    });
+  } catch (error) {
+    console.error("Error deleting course:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
 
 export default coursesRouter;

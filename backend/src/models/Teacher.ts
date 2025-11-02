@@ -202,3 +202,35 @@ export async function updateTeacher({
     throw new Error(err.message || "Failed to update teacher");
   }
 }
+
+export async function deleteTeacher({
+  schemaName,
+  teacherId: id,
+}: {
+  schemaName: string;
+  teacherId: string;
+}) {
+  try {
+    const teacher = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM teachers WHERE id = :id`,
+      { id }
+    );
+
+    if (teacher.length === 0) {
+      throw new Error("Teacher not found");
+    }
+
+    const rows = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `DELETE FROM teachers WHERE id = :id`,
+      { id }
+    );
+
+    return {
+      id,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error deleting teacher:");
+  }
+}

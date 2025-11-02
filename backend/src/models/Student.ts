@@ -214,3 +214,35 @@ export async function updateStudent({
     throw new Error(err.message || "Failed to update student");
   }
 }
+
+export async function deleteStudent({
+  schemaName,
+  studentId: id,
+}: {
+  schemaName: string;
+  studentId: string;
+}) {
+  try {
+    const student = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM students WHERE id = :id`,
+      { id }
+    );
+
+    if (student.length === 0) {
+      throw new Error("Student not found");
+    }
+
+    const rows = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `DELETE FROM students WHERE id = :id`,
+      { id }
+    );
+
+    return {
+      id,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error deleting student:");
+  }
+}
