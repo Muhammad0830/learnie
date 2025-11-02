@@ -85,6 +85,10 @@ export async function getEachTeacher({
       { id }
     );
 
+    if (rows.length === 0) {
+      throw new Error("Teacher not found");
+    }
+
     const courses = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT c.id, c.name FROM courses as c
@@ -92,7 +96,7 @@ export async function getEachTeacher({
       { id }
     );
 
-    return { ...rows, courses: courses };
+    return { teacher: rows[0], courses: courses };
   } catch (err: any) {
     throw new Error(err.message || "Error fetching teacher:");
   }
@@ -198,7 +202,6 @@ export async function updateTeacher({
 
     return { ...updatedTeacher[0], courses: updatedCourses };
   } catch (err: any) {
-    console.error("Error updating teacher:", err);
     throw new Error(err.message || "Failed to update teacher");
   }
 }

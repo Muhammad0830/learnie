@@ -18,9 +18,9 @@ universityRouter.get("/", async (req, res) => {
     }
 
     res.status(200).json(result);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching university schemas:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 });
 
@@ -38,9 +38,9 @@ universityRouter.post("/", async (req, res) => {
     res.status(201).json({
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error inserting university:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
 });
 
@@ -59,9 +59,9 @@ universityRouter.get("/:universityId", async (req, res) => {
     }
 
     res.json(result);
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error fetching university:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
 });
 

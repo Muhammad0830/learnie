@@ -22,9 +22,9 @@ studentsRouter.get("/", validateUniversitySchema, async (req, res) => {
     }
 
     res.json(result);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching students:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error.message || "Internal Server Error" });
   }
 });
 
@@ -57,9 +57,9 @@ studentsRouter.post("/", validateUniversitySchema, async (req, res) => {
     res.status(201).json({
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error inserting student:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
 });
 
@@ -77,15 +77,10 @@ studentsRouter.get(
 
       const result = await getEachStudent({ id: studentId, schemaName });
 
-      if (result.length === 0) {
-        res.status(404).json({ error: "Student not found" });
-        return;
-      }
-
       res.json(result);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error fetching student:", err);
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: err.message || "Internal Server Error" });
     }
   }
 );
