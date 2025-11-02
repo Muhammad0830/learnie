@@ -106,7 +106,7 @@ export async function getEachStudent({
       { id }
     );
 
-    return { ...rows, courses: courses };
+    return { student: rows[0], courses: courses };
   } catch (err: any) {
     throw new Error(err.message || "Error fetching student:");
   }

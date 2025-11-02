@@ -29,6 +29,10 @@ export async function getEachCourse({
       { id }
     );
 
+    if (rows.length === 0) {
+      throw new Error("Course not found");
+    }
+
     const teachers = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT t.id, t.name FROM teachers as t
@@ -45,7 +49,7 @@ export async function getEachCourse({
       { id }
     );
 
-    return { ...rows, teachers: teachers, students: students };
+    return { course: rows[0], teachers: teachers, students: students };
   } catch (err: any) {
     throw new Error(err.message || "Error fetching course:");
   }

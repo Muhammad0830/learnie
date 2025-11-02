@@ -18,7 +18,7 @@ GET http://localhost:3001/teachers/
 x-university-schema: university_harvard_university
 
 ###
-GET http://localhost:3001/teachers/2
+GET http://localhost:3001/teachers/1
 x-university-schema: university_harvard_university
 
 ###
