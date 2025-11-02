@@ -3,6 +3,7 @@ import {
   createStudent,
   getEachStudent,
   getStudentsList,
+  updateStudent,
 } from "../models/Student";
 
 const studentsRouter = express.Router();
@@ -87,4 +88,43 @@ studentsRouter.get("/:studentId", async (req, res) => {
   }
 });
 
+studentsRouter.put("/:studentId", async (req, res) => {
+  try {
+    const schemaName = req.headers["x-university-schema"] as string;
+    if (!schemaName) {
+      return res.status(400).json({ error: "Missing university schema" });
+    }
+
+    const studentId = req.params.studentId;
+    const { name, age, email, phoneNumber, courseIds } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: "Missing name" });
+    } else if (!email) {
+      return res.status(400).json({ error: "Missing email address" });
+    } else if (!phoneNumber) {
+      return res.status(400).json({ error: "Missing phone number" });
+    } else if (!studentId) {
+      return res.status(400).json({ error: "Missing ID param" });
+    }
+
+    const updated = await updateStudent({
+      schemaName,
+      studentId,
+      name,
+      age,
+      email,
+      phoneNumber,
+      courseIds,
+    });
+
+    res.json({
+      message: "Student updated successfully",
+      data: updated,
+    });
+  } catch (err: any) {
+    console.error("Error updating student:", err);
+    res.status(500).json({ error: err.message || "Internal Server Error" });
+  }
+});
 export default studentsRouter;

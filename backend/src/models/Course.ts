@@ -77,3 +77,33 @@ export async function createCourse({
     throw new Error(err);
   }
 }
+
+export async function updateCourse({
+  schemaName,
+  courseId: id,
+  name,
+  description,
+}: {
+  schemaName: string;
+  courseId: string;
+  name: string;
+  description: string;
+}) {
+  try {
+    const rows = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `UPDATE courses 
+       SET name = :name, description = :description
+       WHERE id = :id`,
+      { name, description, id }
+    );
+
+    return {
+      id,
+      name,
+      description,
+    };
+  } catch (err: any) {
+    throw new Error(err);
+  }
+}

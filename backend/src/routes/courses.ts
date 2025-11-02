@@ -1,5 +1,5 @@
 import express from "express";
-import { createCourse, getCoursesList, getEachCourse } from "../models/Course";
+import { createCourse, getCoursesList, getEachCourse, updateCourse } from "../models/Course";
 
 const coursesRouter = express.Router();
 
@@ -71,6 +71,39 @@ coursesRouter.post("/", async (req, res) => {
     });
   } catch (err) {
     console.error("Error inserting course:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+coursesRouter.put("/:courseId", async (req, res) => {
+  try {
+    const schemaName = req.headers["x-university-schema"] as string;
+    if (!schemaName) {
+      return res.status(400).json({ error: "Missing university schema" });
+    }
+
+    const courseId = req.params.courseId;
+    const { name, description } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: "Missing name" });
+    } else if (!description) {
+      return res.status(400).json({ error: "Missing description" });
+    }
+
+    const result = await updateCourse({
+      schemaName,
+      courseId,
+      name,
+      description,
+    });
+
+    res.json({
+      message: "Course updated successfully",
+      data: result,
+    });
+  } catch (err) {
+    console.error("Error updating course:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

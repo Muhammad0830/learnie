@@ -1,0 +1,34 @@
+PUT http://localhost:3001/students/5
+x-university-schema: harvard_university
+Content-Type: application/json
+
+{
+    "name": "Sulton Ermatov",
+    "age": null,
+    "email": "Ermatov@gmail.com",
+    "phoneNumber": "50155251",
+    "courseIds": ["1", "5"]
+}
+
+###
+PUT http://localhost:3001/courses/1
+x-university-schema: harvard_university
+Content-Type: application/json
+
+{
+    "name": "IT",
+    "description": "IT iis the art of creating software."
+}
+
+###
+PUT http://localhost:3001/teachers/3
+x-university-schema: harvard_university
+Content-Type: application/json
+
+{
+    "name": "Teacher Ermatov",
+    "age": "25",
+    "email": "Ermatov@gmail.com",
+    "phoneNumber": "45044251",
+    "courseIds": ["1", "5"]
+}
