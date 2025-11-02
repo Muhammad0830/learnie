@@ -5,17 +5,20 @@ import {
   getStudentsList,
   updateStudent,
 } from "../models/Student";
+import { validateUniversitySchema } from "../middlewares/validateUniversitySchema";
 
 const studentsRouter = express.Router();
 
-studentsRouter.get("/", async (req, res) => {
+studentsRouter.get("/", validateUniversitySchema, async (req, res) => {
   try {
-    const schemaName = req.headers["x-university-schema"] as string;
-    if (!schemaName) {
-      return res.status(400).json({ error: "Missing university schema" });
-    }
+    const schemaName = (req as any).universitySchema;
+    if (!schemaName) return;
 
     const result = await getStudentsList({ schemaName });
+
+    if (result?.length === 0) {
+      throw new Error("No students found");
+    }
 
     res.json(result);
   } catch (error) {
@@ -24,12 +27,9 @@ studentsRouter.get("/", async (req, res) => {
   }
 });
 
-studentsRouter.post("/", async (req, res) => {
+studentsRouter.post("/", validateUniversitySchema, async (req, res) => {
   try {
-    const schemaName = req.headers["x-university-schema"] as string;
-    if (!schemaName) {
-      return res.status(400).json({ error: "Missing university schema" });
-    }
+    const schemaName = (req as any).universitySchema;
 
     const { name, age, email, phoneNumber, studentId, courseIds } = req.body;
 
@@ -62,69 +62,71 @@ studentsRouter.post("/", async (req, res) => {
   }
 });
 
-studentsRouter.get("/:studentId", async (req, res) => {
-  try {
-    const schemaName = req.headers["x-university-schema"] as string;
-    if (!schemaName) {
-      return res.status(400).json({ error: "Missing university schema" });
+studentsRouter.get(
+  "/:studentId",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
+
+      const studentId = req.params.studentId;
+      if (!studentId) {
+        return res.status(400).json({ error: "Missing studentId" });
+      }
+
+      const result = await getEachStudent({ id: studentId, schemaName });
+
+      if (result.length === 0) {
+        res.status(404).json({ error: "Student not found" });
+        return;
+      }
+
+      res.json(result);
+    } catch (err) {
+      console.error("Error fetching student:", err);
+      res.status(500).json({ error: "Internal Server Error" });
     }
-
-    const studentId = req.params.studentId;
-    if (!studentId) {
-      return res.status(400).json({ error: "Missing studentId" });
-    }
-
-    const result = await getEachStudent({ id: studentId, schemaName });
-
-    if (result.length === 0) {
-      res.status(404).json({ error: "Student not found" });
-      return;
-    }
-
-    res.json(result);
-  } catch (err) {
-    console.error("Error fetching student:", err);
-    res.status(500).json({ error: "Internal Server Error" });
   }
-});
+);
 
-studentsRouter.put("/:studentId", async (req, res) => {
-  try {
-    const schemaName = req.headers["x-university-schema"] as string;
-    if (!schemaName) {
-      return res.status(400).json({ error: "Missing university schema" });
+studentsRouter.put(
+  "/:studentId",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
+
+      const studentId = req.params.studentId;
+      const { name, age, email, phoneNumber, courseIds } = req.body;
+
+      if (!name) {
+        return res.status(400).json({ error: "Missing name" });
+      } else if (!email) {
+        return res.status(400).json({ error: "Missing email address" });
+      } else if (!phoneNumber) {
+        return res.status(400).json({ error: "Missing phone number" });
+      } else if (!studentId) {
+        return res.status(400).json({ error: "Missing ID param" });
+      }
+
+      const updated = await updateStudent({
+        schemaName,
+        studentId,
+        name,
+        age,
+        email,
+        phoneNumber,
+        courseIds,
+      });
+
+      res.json({
+        message: "Student updated successfully",
+        data: updated,
+      });
+    } catch (err: any) {
+      console.error("Error updating student:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-
-    const studentId = req.params.studentId;
-    const { name, age, email, phoneNumber, courseIds } = req.body;
-
-    if (!name) {
-      return res.status(400).json({ error: "Missing name" });
-    } else if (!email) {
-      return res.status(400).json({ error: "Missing email address" });
-    } else if (!phoneNumber) {
-      return res.status(400).json({ error: "Missing phone number" });
-    } else if (!studentId) {
-      return res.status(400).json({ error: "Missing ID param" });
-    }
-
-    const updated = await updateStudent({
-      schemaName,
-      studentId,
-      name,
-      age,
-      email,
-      phoneNumber,
-      courseIds,
-    });
-
-    res.json({
-      message: "Student updated successfully",
-      data: updated,
-    });
-  } catch (err: any) {
-    console.error("Error updating student:", err);
-    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
-});
+);
 export default studentsRouter;

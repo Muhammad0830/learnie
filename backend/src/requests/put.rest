@@ -1,5 +1,5 @@
-PUT http://localhost:3001/students/5
-x-university-schema: harvard_university
+PUT http://localhost:3001/students/1
+x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
@@ -7,12 +7,12 @@ Content-Type: application/json
     "age": null,
     "email": "Ermatov@gmail.com",
     "phoneNumber": "50155251",
-    "courseIds": ["1", "5"]
+    "courseIds": ["1", "8"]
 }
 
 ###
 PUT http://localhost:3001/courses/1
-x-university-schema: harvard_university
+x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
@@ -21,8 +21,8 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:3001/teachers/3
-x-university-schema: harvard_university
+PUT http://localhost:3001/teachers/1
+x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {

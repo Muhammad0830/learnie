@@ -1,5 +1,8 @@
-import { queryGlobal, queryUniversity } from "../utils/helper";
+import { queryUniversity } from "../utils/helper";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
+import { getEachCourse } from "./Course";
+import { getUniversityPool } from "../db/mysql";
+import { checkCoursesExistance } from "../utils/checkCoursesExistance";
 
 export async function getStudentsList({ schemaName }: { schemaName: string }) {
   try {
@@ -8,9 +11,13 @@ export async function getStudentsList({ schemaName }: { schemaName: string }) {
       "SELECT * FROM students"
     );
 
+    if (rows.length === 0) {
+      throw new Error("No students found");
+    }
+
     return rows;
-  } catch (error) {
-    console.error("Error fetching students:", error);
+  } catch (error: any) {
+    throw new Error(error.message || "Error fetching students:");
   }
 }
 
@@ -32,6 +39,15 @@ export async function createStudent({
   courseIds?: string[];
 }) {
   try {
+    if (Array.isArray(courseIds) && courseIds.length > 0) {
+      const allCoursesExists = await checkCoursesExistance(
+        courseIds,
+        schemaName
+      );
+      if (!allCoursesExists)
+        throw new Error("One or more courses do not exist");
+    }
+
     const rows = await queryUniversity<ResultSetHeader>(
       schemaName,
       `INSERT INTO students (name, age, email, phoneNumber, studentId) 
@@ -41,13 +57,13 @@ export async function createStudent({
 
     const insertId = rows.insertId;
 
-    if (courseIds) {
+    if (Array.isArray(courseIds) && courseIds.length > 0) {
       for (const courseId of courseIds) {
         await queryUniversity<ResultSetHeader>(
           schemaName,
-          `INSERT INTO student_courses (student_id, course_id) 
-          VALUES (:student_id, :course_id)`,
-          { course_id: courseId, student_id: insertId }
+          `INSERT INTO student_courses (student_id, course_id)
+           VALUES (:student_id, :course_id)`,
+          { student_id: insertId, course_id: courseId }
         );
       }
     }
@@ -61,7 +77,7 @@ export async function createStudent({
       studentId,
     };
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err.message || "Error inserting student:");
   }
 }
 
@@ -79,6 +95,10 @@ export async function getEachStudent({
       { id }
     );
 
+    if (rows.length === 0) {
+      throw new Error("Student not found");
+    }
+
     const courses = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT c.id, c.name FROM courses as c
@@ -88,7 +108,7 @@ export async function getEachStudent({
 
     return { ...rows, courses: courses };
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err.message || "Error fetching student:");
   }
 }
 export async function updateStudent({
@@ -109,6 +129,15 @@ export async function updateStudent({
   courseIds?: string[];
 }) {
   try {
+    if (Array.isArray(courseIds) && courseIds.length > 0) {
+      const allCoursesExists = await checkCoursesExistance(
+        courseIds,
+        schemaName
+      );
+      if (!allCoursesExists)
+        throw new Error("One or more courses do not exist");
+    }
+
     const studentRows = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT id FROM students WHERE id = :id`,
@@ -182,7 +211,6 @@ export async function updateStudent({
 
     return { ...updatedStudent[0], courses: updatedCourses };
   } catch (err: any) {
-    console.error("Error updating student:", err);
     throw new Error(err.message || "Failed to update student");
   }
 }

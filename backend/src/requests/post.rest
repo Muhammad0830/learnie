@@ -1,33 +1,41 @@
 POST http://localhost:3001/students/
-x-university-schema: harvard_university
+x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
-    "name": "Sulton Eshmatov",
-    "email": "Sulton@gmail.com",
-    "phoneNumber": "94450155251",
-    "studentId": "122626",
-    "courseIds": ["1"]
+    "name": "Eshmat Boboyev",
+    "email": "Eshmat@gmail.com",
+    "phoneNumber": "94450627215",
+    "studentId": "122722",
+    "courseIds": ["1", "5"]
 }
 
 ###
 POST http://localhost:3001/courses/
-x-university-schema: harvard_university
+x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
-    "name": "physics",
-    "description": "physics is difficult but fun"
+    "name": "IT",
+    "description": "IT is fun"
 }
 
 ###
 POST http://localhost:3001/teachers/
-x-university-schema: harvard_university
+x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
     "name": "Teacher Eshmatov",
-    "email": "Teacher@gmail.com",
-    "phoneNumber": "9445044251",
-    "courseIds": ["1", "3"]
+    "email": "Eshmatov@gmail.com",
+    "phoneNumber": "94621064251",
+    "courseIds": ["1", "7"]
+}
+
+###
+POST http://localhost:3001/university/
+Content-Type: application/json
+
+{
+    "name": "Cambridge University"
 }
