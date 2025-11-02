@@ -16,8 +16,8 @@ x-university-schema: harvard_university
 Content-Type: application/json
 
 {
-    "name": "something",
-    "description": "something else",
+    "name": "physics",
+    "description": "physics is difficult but fun"
 }
 
 ###

@@ -87,3 +87,99 @@ export async function getEachTeacher({
     throw new Error(err);
   }
 }
+
+export async function updateTeacher({
+  schemaName,
+  teacherId,
+  name,
+  age,
+  email,
+  phoneNumber,
+  courseIds,
+}: {
+  schemaName: string;
+  teacherId: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  age?: string | null;
+  courseIds?: string[];
+}) {
+  try {
+    const teacherRows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT id FROM teachers WHERE id = :id`,
+      { id: teacherId }
+    );
+
+    if (teacherRows.length === 0) {
+      throw new Error("Teacher not found");
+    }
+
+    await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `UPDATE teachers 
+       SET name = :name, age = :age, email = :email, phoneNumber = :phoneNumber 
+       WHERE id = :id`,
+      {
+        name,
+        age: age ?? null,
+        email,
+        phoneNumber,
+        id: teacherId,
+      }
+    );
+
+    if (Array.isArray(courseIds)) {
+      const existingCourses = await queryUniversity<RowDataPacket[]>(
+        schemaName,
+        `SELECT course_id FROM teacher_courses WHERE teacher_id = :teacher_id`,
+        { teacher_id: teacherId }
+      );
+
+      const currentIds = existingCourses.map((c) => String(c.course_id));
+      const newIds = courseIds.map((c) => String(c));
+
+      const needToAdd = newIds.filter((id) => !currentIds.includes(id));
+      const needToDelete = currentIds.filter((id) => !newIds.includes(id));
+
+      if (needToDelete.length > 0) {
+        await queryUniversity<ResultSetHeader>(
+          schemaName,
+          `DELETE FROM teacher_courses 
+           WHERE teacher_id = ? 
+           AND course_id IN (${needToDelete.map(() => "?").join(",")})`,
+          [teacherId, ...needToDelete]
+        );
+      }
+
+      for (const courseId of needToAdd) {
+        await queryUniversity<ResultSetHeader>(
+          schemaName,
+          `INSERT INTO teacher_courses (teacher_id, course_id)
+           VALUES (:teacher_id, :course_id)`,
+          { teacher_id: teacherId, course_id: courseId }
+        );
+      }
+    }
+
+    const updatedTeacher = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM teachers WHERE id = :id`,
+      { id: teacherId }
+    );
+
+    const updatedCourses = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT c.id, c.name FROM courses AS c
+       JOIN teacher_courses AS tc ON tc.course_id = c.id
+       WHERE tc.teacher_id = :teacher_id`,
+      { teacher_id: teacherId }
+    );
+
+    return { ...updatedTeacher[0], courses: updatedCourses };
+  } catch (err: any) {
+    console.error("Error updating teacher:", err);
+    throw new Error(err.message || "Failed to update teacher");
+  }
+}
