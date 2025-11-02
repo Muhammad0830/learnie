@@ -5,7 +5,13 @@ import { useEffect } from "react";
 export default function Home() {
   const getData = async () => {
     try {
-      const response = await fetch("http://localhost:3001/notes");
+      const response = await fetch("http://localhost:3001/students", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-university-schema": "harvard_university",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch data");
