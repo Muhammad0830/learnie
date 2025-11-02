@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createTeacher,
+  deleteTeacher,
   getEachTeacher,
   getTeachersList,
   updateTeacher,
@@ -122,6 +123,30 @@ teachersRouter.put("/:teacherId", async (req, res) => {
   } catch (err: any) {
     console.error("Error updating teacher:", err);
     res.status(500).json({ error: err.message || "Internal Server Error" });
+  }
+});
+
+teachersRouter.delete("/:teacherId", async (req, res) => {
+  try {
+    const schemaName = req.headers["x-university-schema"] as string;
+    if (!schemaName) {
+      return res.status(400).json({ error: "Missing university schema" });
+    }
+
+    const teacherId = req.params.teacherId;
+    if (!teacherId) {
+      return res.status(400).json({ error: "Missing teacherId" });
+    }
+
+    const result = await deleteTeacher({ schemaName, teacherId });
+
+    res.json({
+      message: "Teacher deleted successfully",
+      id: result.id,
+    });
+  } catch (error) {
+    console.error("Error deleting teacher:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
