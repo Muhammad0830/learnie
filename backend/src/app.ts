@@ -6,6 +6,8 @@ import express from "express";
 import coursesRouter from "./routes/courses";
 import teachersRouter from "./routes/teachers";
 import universityRouter from "./routes/university";
+import userRouter from "./routes/user";
+import authRouter from "./routes/auth";
 const app = express();
 
 app.use(express.json());
@@ -21,6 +23,8 @@ app.use("/students", studentsRouter);
 app.use("/courses", coursesRouter);
 app.use("/teachers", teachersRouter);
 app.use("/university", universityRouter);
+app.use("/user", userRouter);
+app.use("/auth", authRouter);
 
 app.use(unknownEndpoint);
 
