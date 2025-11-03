@@ -1,0 +1,54 @@
+### Signup
+POST http://localhost:3001/auth/signup
+Content-Type: application/json
+x-university-schema: university_harvard_university
+
+{
+  "email": "teacher@gmail.com",
+  "password": "123123",
+  "name": "Admin",
+  "role": "teacher"
+}
+
+###
+
+### Login
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+x-university-schema: university_harvard_university
+
+{
+  "email": "user123@gmail.com",
+  "password": "Password123",
+  "role": "admin"
+}
+
+### Login
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+x-university-schema: university_harvard_university
+
+{
+  "email": "admin@gmail.com",
+  "password": "123123",
+  "role": "admin"
+}
+
+###
+
+### Get current user (Protected)
+GET http://localhost:3001/user/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYyMTcxODI3LCJleHAiOjE3NjIxNzI3Mjd9.H1dm7jfsF-jpWWpndWcCldZ2Vx8t4R7QEHVDKSopKTM
+x-university-schema: university_harvard_university
+###
+
+### Refresh access token (uses cookie from login)
+POST http://localhost:3001/auth/refresh
+x-university-schema: university_harvard_university
+
+
+###
+
+### Logout (clears refresh cookie)
+POST http://localhost:3001/auth/logout
+x-university-schema: university_harvard_university
