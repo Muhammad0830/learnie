@@ -1,4 +1,4 @@
-DELETE http://localhost:3001/students/5
+DELETE http://localhost:3001/users/6
 x-university-schema: university_harvard_university
 
 ###

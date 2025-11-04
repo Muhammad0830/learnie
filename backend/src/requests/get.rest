@@ -1,8 +1,8 @@
-GET http://localhost:3001/students/
+GET http://localhost:3001/users?role=teacher
 x-university-schema: university_harvard_university
 
 ###
-GET http://localhost:3001/students/1
+GET http://localhost:3001/users/1
 x-university-schema: university_harvard_university
 
 ###
