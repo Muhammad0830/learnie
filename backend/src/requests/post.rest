@@ -1,14 +1,18 @@
-POST http://localhost:3001/students/
-x-university-schema: university_harvard_university
+### Signup
+POST http://localhost:3001/users/
 Content-Type: application/json
+x-university-schema: university_harvard_university
 
 {
-    "name": "Eshmat Boboyev",
-    "email": "Eshmat@gmail.com",
-    "phoneNumber": "94450627215",
-    "studentId": "122722",
-    "courseIds": ["1", "5"]
+  "email": "Odil@gmail.com",
+  "password": "123123",
+  "name": "Odil",
+  "role": "student",
+  "age": "21",
+  "phoneNumber": "12347290",
+  "studentId": "1234567891"
 }
+
 
 ###
 POST http://localhost:3001/courses/
@@ -16,8 +20,8 @@ x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
-    "name": "IT",
-    "description": "IT is fun"
+    "name": "Dancing",
+    "description": "Dancing is maybe the most fun Course"
 }
 
 ###

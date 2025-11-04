@@ -16,70 +16,6 @@ const COOKIE_NAME = "refreshToken";
 const REFRESH_EXPIRES_MS = 1000 * 60 * 60 * 24 * 7;
 
 authRouter.post(
-  "/signup",
-  body("email").isEmail(),
-  body("password").isLength({ min: 6 }),
-  validateUniversitySchema,
-  async (req: any, res: any) => {
-    const schemaName = (req as any).universitySchema;
-    const errors = validationResult(req);
-    if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
-
-    const { email, password, name, role } = req.body as {
-      email: string;
-      password: string;
-      name: string;
-      role: "student" | "teacher";
-    };
-
-    try {
-      const existing = await UserModel.findUserByEmail(email, role, schemaName);
-      if (existing)
-        return res.status(409).json({ message: "Email already in use" });
-
-      const passwordHash = await bcrypt.hash(password, 10);
-      const userId = await UserModel.createUser(
-        email,
-        passwordHash,
-        name,
-        role,
-        schemaName
-      );
-
-      const accessToken = createAccessToken({ userId, email, role });
-      const refreshToken = createRefreshToken({ userId, email, role });
-
-      const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS)
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
-
-      await RTModel.saveRefreshToken(
-        userId,
-        refreshToken,
-        expiresAt,
-        schemaName
-      );
-
-      res.cookie(COOKIE_NAME, refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: REFRESH_EXPIRES_MS,
-      });
-
-      return res
-        .status(201)
-        .json({ accessToken, user: { id: userId, email, name } });
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Internal server error" });
-    }
-  }
-);
-
-authRouter.post(
   "/login",
   body("email").isEmail(),
   body("password").isLength({ min: 6 }),
@@ -99,7 +35,7 @@ authRouter.post(
     const role: "admin" | "student" | "teacher" = req.body.role || "student";
 
     try {
-      const user = await UserModel.findUserByEmail(email, role, schemaName);
+      const user = await UserModel.findUserByEmail(email, schemaName);
       if (!user)
         return res.status(401).json({ message: "Invalid credentials" });
 
