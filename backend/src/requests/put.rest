@@ -20,14 +20,35 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:3001/teachers/1
+PUT http://localhost:3001/courses/assignments/3
 x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
-    "name": "Teacher Eshmatov",
-    "age": "25",
-    "email": "Teacher@gmail.com",
-    "phoneNumber": "45044251",
-    "courseIds": ["1", "3"]
+    "title": "assignment 2 for topic 2",
+    "description": "assignment 2 description",
+    "due_date": "2023-01-01 12:00:00",
+    "images": ["http://...", "http://..."]
+}
+
+###
+PUT http://localhost:3001/courses/lectures/2
+x-university-schema: university_harvard_university
+Content-Type: application/json
+
+{
+    "title": "lecture 2 for topic 2",
+    "content": "lecture 2 content",
+    "video": "https://...",
+    "image": "http://..."
+}
+
+###
+PUT http://localhost:3001/courses/presentations/2
+x-university-schema: university_harvard_university
+Content-Type: application/json
+
+{
+    "title": "presentation 2 for topic 2",
+    "file_url": "https://..."
 }

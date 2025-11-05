@@ -35,17 +35,17 @@ export async function getEachCourse({
 
     const teachers = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      `SELECT t.id, t.name FROM teachers as t
-        LEFT JOIN teacher_courses as tc ON t.id = tc.teacher_id
-        WHERE tc.course_id = :id`,
+      `SELECT u.id, u.name FROM users as u
+        LEFT JOIN users_courses uc ON u.id = uc.user_id
+        WHERE uc.course_id = :id and u.role = 'teacher'`,
       { id }
     );
 
     const students = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      `SELECT s.id, s.name FROM students as s
-        LEFT JOIN student_courses as sc ON s.id = sc.student_id
-        WHERE sc.course_id = :id`,
+      `SELECT u.id, u.name FROM users as u
+        LEFT JOIN users_courses uc ON u.id = uc.user_id
+        WHERE uc.course_id = :id and u.role = 'student'`,
       { id }
     );
 
@@ -141,5 +141,487 @@ export async function deleteCourse({
     };
   } catch (err: any) {
     throw new Error(err.message || "Error deleting course:");
+  }
+}
+
+export async function getCourseTopicsList({
+  courseId,
+  schemaName,
+}: {
+  courseId: string;
+  schemaName: string;
+}) {
+  try {
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM course_topics
+        WHERE course_id = :courseId`,
+      { courseId }
+    );
+
+    if (rows.length === 0) {
+      throw new Error("Course topics not found");
+    }
+
+    return rows;
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching course topics:");
+  }
+}
+
+export async function createCourseTopic({
+  schemaName,
+  courseId,
+  title,
+  description,
+}: {
+  schemaName: string;
+  courseId: string;
+  title: string;
+  description: string;
+}) {
+  try {
+    const rows = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `INSERT INTO course_topics (course_id, title, description) 
+        VALUES (:courseId, :title, :description)`,
+      { courseId, title, description }
+    );
+
+    return {
+      id: rows.insertId,
+      title,
+      description,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error inserting course topic:");
+  }
+}
+
+export async function getCourseTopic({
+  courseId,
+  schemaName,
+  topicId,
+}: {
+  courseId: string;
+  schemaName: string;
+  topicId: string;
+}) {
+  try {
+    const couserTopics = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT ct.* FROM course_topics as ct
+        WHERE course_id = :courseId AND id = :topicId`,
+      { courseId, topicId }
+    );
+
+    const assignments = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM assignments
+        WHERE course_id = :courseId AND topic_id = :topicId`,
+      { courseId, topicId }
+    );
+
+    const lectures = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM lectures
+        WHERE course_id = :courseId AND topic_id = :topicId`,
+      { courseId, topicId }
+    );
+
+    const presentations = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM presentations
+        WHERE course_id = :courseId AND topic_id = :topicId`,
+      { courseId, topicId }
+    );
+
+    if (couserTopics.length === 0) {
+      throw new Error("Course topic not found");
+    }
+
+    return {
+      course_topics: couserTopics[0],
+      assignments: assignments,
+      lectures: lectures,
+      presentations: presentations,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching course topic:");
+  }
+}
+
+export async function getEachLecture({
+  schemaName, 
+  lectureId
+} : {
+  schemaName: string;
+  lectureId: string;
+}) {
+  try {
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM lectures
+        WHERE id = :lectureId`,
+      { lectureId }
+    );
+
+    if (rows.length === 0) {
+      throw new Error("Lecture not found");
+    }
+
+    return rows;
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching lecture:");
+  }
+}
+
+export async function getEachPresentation({
+  schemaName, 
+  presentationId
+} : {
+  schemaName: string;
+  presentationId: string;
+}) {
+  try {
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM presentations
+        WHERE id = :presentationId`,
+      { presentationId }
+    );
+
+    if (rows.length === 0) {
+      throw new Error("Presentation not found");
+    }
+
+    return rows;
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching presentation:");
+  }
+}
+
+export async function getEachAssignment({
+  schemaName, 
+  assignmentId
+} : {
+  schemaName: string;
+  assignmentId: string;
+})  {
+  try {
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM assignments
+        WHERE id = :assignmentId`,
+      { assignmentId }
+    );
+
+    if (rows.length === 0) {
+      throw new Error("Assignment not found");
+    }
+
+    return rows;
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching assignment:");
+  }
+}
+
+export async function createCourseTopicAssignment({
+  courseId,
+  topicId,
+  schemaName,
+  title,
+  description,
+  images,
+  due_date,
+}: {
+  courseId: string;
+  topicId: string;
+  schemaName: string;
+  title: string;
+  description: string;
+  images: string;
+  due_date: string;
+}) {
+  try {
+    const imagesJson = JSON.stringify(images);
+
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `INSERT INTO assignments (course_id, topic_id, title, description, images, due_date) 
+        VALUES (:courseId, :topicId, :title, :description, :images, :due_date)`,
+      { courseId, topicId, title, description, images: imagesJson, due_date }
+    );
+
+    return {
+      id: result.insertId,
+      title: title,
+      description: description,
+      due_date: due_date,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching course topic assignments:");
+  }
+}
+
+export async function createCourseTopicLectures({
+  courseId,
+  topicId,
+  schemaName,
+  title,
+  content,
+  video,
+  image,
+}: {
+  courseId: string;
+  topicId: string;
+  schemaName: string;
+  title: string;
+  content: string;
+  video: string;
+  image: string;
+}) {
+  try {
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `INSERT INTO lectures (course_id, topic_id, title, content, image_url, video_url) 
+        VALUES (:courseId, :topicId, :title, :content, :image, :video)`,
+      { courseId, topicId, title, content, image, video }
+    );
+
+    return {
+      id: result.insertId,
+      title: title,
+      description: content,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching course topic assignments:");
+  }
+}
+
+export async function createCourseTopicPresentations({
+  courseId,
+  topicId,
+  schemaName,
+  title,
+  file_url,
+}: {
+  courseId: string;
+  topicId: string;
+  schemaName: string;
+  title: string;
+  file_url: string;
+}) {
+  try {
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `INSERT INTO presentations (course_id, topic_id, title, file_url) 
+        VALUES (:courseId, :topicId, :title, :file_url)`,
+      { courseId, topicId, title, file_url }
+    );
+
+    return {
+      id: result.insertId,
+      title: title,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching course topic assignments:");
+  }
+}
+
+export async function deleteCourseTopic({
+  courseId,
+  topicId,
+  schemaName,
+}: {
+  courseId: string;
+  topicId: string;
+  schemaName: string;
+}) {
+  try {
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `DELETE FROM course_topics WHERE course_id = :courseId AND id = :topicId`,
+      { courseId, topicId }
+    );
+
+    return {
+      id: topicId,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error deleting course topic:");
+  }
+}
+
+export async function deleteCourseTopicAssignment({
+  assignmentId,
+  schemaName,
+}: {
+  assignmentId: string;
+  schemaName: string;
+}) {
+  try {
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `DELETE FROM assignments WHERE id = :assignmentId`,
+      { assignmentId }
+    );
+
+    return {
+      id: assignmentId,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error deleting course topic assignment:");
+  }
+}
+
+export async function deleteCourseTopicLecture({
+  lectureId,
+  schemaName,
+}: {
+  lectureId: string;
+  schemaName: string;
+}) {
+  try {
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `DELETE FROM lectures WHERE id = :lectureId`,
+      { lectureId }
+    );
+
+    return {
+      id: lectureId,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error deleting course topic lecture:");
+  }
+}
+export async function deleteCourseTopicPresentation({
+  presentationId,
+  schemaName,
+}: {
+  presentationId: string;
+  schemaName: string;
+}) {
+  try {
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `DELETE FROM presentations WHERE id = :presentationId`,
+      { presentationId }
+    );
+
+    return {
+      id: presentationId,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error deleting course topic presentation:");
+  }
+}
+
+export async function updateCourseTopicAssignment({
+  assignmentId,
+  schemaName,
+  title,
+  description,
+  images,
+  due_date,
+}: {
+  assignmentId: string;
+  schemaName: string;
+  title: string;
+  description: string;
+  images: string;
+  due_date: string;
+}) {
+  try {
+    const imagesJson = JSON.stringify(images);
+
+    // check if assignment exists
+    await getEachAssignment({ schemaName, assignmentId });
+
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `UPDATE assignments 
+        SET title = :title, description = :description, images = :images, due_date = :due_date
+        WHERE id = :assignmentId`,
+      { title, description, images: imagesJson, due_date, assignmentId }
+    );
+
+    return {
+      id: assignmentId,
+      title: title,
+      description: description,
+      due_date: due_date,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error updating course topic assignment:");
+  }
+}
+
+export async function updateCourseTopicLecture({
+  lectureId,
+  schemaName,
+  title,
+  content,
+  image,
+  video,
+}: {
+  lectureId: string;
+  schemaName: string;
+  title: string;
+  content: string;
+  image: string;
+  video: string;
+}) {
+  try {
+    // check if lecture exists
+    await getEachLecture({ schemaName, lectureId });
+
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `UPDATE lectures 
+        SET title = :title, content = :content, image_url = :image, video_url = :video
+        WHERE id = :lectureId`,
+      { title, content, image, video, lectureId }
+    );
+
+    return {
+      message: "Lecture updated successfully",
+      id: lectureId,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error updating course topic assignment:");
+  }
+}
+
+export async function updateCourseTopicPresentation({
+  presentationId,
+  schemaName,
+  title,
+  file_url,
+}: {
+  presentationId: string;
+  schemaName: string;
+  title: string;
+  file_url: string;
+}) {
+  try {
+    // check if presentation exists
+    await getEachPresentation({ schemaName, presentationId });
+
+    const result = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `UPDATE presentations 
+        SET title = :title, file_url = :file_url
+        WHERE id = :presentationId`,
+      { title, file_url, presentationId }
+    );
+
+    return {
+      message: "Presentation updated successfully",
+      id: presentationId,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error updating course topic assignment:");
   }
 }

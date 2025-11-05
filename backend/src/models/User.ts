@@ -90,7 +90,6 @@ export async function getUsersList({
   role?: string;
 }) {
   try {
-    console.log("role", role);
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,
       "SELECT * FROM users WHERE role = :role",
@@ -98,7 +97,6 @@ export async function getUsersList({
         role,
       }
     );
-    console.log("rows", rows);
 
     if (rows.length === 0) {
       throw new Error("No users found");
