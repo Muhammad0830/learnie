@@ -14,11 +14,23 @@ GET http://localhost:3001/courses/1
 x-university-schema: university_harvard_university
 
 ###
-GET http://localhost:3001/teachers/
+GET http://localhost:3001/courses/1/topics
 x-university-schema: university_harvard_university
 
 ###
-GET http://localhost:3001/teachers/1
+GET http://localhost:3001/courses/1/topics/2
+x-university-schema: university_harvard_university
+
+###
+GET http://localhost:3001/courses/assignments/3
+x-university-schema: university_harvard_university
+
+###
+GET http://localhost:3001/courses/lectures/2
+x-university-schema: university_harvard_university
+
+###
+GET http://localhost:3001/courses/presentations/2
 x-university-schema: university_harvard_university
 
 ###

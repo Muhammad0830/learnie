@@ -37,9 +37,57 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:3001/courses/1/topics
+x-university-schema: university_harvard_university
+Content-Type: application/json
+
+{
+    "title": "Topic 3",
+    "description": "Topic 3 description"
+}
+
+###
+POST http://localhost:3001/courses/1/topics/2/assignments
+x-university-schema: university_harvard_university
+Content-Type: application/json
+
+{
+    "title": "Topic 3",
+    "description": "Topic 3 description",
+    "due_date": "2023-01-01 12:00:00",
+    "images": [
+        {"title": "image1", "url": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"},
+        {"title": "image2", "url": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"}
+    ]
+}
+
+###
+POST http://localhost:3001/courses/1/topics/2/lectures
+x-university-schema: university_harvard_university
+Content-Type: application/json
+
+{
+    "title": "lectures 3",
+    "content": "lectures description",
+    "video": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "image": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+}
+
+###
+POST http://localhost:3001/courses/1/topics/2/presentations
+x-university-schema: university_harvard_university
+Content-Type: application/json
+
+{
+    "title": "Topic 3",
+    "file_url": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+}
+
+###
 POST http://localhost:3001/university/
 Content-Type: application/json
 
 {
     "name": "Cambridge University"
 }
+

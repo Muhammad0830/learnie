@@ -33,7 +33,6 @@ universityRouter.post("/", async (req, res) => {
     }
 
     const result = await createUniversity(name);
-    console.log("result", result);
 
     res.status(201).json({
       data: result,

@@ -111,7 +111,6 @@ usersRouter.get("/", validateUniversitySchema, async (req, res) => {
     const schemaName = (req as any).universitySchema;
     const { role } = req.query as { role: string };
     if (!schemaName) return;
-    console.log("role", role);
 
     const result = await getUsersList({ schemaName, role });
 

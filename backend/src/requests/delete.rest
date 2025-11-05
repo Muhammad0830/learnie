@@ -6,5 +6,13 @@ DELETE http://localhost:3001/courses/2
 x-university-schema: university_harvard_university
 
 ###
-DELETE http://localhost:3001/teachers/2
+DELETE http://localhost:3001/courses/1/topics/4
+x-university-schema: university_harvard_university
+
+###
+DELETE http://localhost:3001/courses/lectures/1
+x-university-schema: university_harvard_university
+
+###
+DELETE http://localhost:3001/courses/presentations/1
 x-university-schema: university_harvard_university
