@@ -1,0 +1,14 @@
+{
+    "NavBar": {
+        "dashboard": "Dashboard",
+        "Students": "Students",
+        "Teachers": "Teachers",
+        "Courses": "Courses",
+        "Admins": "Admins",
+        "Settings": "Settings",
+        "Profile": "Profile"
+    },
+    "dashboard": {
+        "dashboard": "Dashboard"
+    }
+}
