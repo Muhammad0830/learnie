@@ -134,7 +134,10 @@ authRouter.post(
         maxAge: REFRESH_EXPIRES_MS,
       });
 
-      return res.json({ accessToken: newAccessToken });
+      return res.json({
+        accessToken: newAccessToken,
+        universitySchema: schemaName,
+      });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: "Internal server error" });

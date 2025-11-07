@@ -10,5 +10,10 @@
     },
     "dashboard": {
         "dashboard": "Dashboard"
+    },
+    "Toast": {
+        "Failed to perform the action": "Failed to perform the action",
+        "Internal server error": "Internal server error",
+        "Error occured": "Error occured"
     }
 }

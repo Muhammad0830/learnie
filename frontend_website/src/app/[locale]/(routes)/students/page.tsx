@@ -1,9 +1,11 @@
-import React from 'react'
+"use client";
+import GetStudents from "./provider";
 
 const Page = () => {
-  return (
-    <div>Students Page</div>
-  )
-}
+  const somethign = GetStudents();
+  console.log("students", somethign);
 
-export default Page
+  return <div>Students Page</div>;
+};
+
+export default Page;

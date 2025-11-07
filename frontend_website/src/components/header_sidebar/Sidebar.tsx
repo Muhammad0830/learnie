@@ -1,10 +1,6 @@
 "use client";
 import {
   LayoutDashboard,
-  ListChecks,
-  CreditCard,
-  Clock4,
-  BarChart3,
   Settings,
   Sun,
   Moon,
@@ -34,22 +30,22 @@ const navLinksData = [
   },
   {
     icon: <FontAwesomeIcon icon={faGraduationCap} className="w-5 h-5" />,
-    label: "Students", 
+    label: "Students",
     url: "/students",
   },
   {
     icon: <FontAwesomeIcon icon={faPersonChalkboard} className="w-5 h-5" />,
-    label: `Teachers`, 
+    label: `Teachers`,
     url: "/teachers",
   },
   {
     icon: <Presentation className="w-5 h-5" />,
-    label: "Courses", 
+    label: "Courses",
     url: "/courses",
   },
   {
     icon: <ShieldUser className="w-5 h-5" />,
-    label: "Admins", 
+    label: "Admins",
     url: "/admins",
   },
   {
@@ -67,7 +63,7 @@ const SideBar = ({ children }: { children: React.ReactNode }) => {
   const { theme: currentTheme, setTheme } = useTheme();
 
   useEffect(() => {
-    setMounted(true);
+    queueMicrotask(() => setMounted(true));
   }, []);
 
   const toggleTheme = () => {
@@ -206,7 +202,7 @@ const SideBar = ({ children }: { children: React.ReactNode }) => {
 
         <div
           className={cn(
-            "lg:p-6 p-4 h-[calc(100svh-64px)] overflow-y-scroll",
+            "lg:p-6 p-4 h-[calc(100svh-64px)] overflow-y-auto",
             currentTheme === "dark" ? "bg-[#000000]" : "bg-[#ffffff]"
           )}
         >
