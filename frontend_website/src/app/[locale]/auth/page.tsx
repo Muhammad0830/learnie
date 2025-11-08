@@ -38,10 +38,6 @@ const Page = () => {
     queueMicrotask(() => setMounted(true));
   }, []);
 
-  const toggleTheme = () => {
-    setTheme(currentTheme === "dark" ? "light" : "dark");
-  };
-
   const { data: universities, isLoading: universitiesLoading } = useApiQuery<
     University[]
   >("/university", { key: "UniversityList" });
@@ -53,6 +49,10 @@ const Page = () => {
       "x-university-schema": variables.universitySchema,
     })
   );
+
+  const toggleTheme = () => {
+    setTheme(currentTheme === "dark" ? "light" : "dark");
+  };
 
   const onSubmit = (data: LoginFormData) => {
     console.log("Form submitted:", data);

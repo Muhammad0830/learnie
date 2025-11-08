@@ -29,6 +29,25 @@
     "dashboard": {
         "dashboard": "Dashboard"
     },
+    "Students": {
+        "Students": "Students",
+        "Create New": "Create New",
+        "Name": "Name",
+        "Email": "Email",
+        "Student Id": "Student Id",
+        "Created At": "Created At",
+        "Actions": "Actions",
+        "View": "View",
+        "Edit": "Edit",
+        "Delete": "Delete",
+        "type to search": "type to search",
+        "Filter by": "Filter by",
+        "All": "All",
+        "totalStudents": "Total Students",
+        "Previous": "Previous",
+        "Next": "Next",
+        "filter": "Filter"
+    },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
         "Internal server error": "Internal server error",
