@@ -3,15 +3,18 @@ import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { useTranslations } from "next-intl";
 import { useCustomToast } from "@/context/CustomToastContext";
+import { AxiosRequestConfig } from "axios";
 
 type UrlType<TVariables> = string | ((variables: TVariables) => string);
 
-export function useApiMutation<
-  TResponse = unknown,
-  TVariables = unknown
->(
+type HeaderGenerator<TVariables> = (
+  variables: TVariables
+) => Record<string, string>;
+
+export function useApiMutation<TResponse = unknown, TVariables = unknown>(
   url: UrlType<TVariables>,
-  method: "post" | "put" | "delete" = "post"
+  method: "post" | "put" | "delete" = "post",
+  headerGenerator?: HeaderGenerator<TVariables>
 ): UseMutationResult<TResponse, Error, TVariables> {
   const toastT = useTranslations("Toast");
   const { showToast } = useCustomToast();
@@ -19,16 +22,24 @@ export function useApiMutation<
   return useMutation<TResponse, Error, TVariables>({
     mutationFn: async (data: TVariables) => {
       const finalUrl = typeof url === "function" ? url(data) : url;
-      const response = await api[method]<TResponse>(finalUrl, data);
+
+      const customHeaders = headerGenerator ? headerGenerator(data) : {};
+
+      const config: AxiosRequestConfig = {
+        headers: customHeaders,
+      };
+
+      const response = await api[method]<TResponse>(finalUrl, data, config);
+
       return response.data;
     },
-    onError: (error: any) => { // eslint-disable-line
+    onError: (error) => {
       showToast(
         "error",
         toastT("Failed to perform the action"),
         toastT("Internal server error")
       );
-      throw new Error(error.message);
+      throw error;
     },
   });
 }

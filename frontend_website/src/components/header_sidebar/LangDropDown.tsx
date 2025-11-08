@@ -9,10 +9,12 @@ const LangDropDown = ({
   setLangDropdownOpen,
   langDropdownOpen,
   currentTheme,
+  backgroundColor,
 }: {
   setLangDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
   langDropdownOpen: boolean;
   currentTheme?: string;
+  backgroundColor?: string;
 }) => {
   const pathName = usePathname();
   const nextPathName = useNextPathName();
@@ -26,7 +28,8 @@ const LangDropDown = ({
           "z-10 relative cursor-pointer p-2 rounded-lg transition-all bg-background-secondary",
           currentTheme === "dark"
             ? "hover:bg-[#172554] border border-[#4b5563]"
-            : "hover:bg-[#e5e7eb] border border-[#d1d5db]"
+            : "hover:bg-[#e5e7eb] border border-[#d1d5db]",
+          `bg-${backgroundColor}`
         )}
         aria-label="Tilni tanlash"
       >
@@ -36,14 +39,17 @@ const LangDropDown = ({
         />
       </button>
       <motion.div
-        initial={{ top: "90%", opacity: 0.5, scale: 0 }}
+        initial={{ top: "90%", opacity: 0.5, scale: 0, right: "10%" }}
         animate={
           langDropdownOpen
-            ? { top: "115%", opacity: 1, scale: 1 }
-            : { top: "90%", opacity: 0.5, scale: 0 }
+            ? { top: "115%", opacity: 1, scale: 1, right: "0%"  }
+            : { top: "90%", opacity: 0.5, scale: 0, right: "10%"  }
         }
         transition={{ type: "spring", duration: 0.3, ease: "easeIn" }}
-        className="z-1 overflow-hidden absolute right-[20%] flex flex-col gap-1 p-2 rounded-sm bg-background-secondary border border-[#d1d5db] dark:border-[#4b5563] origin-top-right"
+        className={cn(
+          "z-1 overflow-hidden absolute flex flex-col gap-1 p-2 rounded-sm bg-background-secondary border border-[#d1d5db] dark:border-[#4b5563] origin-top-right",
+          backgroundColor && `bg-${backgroundColor}`
+        )}
       >
         <Link
           href={pathName}

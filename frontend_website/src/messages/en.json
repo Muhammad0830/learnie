@@ -8,6 +8,24 @@
         "Settings": "Settings",
         "Profile": "Profile"
     },
+    "AuthPage": {
+        "Sign in": "Sign in",
+        "Email": "Email",
+        "Password": "Password",
+        "Select Role": "Select Role",
+        "student": "Student",
+        "teacher": "Teacher",
+        "admin": "Admin",
+        "Submit": "Submit",
+        "Submitting": "Submitting...",
+        "Invalid email address": "Invalid email address",
+        "Password must be at least 6 characters": "Password must be at least 6 characters",
+        "Role must be either 'student' or 'teacher' or 'admin'": "Role must be either 'student' or 'teacher' or 'admin'",
+        "SelectUniversity": "Select university",
+        "EnterYourEmail": "Enter your email",
+        "EnterYourpPassword": "Enter your password",
+        "Please select a university schema": "Please select a university schema"
+    },
     "dashboard": {
         "dashboard": "Dashboard"
     },

@@ -9,6 +9,7 @@ export const setAccessToken = (at: string) => {
 };
 
 export const setUniversitySchema = (schema: string) => {
+  console.log("Setting university schema to:", schema);
   universitySchema = schema;
 };
 
@@ -27,7 +28,7 @@ api.interceptors.request.use((config) => {
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
-  if (universitySchema) {
+  if (universitySchema && !config.headers["x-university-schema"]) {
     config.headers["x-university-schema"] = universitySchema;
   }
   return config;
