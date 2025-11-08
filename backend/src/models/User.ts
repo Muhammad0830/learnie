@@ -85,14 +85,20 @@ export async function createUser(
 export async function getUsersList({
   schemaName,
   role,
+  page,
+  limit,
 }: {
   schemaName: string;
   role?: string;
+  page: number;
+  limit: number;
 }) {
   try {
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      "SELECT * FROM users WHERE role = :role",
+      `SELECT * FROM users WHERE role = :role ORDER BY created_at DESC LIMIT ${limit} OFFSET ${
+        (page - 1) * limit
+      }`,
       {
         role,
       }
@@ -102,86 +108,19 @@ export async function getUsersList({
       throw new Error("No users found");
     }
 
-    return rows;
+    const totalResult = await queryUniversity<any>(
+      schemaName,
+      "SELECT COUNT(*) as count FROM users where role = :role",
+      { role }
+    );
+    const totalStudents = totalResult[0].count;
+    const totalPages = Math.ceil(totalStudents / limit);
+
+    return { students: rows, page, limit, totalStudents, totalPages };
   } catch (error: any) {
     throw new Error(error.message || "Error fetching users:");
   }
 }
-
-// export async function createUser({
-//   schemaName,
-//   name,
-//   age,
-//   email,
-//   phoneNumber,
-//   studentId,
-//   courseIds,
-//   role,
-// }: {
-//   schemaName: string;
-//   name: string;
-//   age: string | null;
-//   email: string;
-//   phoneNumber: string;
-//   role: "student" | "teacher";
-//   courseIds?: string[];
-//   studentId?: string;
-// }) {
-//   try {
-//     if (Array.isArray(courseIds) && courseIds.length > 0) {
-//       const allCoursesExists = await checkCoursesExistance(
-//         courseIds,
-//         schemaName
-//       );
-//       if (!allCoursesExists)
-//         throw new Error("One or more courses do not exist");
-//     }
-
-//     let insertId;
-
-//     if (role === "student") {
-//       const rows = await queryUniversity<ResultSetHeader>(
-//         schemaName,
-//         `INSERT INTO users (name, age, email, phoneNumber, studentId, role)
-//         VALUES (:name, :age, :email, :phoneNumber, :studentId, :role)`,
-//         { name, age: age ?? null, email, phoneNumber, studentId, role }
-//       );
-
-//       insertId = rows.insertId;
-//     } else {
-//       const rows = await queryUniversity<ResultSetHeader>(
-//         schemaName,
-//         `INSERT INTO users (name, age, email, phoneNumber, role)
-//         VALUES (:name, :age, :email, :phoneNumber, :role)`,
-//         { name, age: age ?? null, email, phoneNumber, role }
-//       );
-
-//       insertId = rows.insertId;
-//     }
-
-//     if (Array.isArray(courseIds) && courseIds.length > 0) {
-//       for (const courseId of courseIds) {
-//         await queryUniversity<ResultSetHeader>(
-//           schemaName,
-//           `INSERT INTO users_courses (user_id, course_id)
-//            VALUES (:user_id, :course_id)`,
-//           { user_id: insertId, course_id: courseId }
-//         );
-//       }
-//     }
-
-//     return {
-//       id: insertId,
-//       name,
-//       age: age ?? null,
-//       email,
-//       phoneNumber,
-//       studentId,
-//     };
-//   } catch (err: any) {
-//     throw new Error(err.message || "Error inserting a user:");
-//   }
-// }
 
 export async function getEachUser({
   id,

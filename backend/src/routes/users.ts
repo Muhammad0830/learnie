@@ -109,15 +109,30 @@ usersRouter.post(
 usersRouter.get("/", validateUniversitySchema, async (req, res) => {
   try {
     const schemaName = (req as any).universitySchema;
-    const { role } = req.query as { role: string };
+    const {
+      role,
+      page = "1",
+      limit = "10",
+    } = req.query as {
+      role: string;
+      page: string;
+      limit: string;
+    };
     if (!schemaName) return;
     if (!role) return res.status(400).json({ error: "Missing role" });
 
-    const result = await getUsersList({ schemaName, role });
-
-    if (result?.length === 0) {
-      throw new Error("No students found");
+    const parsedPage = parseInt(page);
+    const parsedLimit = parseInt(limit);
+    if (isNaN(parsedPage) || isNaN(parsedLimit)) {
+      return res.status(400).json({ error: "Invalid page or limit" });
     }
+
+    const result = await getUsersList({
+      schemaName,
+      role,
+      page: parsedPage,
+      limit: parsedLimit,
+    });
 
     res.json(result);
   } catch (error: any) {

@@ -25,3 +25,20 @@ export interface University {
   created_at: string;
   updated_at: string | null;
 }
+
+export interface Student {
+  id: string;
+  name: string;
+  email: string;
+  studentId: string;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface StudentListResponse {
+  students: Student[];
+  page: number;
+  limit: number;
+  totalStudents: number;
+  totalPages: number;
+}

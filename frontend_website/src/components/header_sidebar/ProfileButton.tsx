@@ -24,7 +24,7 @@ const ProfileButton = ({ collapsed }: { collapsed: boolean }) => {
             initial={{ marginRight: 8 }}
             animate={collapsed ? { marginRight: 0 } : { marginRight: 8 }}
             layout
-            className="ml-0.5"
+            className="ml-0.5 py-0.5"
           >
             <User className="w-4 h-4" />
           </motion.div>
