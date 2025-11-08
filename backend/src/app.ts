@@ -7,9 +7,10 @@ import coursesRouter from "./routes/courses";
 import universityRouter from "./routes/university";
 import userRouter from "./routes/user";
 import authRouter from "./routes/auth";
+import cookieParser from "cookie-parser";
+
 const app = express();
 
-app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -17,6 +18,9 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
+
+app.use(express.json());
+app.use(cookieParser());
 
 app.use("/users", usersRouter);
 app.use("/courses", coursesRouter);

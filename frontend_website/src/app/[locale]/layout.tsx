@@ -2,7 +2,6 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { ThemeProvider } from "next-themes";
-import SideBar from "@/components/header_sidebar/Sidebar";
 import Providers from "@/context/ReactQueryProvider";
 import { AuthProvider } from "@/context/AuthContext";
 import { CustomToastProvider } from "@/context/CustomToastContext";
@@ -33,7 +32,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                     defaultTheme="light"
                     enableSystem
                   >
-                    <SideBar>{children}</SideBar>
+                    {children}
                   </ThemeProvider>
                 </NextIntlClientProvider>
               </CustomToastProvider>

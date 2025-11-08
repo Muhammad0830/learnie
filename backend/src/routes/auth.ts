@@ -13,6 +13,7 @@ import { validateUniversitySchema } from "../middlewares/validateUniversitySchem
 const authRouter = express.Router();
 
 const COOKIE_NAME = "refreshToken";
+const SCHEMA_COOKIE_NAME = "universitySchema";
 const REFRESH_EXPIRES_MS = 1000 * 60 * 60 * 24 * 7;
 
 authRouter.post(
@@ -64,78 +65,15 @@ authRouter.post(
         maxAge: REFRESH_EXPIRES_MS,
       });
 
-      return res.json({
-        accessToken,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        },
-      });
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Internal server error" });
-    }
-  }
-);
-
-authRouter.post(
-  "/refresh",
-  validateUniversitySchema,
-  async (req: any, res: any) => {
-    try {
-      const schemaName = (req as any).universitySchema;
-      const token = req.cookies[COOKIE_NAME];
-      if (!token) return res.status(401).json({ message: "No refresh token" });
-
-      let payload: any;
-      try {
-        payload = verifyRefreshToken(token) as any;
-      } catch (e) {
-        return res
-          .status(401)
-          .json({ message: "Invalid or expired refresh token" });
-      }
-
-      const dbToken = await RTModel.findRefreshToken(token, schemaName);
-      if (!dbToken)
-        return res.status(401).json({ message: "Refresh token revoked" });
-
-      await RTModel.deleteRefreshToken(token, schemaName);
-
-      const newAccessToken = createAccessToken({
-        userId: payload.userId,
-        email: payload.email,
-        role: payload.role,
-      });
-      const newRefreshToken = createRefreshToken({
-        userId: payload.userId,
-        email: payload.email,
-        role: payload.role,
-      });
-      const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS)
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
-
-      await RTModel.saveRefreshToken(
-        payload.userId,
-        newRefreshToken,
-        expiresAt,
-        schemaName
-      );
-
-      res.cookie(COOKIE_NAME, newRefreshToken, {
+      res.cookie(SCHEMA_COOKIE_NAME, schemaName, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        path: "/",
         maxAge: REFRESH_EXPIRES_MS,
       });
 
       return res.json({
-        accessToken: newAccessToken,
+        accessToken,
         universitySchema: schemaName,
       });
     } catch (err) {
@@ -144,6 +82,71 @@ authRouter.post(
     }
   }
 );
+
+authRouter.post("/refresh", async (req: any, res: any) => {
+  try {
+    const token = req.cookies[COOKIE_NAME];
+    const schemaName = req.cookies[SCHEMA_COOKIE_NAME];
+    if (!token) return res.status(401).json({ message: "No refresh token" });
+    if (!schemaName)
+      return res.status(400).json({ message: "No university schema provided" });
+
+    let payload: any;
+    try {
+      payload = verifyRefreshToken(token) as any;
+    } catch (e) {
+      return res
+        .status(401)
+        .json({ message: "Invalid or expired refresh token" });
+    }
+
+    const dbToken = await RTModel.findRefreshToken(token, schemaName);
+    if (!dbToken)
+      return res.status(401).json({ message: "Refresh token revoked" });
+
+    await RTModel.deleteRefreshToken(token, schemaName);
+
+    const newAccessToken = createAccessToken({
+      userId: payload.userId,
+      email: payload.email,
+      role: payload.role,
+    });
+    const newRefreshToken = createRefreshToken({
+      userId: payload.userId,
+      email: payload.email,
+      role: payload.role,
+    });
+    const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS)
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+
+    await RTModel.saveRefreshToken(
+      payload.userId,
+      newRefreshToken,
+      expiresAt,
+      schemaName
+    );
+
+    res.cookie(COOKIE_NAME, newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      maxAge: REFRESH_EXPIRES_MS,
+    });
+
+    return res.json({
+      accessToken: newAccessToken,
+      universitySchema: schemaName,
+    });
+  } catch (err: any) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: err.message || "Internal server error" });
+  }
+});
 
 authRouter.post(
   "/logout",
