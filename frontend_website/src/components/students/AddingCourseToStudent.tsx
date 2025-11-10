@@ -40,7 +40,8 @@ const AddingCourseToStudent = ({
                 key={course.id}
                 className={cn(
                   "p-2 rounded-sm border border-primary flex items-center justify-between gap-3 bg-primary/5",
-                  selectedCoursesIds?.includes(course.id) && "bg-primary/10"
+                  selectedCoursesIds?.includes(String(course.id)) &&
+                    "bg-primary/10"
                 )}
               >
                 <label

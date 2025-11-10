@@ -34,7 +34,7 @@ type PhoneInputProps = Omit<
 const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
   React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
     ({ className, onChange, value, ...props }, ref) => {
-      const [isValid, setIsValid] = React.useState(true);
+      const [isValid, setIsValid] = React.useState(true); //eslint-disable-line
       return (
         <div className="relative">
           <RPNInput.default
@@ -75,7 +75,7 @@ const InputComponent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <Input
     className={cn(
-      "rounded-e border border-foreground rounded-s-none bg-background-secondary!",
+      "rounded-e border border-foreground rounded-s-none bg-background-secondary! h-10",
       className
     )}
     {...props}
@@ -109,6 +109,7 @@ const CountrySelect = ({
       modal
       onOpenChange={(open) => {
         setIsOpen(open);
+        // eslint-disable-next-line
         open && setSearchValue("");
       }}
     >
@@ -116,7 +117,7 @@ const CountrySelect = ({
         <Button
           type="button"
           variant="outline"
-          className="flex gap-1 rounded-e-none rounded-s bg-background-secondary! border border-r-0 border-foreground! px-3 focus:z-10"
+          className="flex h-10 gap-1 rounded-e-none rounded-s bg-background-secondary! border border-r-0 border-foreground! px-3 focus:z-10"
           disabled={disabled}
         >
           <FlagComponent

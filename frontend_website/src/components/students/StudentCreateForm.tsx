@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import { StudentFormData } from "@/schemas/studentSchema";
 import { useTranslations } from "next-intl";
-import React, { useState } from "react";
+import React from "react";
 import {
   Control,
   FieldErrors,
@@ -128,7 +128,10 @@ const StudentCreateForm = ({
       <div className="flex gap-2">
         {/* age */}
         <div className="relative flex-1">
-          <label className="block mb-0.5 font-semibold">{t("Age")}</label>
+          <label className="block mb-0.5 font-semibold">
+            <span>{t("Age")} </span>
+            <span className="text-xs font-normal">({t("optional")})</span>
+          </label>
           <input
             type="text"
             {...register("age", {

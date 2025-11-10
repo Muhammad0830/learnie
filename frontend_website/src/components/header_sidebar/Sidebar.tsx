@@ -20,6 +20,7 @@ import {
   faPersonChalkboard,
 } from "@fortawesome/free-solid-svg-icons";
 import ThemeToggle from "./ThemeToggle";
+import MenuSheet from "./MenuSheet";
 
 const navLinksData = [
   {
@@ -58,11 +59,16 @@ const SideBar = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const { theme: currentTheme, setTheme } = useTheme();
 
   useEffect(() => {
     queueMicrotask(() => setMounted(true));
+    const width = window.innerWidth;
+    if (width < 768) {
+      setTimeout(() => setCollapsed(true), 0);
+    }
   }, []);
 
   const toggleTheme = () => {
@@ -76,7 +82,7 @@ const SideBar = ({ children }: { children: React.ReactNode }) => {
       {/* SideBar */}
       <motion.div
         suppressHydrationWarning
-        className="w-60 flex flex-col border-r border-r-black/50 dark:border-r-white bg-background-secondary overflow-hidden"
+        className="w-60 md:flex hidden flex-col border-r border-r-black/50 dark:border-r-white bg-background-secondary overflow-hidden"
         initial={{ width: 240 }}
         animate={collapsed ? { width: 65 } : { width: 240 }}
       >
@@ -131,12 +137,32 @@ const SideBar = ({ children }: { children: React.ReactNode }) => {
         {/* Header */}
         <div className="bg-background-secondary px-4! h-16 flex items-center border-b border-bottom-[#d1d5db] justify-between text-black dark:text-white ">
           {/* SideBar Controller */}
+
+          <MenuSheet
+            menuOpen={menuOpen}
+            setMenuOpen={setMenuOpen}
+            navLinksData={navLinksData}
+          />
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="flex w-7 h-7 border border-black dark:border-white rounded-sm cursor-pointer hover:border-primary dark:hover:border-primary group transition-colors duration-150"
+            className="md:flex hidden w-7 h-7 border border-black dark:border-white rounded-sm cursor-pointer hover:border-primary dark:hover:border-primary group transition-colors duration-150"
           >
             <div className="translate-x-2 h-full w-px bg-black dark:bg-white group-hover:bg-primary dark:group-hover:bg-primary transition-colors duration-150" />
           </button>
+
+          <AnimatePresence>
+            {collapsed && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, type: "tween" }}
+                className="whitespace-nowrap lg:text-2xl text-lg font-bold"
+              >
+                Learnie
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="flex items-center gap-2">
             {/* Theme toggle button */}
