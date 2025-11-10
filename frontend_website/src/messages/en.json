@@ -22,8 +22,8 @@
         "Password must be at least 6 characters": "Password must be at least 6 characters",
         "Role must be either 'student' or 'teacher' or 'admin'": "Role must be either 'student' or 'teacher' or 'admin'",
         "SelectUniversity": "Select university",
-        "EnterYourEmail": "Enter your email",
-        "EnterYourpPassword": "Enter your password",
+        "EnterStudentEmail": "Enter Student email",
+        "EnterStudentpPassword": "Enter Student password",
         "Please select a university schema": "Please select a university schema"
     },
     "dashboard": {
@@ -46,11 +46,49 @@
         "totalStudents": "Total Students",
         "Previous": "Previous",
         "Next": "Next",
-        "filter": "Filter"
+        "filter": "Filter",
+        "Create New Student": "Create New Student",
+        "Back": "Back",
+        "Submit": "Submit",
+        "EnterStudentName": "Enter Student name",
+        "EnterStudentEmail": "Enter Student email",
+        "EnterStudentPhoneNumber": "Enter Student phone number",
+        "EnterStudentStudentId": "Enter Student student id",
+        "Age": "Age",
+        "EnterStudentAge": "Enter Student age",
+        "studentId": "Student Id",
+        "Creating": "Creating...",
+        "PhoneNumber": "Phone Number",
+        "password": "Password",
+        "EnterStudentPassword": "Enter Student password",
+        "Invalid email address": "Invalid email address",
+        "Password must be at least 6 characters": "Password must be at least 6 characters",
+        "Role must be either 'student' or 'teacher' or 'admin'": "Role must be either 'student' or 'teacher' or 'admin'",
+        "SelectUniversity": "Select university",
+        "Name is required": "Name is required",
+        "AgeIsRequired": "Age is required",
+        "AgeMustBeNumber": "Age must be a number",
+        "Please select a university schema": "Please select a university schema",
+        "Phone number is required": "Phone number is required",
+        "Student Id must be at least 6 characters": "Student Id must be at least 6 characters",
+        "studentId is required": "Student Id is required",
+        "StudentIdMustBeNumber": "Student Id must be a number",
+        "Courses": "Courses",
+        "Loading": "Loading...",
+        "No courses found": "No courses found",
+        "Creating a new Student": "Creating a new Student",
+        "Student": "Student",
+        "Cancel": "Cancel",
+        "Create": "Create",
+        "Invalid phone number": "Invalid phone number",
+        "Invalid input: expected string, received undefined": "Phone Number is required"
+
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
         "Internal server error": "Internal server error",
-        "Error occured": "Error occured"
+        "Error occured": "Error occured",
+        "Error Fetching Courses": "Error Fetching Courses",
+        "Student created successfully": "Student created successfully"
     }
 }

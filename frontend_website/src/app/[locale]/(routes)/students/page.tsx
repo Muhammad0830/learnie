@@ -34,12 +34,12 @@ const Page = () => {
   return (
     <div>
       <div className="flex items-center justify-between gap-4 mb-4">
-        <h1 className="lg:text-3xl md:text-xl text-lg font-bold">
+        <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
           {t("Students")}
         </h1>
         <Link
           href={"/students/create"}
-          className="rounded-sm px-2 py-1 cursor-pointer bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
+          className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
         >
           {t("Create New")}
         </Link>

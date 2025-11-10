@@ -3,10 +3,23 @@ import { RowDataPacket, ResultSetHeader } from "mysql2";
 
 export async function getCoursesList({ schemaName }: { schemaName: string }) {
   try {
-    const rows = await queryUniversity<RowDataPacket[]>(
-      schemaName,
-      "SELECT * FROM courses"
-    );
+    const sql = `
+        SELECT
+            c.*,
+            COUNT(DISTINCT t.id) AS topics_count,
+            COUNT(DISTINCT l.id) AS lectures_count,
+            COUNT(DISTINCT a.id) AS assignments_count,
+            COUNT(DISTINCT p.id) AS presentations_count
+          FROM courses c
+            LEFT JOIN course_topics t ON c.id = t.course_id
+            LEFT JOIN lectures l ON c.id = l.course_id
+            LEFT JOIN assignments a ON c.id = a.course_id
+            LEFT JOIN presentations p ON c.id = p.course_id
+            GROUP BY c.id, c.name, c.description, c.has_topics
+            ORDER BY c.id;
+    `;
+
+    const rows = await queryUniversity<RowDataPacket[]>(schemaName, sql);
 
     return rows;
   } catch (error: any) {
@@ -252,9 +265,9 @@ export async function getCourseTopic({
 }
 
 export async function getEachLecture({
-  schemaName, 
-  lectureId
-} : {
+  schemaName,
+  lectureId,
+}: {
   schemaName: string;
   lectureId: string;
 }) {
@@ -277,9 +290,9 @@ export async function getEachLecture({
 }
 
 export async function getEachPresentation({
-  schemaName, 
-  presentationId
-} : {
+  schemaName,
+  presentationId,
+}: {
   schemaName: string;
   presentationId: string;
 }) {
@@ -302,12 +315,12 @@ export async function getEachPresentation({
 }
 
 export async function getEachAssignment({
-  schemaName, 
-  assignmentId
-} : {
+  schemaName,
+  assignmentId,
+}: {
   schemaName: string;
   assignmentId: string;
-})  {
+}) {
   try {
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,

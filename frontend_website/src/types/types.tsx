@@ -42,3 +42,16 @@ export interface StudentListResponse {
   totalStudents: number;
   totalPages: number;
 }
+
+export interface Course {
+  id: string;
+  name: string;
+  description: string;
+  has_topics: boolean;
+  created_at: string;
+  updated_at: string | null;
+  topics_count: number;
+  lectures_count: number;
+  assignments_count: number;
+  presentations_count: number;
+}

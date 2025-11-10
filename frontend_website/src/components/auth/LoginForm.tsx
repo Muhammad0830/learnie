@@ -105,7 +105,9 @@ const LoginForm = ({
           ))}
         </div>
         {errors.role && (
-          <p className="text-red-500 sm:text-sm mt-1 text-xs">{t(`${errors.role.message}`)}</p>
+          <p className="text-red-500 sm:text-sm mt-1 text-xs">
+            {t(`${errors.role.message}`)}
+          </p>
         )}
       </div>
 
