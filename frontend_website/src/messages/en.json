@@ -81,8 +81,8 @@
         "Cancel": "Cancel",
         "Create": "Create",
         "Invalid phone number": "Invalid phone number",
-        "Invalid input: expected string, received undefined": "Phone Number is required"
-
+        "Invalid input: expected string, received undefined": "Phone Number is required",
+        "optional": "optional"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
