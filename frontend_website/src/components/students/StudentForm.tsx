@@ -11,28 +11,32 @@ import {
 } from "react-hook-form";
 import { PhoneInput } from "./PhoneInput";
 
-type StudentCreateFormProps = {
+type StudentFormProps = {
   onSubmit: React.FormEventHandler<HTMLFormElement>;
   errors: FieldErrors<StudentFormData>;
   register: UseFormRegister<StudentFormData>;
   control: Control<StudentFormData>;
   setValue: UseFormSetValue<StudentFormData>;
-  onPhoneValidityChange?: (isValid: boolean) => void; // ✅ new
+  onPhoneValidityChange?: (isValid: boolean) => void;
+  editPage?: boolean;
+  passwordError?: string;
 };
 
-const StudentCreateForm = ({
+const StudentForm = ({
   onSubmit,
   errors,
   register,
   control,
   setValue,
   onPhoneValidityChange,
-}: StudentCreateFormProps) => {
+  editPage,
+  passwordError,
+}: StudentFormProps) => {
   const t = useTranslations("Students");
 
   return (
-    <form id="student_create_form" onSubmit={onSubmit} className="space-y-4">
-      <div className="flex gap-2">
+    <form id="student_form" onSubmit={onSubmit} className="space-y-4">
+      <div className="flex sm:gap-2 gap-4 sm:flex-row flex-col">
         {/* name */}
         <div className="relative flex-1">
           <label className="block mb-0.5 font-semibold">{t("Name")}</label>
@@ -72,7 +76,7 @@ const StudentCreateForm = ({
         </div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex sm:gap-2 gap-4 sm:flex-row flex-col">
         {/* phone number */}
         <div className="relative flex-1">
           <label className="block mb-0.5 font-semibold">
@@ -125,7 +129,7 @@ const StudentCreateForm = ({
         </div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex sm:flex-row flex-col sm:gap-2 gap-4">
         {/* age */}
         <div className="relative flex-1">
           <label className="block mb-0.5 font-semibold">
@@ -158,26 +162,32 @@ const StudentCreateForm = ({
         </div>
 
         {/* password */}
-        <div className="relative flex-1">
-          <label className="block mb-0.5 font-semibold">{t("password")}</label>
-          <input
-            type="text"
-            {...register("password")}
-            className={cn(
-              "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
-              errors.password && "border-red-600"
+        {!editPage ? (
+          <div className="relative flex-1">
+            <label className="block mb-0.5 font-semibold">
+              {t("password")}
+            </label>
+            <input
+              type="text"
+              {...register("password")}
+              className={cn(
+                "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
+                passwordError && "border-red-600"
+              )}
+              placeholder={t("EnterStudentPassword") as string}
+            />
+            {passwordError && (
+              <p className="text-red-500 sm:text-sm absolute text-xs">
+                {t(`${passwordError}`)}
+              </p>
             )}
-            placeholder={t("EnterStudentPassword") as string}
-          />
-          {errors.password && (
-            <p className="text-red-500 sm:text-sm absolute text-xs">
-              {t(`${errors.password.message}`)}
-            </p>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="flex-1 max-sm:hidden"></div>
+        )}
       </div>
     </form>
   );
 };
 
-export default StudentCreateForm;
+export default StudentForm;

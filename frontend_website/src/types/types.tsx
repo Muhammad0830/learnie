@@ -33,6 +33,8 @@ export interface Student {
   studentId: string;
   created_at: string;
   updated_at: string | null;
+  phoneNumber: string;
+  age: string | null;
 }
 
 export interface StudentListResponse {
