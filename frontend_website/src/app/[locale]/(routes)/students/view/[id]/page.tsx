@@ -1,9 +1,75 @@
-import React from 'react'
+"use client";
+import CoursesView from "@/components/students/CoursesView";
+import StudentView from "@/components/students/StudentView";
+import useApiQuery from "@/hooks/useApiQuery";
+import { Course, Student } from "@/types/types";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import React from "react";
 
 const Page = () => {
-  return (
-    <div>View each student Page</div>
-  )
-}
+  const t = useTranslations("Students");
+  const { id } = useParams();
 
-export default Page
+  const { data: student, isLoading } = useApiQuery<{
+    courses: { id: number; name: string }[];
+    user: Student;
+  }>(`/users/${id}`, {
+    key: ["students"],
+  });
+
+  const { data: courses, isLoading: isLoadingCourses } = useApiQuery<Course[]>(
+    "/courses",
+    { key: "CourseList" }
+  );
+
+  const selectedCoursesIds = student?.courses.map((course) =>
+    String(course.id)
+  );
+
+  const selectedCourses = courses?.filter((course) =>
+    selectedCoursesIds?.includes(String(course.id))
+  );
+
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-4 mb-4">
+        <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
+          {t("Student View")}
+        </h1>
+        <div className="flex gap-2">
+          <Link
+            href={"/students"}
+            className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/5 hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/15 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
+          >
+            {t("Back to students")}
+          </Link>
+          <Link
+            href={`/students/edit/${student?.user.id}`}
+            className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
+          >
+            {t("Edit")}
+          </Link>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="mb-4">{t("Loading")}</div>
+      ) : (
+        <StudentView student={student?.user} />
+      )}
+
+      {courses?.length === 0 ? (
+        <div>{t("no courses found")}</div>
+      ) : (
+        <CoursesView
+          isLoading={isLoadingCourses}
+          selectedCourses={selectedCourses ?? []}
+        />
+      )}
+    </div>
+  );
+};
+
+export default Page;

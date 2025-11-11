@@ -87,7 +87,13 @@
         "Error Fetching Student": "Error Fetching Student",
         "no student found": "No student found",
         "no courses found": "No courses found",
-        "unfilled": "(Unfilled)"
+        "unfilled": "(Unfilled)",
+        "Student View": "Student View",
+        "Student Edit": "Student Edit",
+        "Back to students": "Back to students",
+        "created_at": "Created at",
+        "updated_at": "Updated at",
+        "not updated yet": "(not updated yet)"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
