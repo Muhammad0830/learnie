@@ -54,7 +54,7 @@ const TableActionButton = ({
         <div className="absolute inset-0 bg-primary/10"></div>
         <DropdownMenuItem className="p-0 hover:bg-transparent!">
           <Link
-            href={`/students/${payment.id}`}
+            href={`/students/view/${payment.id}`}
             className="flex items-center gap-2 hover:bg-primary/30 cursor-pointer w-full h-full px-2 py-1.5 rounded-sm"
           >
             <Eye />
