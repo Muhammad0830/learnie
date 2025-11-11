@@ -5,7 +5,20 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 
-// Let queryKey be compatible with TanStack: readonly unknown[]
+interface ServerErrorData {
+  error: string;
+}
+
+interface ApiErrorResponse {
+  data: ServerErrorData;
+  status: number;
+}
+
+interface ApiAxiosError extends Error {
+  response?: ApiErrorResponse;
+  isAxiosError?: boolean;
+}
+
 type UseApiQueryOptions<T> = {
   key: string | readonly (string | number)[];
 
@@ -15,7 +28,7 @@ type UseApiQueryOptions<T> = {
   refetchOnWindowFocus?: boolean;
 
   queryOptions?: Omit<
-    UseQueryOptions<T, Error, T, readonly unknown[]>,
+    UseQueryOptions<T, ApiAxiosError, T, readonly unknown[]>,
     "queryKey" | "queryFn"
   >;
 };
@@ -35,7 +48,10 @@ const useApiQuery = <T,>(
   const toastT = useTranslations("Toast");
   const hasShownError = useRef(false);
 
-  const { data, error, isLoading, refetch, isError } = useQuery<T>({
+  const { data, error, isLoading, refetch, isError } = useQuery<
+    T,
+    ApiAxiosError
+  >({
     queryKey: Array.isArray(key) ? [...key] : [key], // ✅ make sure it's an array
     queryFn: async () => {
       const response = await api.get(url);
@@ -51,14 +67,23 @@ const useApiQuery = <T,>(
 
   useEffect(() => {
     if (error && !hasShownError.current) {
-      showToast(
-        "error",
-        toastT("Error occured"),
-        toastT("Internal server error")
-      );
+      if (error.response?.data?.error) {
+        showToast("error", error.response?.data?.error);
+      } else {
+        showToast(
+          "error",
+          toastT("Error occured"),
+          toastT("Internal server error")
+        );
+      }
       hasShownError.current = true;
+      console.error("error", error.response?.data?.error);
     }
-  }, [error, showToast, toastT]);
+
+    if (data && hasShownError.current) {
+      hasShownError.current = false;
+    }
+  }, [error, showToast, toastT, data]);
 
   return { data, error, isLoading, refetch, isError };
 };

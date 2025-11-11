@@ -1,11 +1,11 @@
 "use client";
 import AddingCourseToStudent from "@/components/students/AddingCourseToStudent";
 import FormCheckDialog from "@/components/students/FormCheckDialog";
-import StudentCreateForm from "@/components/students/StudentCreateForm";
+import StudentForm from "@/components/students/StudentForm";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import useApiQuery from "@/hooks/useApiQuery";
-import { StudentFormData, studentSchema } from "@/schemas/studentSchema";
+import { StudentFormData, StudentSchema } from "@/schemas/studentSchema";
 import { Course } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -19,6 +19,7 @@ const Page = () => {
   const [isPhoneValid, setIsPhoneValid] = useState(true);
   const t = useTranslations("Students");
   const toastT = useTranslations("Toast");
+  const [passwordError, setPasswordError] = useState("");
   const {
     register,
     handleSubmit,
@@ -28,7 +29,7 @@ const Page = () => {
     setValue,
     trigger,
   } = useForm<StudentFormData>({
-    resolver: zodResolver(studentSchema),
+    resolver: zodResolver(StudentSchema),
     defaultValues: {
       role: "student",
     },
@@ -41,12 +42,9 @@ const Page = () => {
     "post"
   );
 
-  const {
-    data: courses,
-    isLoading,
-    isError,
-    error,
-  } = useApiQuery<Course[]>("/courses", { key: "CourseList" });
+  const { data: courses, isLoading } = useApiQuery<Course[]>("/courses", {
+    key: "CourseList",
+  });
 
   const onSubmit = (data: StudentFormData) => {
     console.log("Form submitted:", data);
@@ -64,14 +62,26 @@ const Page = () => {
     });
   };
 
-  if (isError) {
-    showToast("error", toastT("Error Fetching Courses"));
-    console.error("Error fetching courses:", error);
-  }
+  const validateValues = async () => {
+    const isValid = await trigger();
+    let isPasswordValid;
+    if (control._formValues.password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      isPasswordValid = false;
+    } else {
+      setPasswordError("");
+      isPasswordValid = true;
+    }
+    if (!isPhoneValid) {
+      showToast("error", "Invalid phone number");
+      return;
+    }
+    setIsDialogOpen(isValid && isPasswordValid);
+  };
 
   const selectedCoursesIds = useWatch({
     control,
-    name: "coursesIds",
+    name: "courseIds",
   });
 
   const selectedCourses = courses?.filter((course) =>
@@ -95,32 +105,30 @@ const Page = () => {
         </Link>
       </div>
 
-      <StudentCreateForm
+      <StudentForm
         onSubmit={handleSubmit(onSubmit)}
         errors={errors}
         register={register}
         control={control}
         setValue={setValue}
         onPhoneValidityChange={setIsPhoneValid}
+        passwordError={passwordError}
       />
 
-      <AddingCourseToStudent
-        isLoading={isLoading}
-        courses={courses ?? []}
-        selectedCoursesIds={selectedCoursesIds}
-        setValue={setValue}
-      />
+      {courses?.length === 0 ? (
+        <div>{t("no courses found")}</div>
+      ) : (
+        <AddingCourseToStudent
+          isLoading={isLoading}
+          courses={courses ?? []}
+          selectedCoursesIds={selectedCoursesIds}
+          setValue={setValue}
+        />
+      )}
 
       <button
         type="button"
-        onClick={async () => {
-          const isValid = await trigger();
-          if (!isPhoneValid) {
-            showToast("error", "Invalid phone number");
-            return;
-          }
-          setIsDialogOpen(isValid);
-        }}
+        onClick={async () => await validateValues()}
         className="mt-4 cursor-pointer px-3 py-1.5 rounded-sm bg-primary/20 hover:bg-primary/30 transition-colors duration-150 border border-primary"
       >
         {t("Submit")}

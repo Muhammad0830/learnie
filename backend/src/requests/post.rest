@@ -4,13 +4,14 @@ Content-Type: application/json
 x-university-schema: university_harvard_university
 
 {
-  "email": "Odil@gmail.com",
+  "email": "Odil123@gmail.com",
   "password": "123123",
   "name": "Odil",
   "role": "student",
   "age": "21",
-  "phoneNumber": "12347290",
-  "studentId": "1234567891"
+  "phoneNumber": "+12384290",
+  "studentId": "123456338891",
+  "courseIds": ["1"]
 }
 
 

@@ -24,16 +24,16 @@ const TableActionButton = ({
   const { showToast } = useCustomToast();
 
   const handleDelete = async (id: string) => {
-    deleteNews(id, {
+    deleteStudent(id, {
       onSuccess: () => {
-        showToast("success", t("News deleted successfully"));
+        showToast("success", t("Student deleted successfully"));
         refetch();
       },
     });
   };
 
-  const { mutate: deleteNews } = useApiMutation(
-    (id) => `/news/delete/${id}`,
+  const { mutate: deleteStudent } = useApiMutation(
+    (id) => `/students/delete/${id}`,
     "delete"
   );
 
@@ -63,7 +63,7 @@ const TableActionButton = ({
         </DropdownMenuItem>
         <DropdownMenuItem className="p-0 hover:bg-transparent!">
           <Link
-            href={`/admin/news/edit/${payment.id}`}
+            href={`/students/edit/${payment.id}`}
             className="flex items-center gap-2 hover:bg-primary/30 cursor-pointer w-full h-full px-2 py-1.5 rounded-sm"
           >
             <Pencil />

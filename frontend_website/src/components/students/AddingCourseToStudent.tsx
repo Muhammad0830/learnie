@@ -16,7 +16,6 @@ const AddingCourseToStudent = ({
   setValue,
 }: {
   isLoading: boolean;
-
   courses: Course[];
   selectedCoursesIds: string[] | undefined;
   setValue: UseFormSetValue<StudentFormData>;
@@ -58,12 +57,12 @@ const AddingCourseToStudent = ({
                     }
                     onCheckedChange={(e) => {
                       if (e) {
-                        setValue("coursesIds", [
+                        setValue("courseIds", [
                           ...(selectedCoursesIds || []),
                           String(course.id),
                         ]);
                       } else {
-                        setValue("coursesIds", [
+                        setValue("courseIds", [
                           ...(selectedCoursesIds || []).filter(
                             (id: string) => String(id) !== String(course.id)
                           ),
@@ -74,7 +73,7 @@ const AddingCourseToStudent = ({
                   <button>
                     <label
                       htmlFor={course.id}
-                      className="text-lg font-semibold cursor-pointer"
+                      className="sm:text-lg text-sm font-semibold cursor-pointer"
                     >
                       {course.name}
                     </label>
@@ -82,25 +81,25 @@ const AddingCourseToStudent = ({
                 </label>
                 <div className="flex gap-2">
                   {course.topics_count > 0 && (
-                    <div className="flex gap-2 items-center cursor-default relative p-1 pr-3">
+                    <div className="sm:flex hidden gap-2 items-center cursor-default relative p-1 pr-3">
                       <div className="w-px h-2/3 bg-primary absolute right-0" />
                       <Network className="w-4 h-4" />
                       <span className="text-lg/4">{course.topics_count}</span>
                     </div>
                   )}
-                  <div className="flex gap-2 items-center rounded cursor-default relative p-1 pr-3">
+                  <div className="sm:flex hidden gap-2 items-center rounded cursor-default relative p-1 pr-3">
                     <div className="w-px h-2/3 bg-primary absolute right-0" />
                     <MonitorPlay className="w-4 h-4" />
                     <span className="text-lg/4">{course.lectures_count}</span>
                   </div>
-                  <div className="flex gap-2 items-center rounded cursor-default relative p-1 pr-3">
+                  <div className="sm:flex hidden gap-2 items-center rounded cursor-default relative p-1 pr-3">
                     <div className="w-px h-2/3 bg-primary absolute right-0" />
                     <FilePen className="w-4 h-4" />
                     <span className="text-lg/4">
                       {course.assignments_count}
                     </span>
                   </div>
-                  <div className="flex gap-2 items-center rounded cursor-default p-1 mr-3">
+                  <div className="sm:flex hidden gap-2 items-center rounded cursor-default p-1 mr-3">
                     <Presentation className="w-4 h-4" />
                     <span className="text-lg/4">
                       {course.presentations_count}
@@ -109,7 +108,7 @@ const AddingCourseToStudent = ({
 
                   <Link
                     href={`/courses/${course.id}`}
-                    className="flex gap-2 items-center px-2 py-1 border rounded border-primary bg-primary/20 hover:bg-primary/10 transition-colors duration-150 cursor-pointer"
+                    className="flex gap-2 items-center px-2 sm:py-1 py-0.5 sm:text-base text-sm border rounded border-primary bg-primary/20 hover:bg-primary/10 transition-colors duration-150 cursor-pointer"
                   >
                     <Eye className="w-4 h-4" />
                     {t("View")}
