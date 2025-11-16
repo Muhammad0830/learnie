@@ -16,20 +16,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useTranslations } from "next-intl";
-import LoadingSkeleton from "./LoadingSkeleton";
+import LoadingSkeleton from "../LoadingSkeleton";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading: boolean;
+  translateFrom: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   isLoading,
+  translateFrom,
 }: DataTableProps<TData, TValue>) {
-  const t = useTranslations("Students");
+  const t = useTranslations(translateFrom);
 
   // eslint-disable-next-line
   const table = useReactTable({

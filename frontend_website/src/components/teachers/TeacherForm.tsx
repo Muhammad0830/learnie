@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { StudentFormData } from "@/schemas/studentSchema";
+import { TeacherFormData } from "@/schemas/teacherSchema";
 import { useTranslations } from "next-intl";
 import React from "react";
 import {
@@ -11,18 +11,18 @@ import {
 } from "react-hook-form";
 import { PhoneInput } from "../ui/PhoneInput";
 
-type StudentFormProps = {
+type TeacherFormProps = {
   onSubmit: React.FormEventHandler<HTMLFormElement>;
-  errors: FieldErrors<StudentFormData>;
-  register: UseFormRegister<StudentFormData>;
-  control: Control<StudentFormData>;
-  setValue: UseFormSetValue<StudentFormData>;
+  errors: FieldErrors<TeacherFormData>;
+  register: UseFormRegister<TeacherFormData>;
+  control: Control<TeacherFormData>;
+  setValue: UseFormSetValue<TeacherFormData>;
   onPhoneValidityChange?: (isValid: boolean) => void;
   editPage?: boolean;
   passwordError?: string;
 };
 
-const StudentForm = ({
+const TeacherForm = ({
   onSubmit,
   errors,
   register,
@@ -31,11 +31,11 @@ const StudentForm = ({
   onPhoneValidityChange,
   editPage,
   passwordError,
-}: StudentFormProps) => {
-  const t = useTranslations("Students");
+}: TeacherFormProps) => {
+  const t = useTranslations("Teachers");
 
   return (
-    <form id="student_form" onSubmit={onSubmit} className="space-y-4">
+    <form id="teacher_form" onSubmit={onSubmit} className="space-y-4">
       <div className="flex sm:gap-2 gap-4 sm:flex-row flex-col">
         {/* name */}
         <div className="relative flex-1">
@@ -47,7 +47,7 @@ const StudentForm = ({
               "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
               errors.name && "border-red-600"
             )}
-            placeholder={t("EnterStudentName") as string}
+            placeholder={t("EnterTeacherName") as string}
           />
           {errors.name && (
             <p className="text-red-500 sm:text-sm absolute text-xs">
@@ -66,7 +66,7 @@ const StudentForm = ({
               "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
               errors.email && "border-red-600"
             )}
-            placeholder={t("EnterStudentEmail") as string}
+            placeholder={t("EnterTeacherEmail") as string}
           />
           {errors.email && (
             <p className="text-red-500 sm:text-sm absolute text-xs">
@@ -91,7 +91,7 @@ const StudentForm = ({
               }
             }}
             onValidityChange={onPhoneValidityChange}
-            placeholder={t("EnterStudentPhoneNumber") as string}
+            placeholder={t("EnterTeacherPhoneNumber") as string}
           />
           {errors.phoneNumber && (
             <p className="text-red-500 sm:text-sm absolute text-xs">
@@ -100,36 +100,6 @@ const StudentForm = ({
           )}
         </div>
 
-        {/* studentId */}
-        <div className="relative flex-1">
-          <label className="block mb-0.5 font-semibold">{t("studentId")}</label>
-          <input
-            type="text"
-            {...register("studentId", {
-              required: t("studentId is required") as string,
-              pattern: {
-                value: /^[0-9]+$/,
-                message: t("StudentIdMustBeNumber") as string,
-              },
-              onChange: (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-              },
-            })}
-            className={cn(
-              "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
-              errors.studentId && "border-red-600"
-            )}
-            placeholder={t("EnterStudentStudentId") as string}
-          />
-          {errors.studentId && (
-            <p className="text-red-500 sm:text-sm absolute text-xs">
-              {t(`${errors.studentId.message}`)}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="flex sm:flex-row flex-col sm:gap-2 gap-4">
         {/* age */}
         <div className="relative flex-1">
           <label className="block mb-0.5 font-semibold">
@@ -152,7 +122,7 @@ const StudentForm = ({
               "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
               errors.age && "border-red-600"
             )}
-            placeholder={t("EnterStudentAge") as string}
+            placeholder={t("EnterTeacherAge") as string}
           />
           {errors.age && (
             <p className="text-red-500 sm:text-sm absolute text-xs">
@@ -160,7 +130,9 @@ const StudentForm = ({
             </p>
           )}
         </div>
+      </div>
 
+      <div className="flex sm:flex-row flex-col sm:gap-2 gap-4">
         {/* password */}
         {!editPage ? (
           <div className="relative flex-1">
@@ -174,7 +146,7 @@ const StudentForm = ({
                 "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
                 passwordError && "border-red-600"
               )}
-              placeholder={t("EnterStudentPassword") as string}
+              placeholder={t("EnterTeacherPassword") as string}
             />
             {passwordError && (
               <p className="text-red-500 sm:text-sm absolute text-xs">
@@ -185,9 +157,10 @@ const StudentForm = ({
         ) : (
           <div className="flex-1 max-sm:hidden"></div>
         )}
+        <div className="flex-1 sm:flex hidden"></div>
       </div>
     </form>
   );
 };
 
-export default StudentForm;
+export default TeacherForm;

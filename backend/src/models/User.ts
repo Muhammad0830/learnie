@@ -121,10 +121,10 @@ export async function getUsersList({
       `SELECT COUNT(*) as count FROM users where role = :role ${searchCondition}`,
       { role, search: `%${search}%` }
     );
-    const totalStudents = totalResult[0].count;
-    const totalPages = Math.ceil(totalStudents / limit);
+    const totalUsers = totalResult[0].count;
+    const totalPages = Math.ceil(totalUsers / limit);
 
-    return { students: rows, page, limit, totalStudents, totalPages };
+    return { users: rows, page, limit, totalUsers, totalPages };
   } catch (error: any) {
     throw new Error(error.message || "Error fetching users:");
   }

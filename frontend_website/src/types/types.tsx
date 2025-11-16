@@ -38,10 +38,28 @@ export interface Student {
 }
 
 export interface StudentListResponse {
-  students: Student[];
+  users: Student[];
   page: number;
   limit: number;
-  totalStudents: number;
+  totalUsers: number;
+  totalPages: number;
+}
+
+export interface Teacher {
+  id: string;
+  name: string;
+  email: string;
+  created_at: string;
+  updated_at: string | null;
+  phoneNumber: string;
+  age: string | null;
+}
+
+export interface TeacherListResponse {
+  users: Teacher[];
+  page: number;
+  limit: number;
+  totalUsers: number;
   totalPages: number;
 }
 

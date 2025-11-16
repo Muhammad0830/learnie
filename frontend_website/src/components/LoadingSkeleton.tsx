@@ -8,12 +8,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "./ui/table";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const LoadingSkeleton = <TData,>({ table }: { table: TableType<TData> }) => {
-  const t = useTranslations("Students");
+  const t = useTranslations("skeleton");
 
   const headers = table.getHeaderGroups()[0].headers;
 
