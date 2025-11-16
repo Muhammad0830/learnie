@@ -113,10 +113,12 @@ usersRouter.get("/", validateUniversitySchema, async (req, res) => {
       role,
       page = "1",
       limit = "10",
+      search = "",
     } = req.query as {
       role: string;
       page: string;
       limit: string;
+      search: string;
     };
     if (!schemaName) return;
     if (!role) return res.status(400).json({ error: "Missing role" });
@@ -132,6 +134,7 @@ usersRouter.get("/", validateUniversitySchema, async (req, res) => {
       role,
       page: parsedPage,
       limit: parsedLimit,
+      search,
     });
 
     res.json(result);

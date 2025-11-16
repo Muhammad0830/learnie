@@ -16,15 +16,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useTranslations } from "next-intl";
+import LoadingSkeleton from "./LoadingSkeleton";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const t = useTranslations("Students");
 
@@ -39,6 +42,8 @@ export function DataTable<TData, TValue>({
     console.error("Data or columns are not defined");
     return null;
   }
+
+  if (isLoading) return <LoadingSkeleton table={table} />;
 
   return (
     <div className="overflow-hidden rounded-md border">
@@ -69,7 +74,7 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table?.getRowModel()?.rows?.length ? (
+          {data.length > 0 ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 className="max-w-[300px] bg-primary/20 dark:bg-primary/20 hover:bg-primary/30 dark:hover:bg-primary/15"
@@ -86,7 +91,7 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                {t("No results")}
               </TableCell>
             </TableRow>
           )}

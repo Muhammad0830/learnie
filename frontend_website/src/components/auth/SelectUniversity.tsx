@@ -54,7 +54,7 @@ const SelectUniversity = ({
               ? { opacity: 1, top: "115%", scaleY: 1 }
               : { opacity: 0, top: "75%", scaleY: 0 }
           }
-          transition={{ duration: 0.3, type: "tween" }}
+          transition={{ duration: 0.2, type: "tween" }}
           className="p-1 origin-top flex flex-col gap-1 rounded-sm border border-foreground/60 bg-background absolute inset-x-0 z-1"
         >
           {universities.map((schema) => (
@@ -66,7 +66,10 @@ const SelectUniversity = ({
                 setOpen(false);
               }}
               key={schema.id}
-              className="p-2 rounded-sm border border-foreground/30 hover:bg-primary/5 transition-colors duration-150 cursor-pointer"
+              className={cn(
+                "p-2 rounded-sm border border-foreground/30 hover:bg-primary/10 transition-colors duration-150 cursor-pointer",
+                selectedSchema === schema.name && "bg-primary/5"
+              )}
             >
               {schema.name}
             </button>

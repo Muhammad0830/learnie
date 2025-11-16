@@ -87,20 +87,28 @@ export async function getUsersList({
   role,
   page,
   limit,
+  search,
 }: {
   schemaName: string;
   role?: string;
   page: number;
   limit: number;
+  search: string;
 }) {
   try {
+    const searchCondition = search
+      ? `AND (name LIKE :search OR email LIKE :search OR studentId LIKE :search)`
+      : "";
+
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      `SELECT * FROM users WHERE role = :role ORDER BY created_at DESC LIMIT ${limit} OFFSET ${
+      `SELECT * FROM users WHERE role = :role 
+        ${searchCondition} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${
         (page - 1) * limit
       }`,
       {
         role,
+        search: `%${search}%`,
       }
     );
 
@@ -110,8 +118,8 @@ export async function getUsersList({
 
     const totalResult = await queryUniversity<any>(
       schemaName,
-      "SELECT COUNT(*) as count FROM users where role = :role",
-      { role }
+      `SELECT COUNT(*) as count FROM users where role = :role ${searchCondition}`,
+      { role, search: `%${search}%` }
     );
     const totalStudents = totalResult[0].count;
     const totalPages = Math.ceil(totalStudents / limit);

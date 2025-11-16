@@ -7,30 +7,44 @@ import useApiQuery from "@/hooks/useApiQuery";
 import { StudentListResponse } from "@/types/types";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { debounce } from "lodash";
 
 const Page = () => {
   const t = useTranslations("Students");
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const limit = 10;
+
   const {
     data: studentsData,
     isLoading,
     refetch,
   } = useApiQuery<StudentListResponse>(
-    `/users?role=student&page=${page}&limit=${limit}`,
-    { key: ["students", page, limit] }
+    `/users?role=student&page=${page}&limit=${limit}&search=${debouncedSearch}`,
+    { key: ["students", page, limit, debouncedSearch], enabled: true }
   );
 
-  const {
-    students: data,
-    totalStudents,
-    totalPages,
-  } = studentsData
-    ? studentsData
-    : { students: [], totalStudents: 0, totalPages: 0 };
+  const handleSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        setDebouncedSearch(value);
+      }, 500),
+    []
+  );
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value);
+    handleSearch(value);
+  };
 
-  if (isLoading) return <div>Loading...</div>;
+  const {
+    students: data = [],
+    totalStudents = 0,
+    totalPages = 0,
+  } = studentsData || {};
+
   return (
     <div>
       <div className="flex items-center justify-between gap-4 mb-4">
@@ -46,19 +60,25 @@ const Page = () => {
       </div>
 
       {/* search & filter */}
-      <div className="flex gap-2 items-center justify-between w-full mb-4 z-10 relative">
-        <div className="md:min-w-[250px] lg:min-w-[300px] min-w-[200px] w-[30%] h-8">
+      <div className="flex gap-2 items-center justify-between w-full h-10 mb-4 z-10 relative">
+        <div className="md:min-w-[350px] lg:min-w-[400px] sm:min-w-[300px] w-full sm:w-[30%] h-full">
           <input
             type="text"
-            className="w-full h-full p-2 rounded-sm bg-primary/30 dark:bg-primary/50 border border-primary"
+            className="w-full h-full p-2 pl-3 rounded bg-primary/20 dark:bg-primary/30 border border-foreground"
             placeholder={`${t("type to search")}`}
+            value={search}
+            onChange={onSearchChange}
           />
         </div>
       </div>
 
       {/* table */}
       <div className="relative z-0 mb-2">
-        <DataTable columns={columns(refetch)} data={data} />
+        <DataTable
+          isLoading={isLoading}
+          columns={columns(refetch)}
+          data={data}
+        />
       </div>
 
       <Pagination
