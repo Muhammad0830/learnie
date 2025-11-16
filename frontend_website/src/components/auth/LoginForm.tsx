@@ -82,7 +82,7 @@ const LoginForm = ({
       />
 
       <div>
-        <label className="block mb-0.5 font-semibold">Select Role</label>
+        <label className="block mb-0.5 font-semibold">{t("LoginAs")}</label>
         <div className="grid grid-cols-3 gap-4">
           {ROLES.map((role) => (
             <label
@@ -100,7 +100,7 @@ const LoginForm = ({
                 {...register("role")}
                 className="hidden"
               />
-              <div className="capitalize">{role}</div>
+              <div className="capitalize">{t(role)}</div>
             </label>
           ))}
         </div>

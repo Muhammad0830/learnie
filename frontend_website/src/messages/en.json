@@ -22,9 +22,13 @@
         "Password must be at least 6 characters": "Password must be at least 6 characters",
         "Role must be either 'student' or 'teacher' or 'admin'": "Role must be either 'student' or 'teacher' or 'admin'",
         "SelectUniversity": "Select university",
-        "EnterStudentEmail": "Enter Student email",
-        "EnterStudentpPassword": "Enter Student password",
-        "Please select a university schema": "Please select a university schema"
+        "EnterYourEmail": "Enter Your email",
+        "EnterYourpPassword": "Enter Your password",
+        "Please select a university schema": "Please select a university schema",
+        "LoginAs": "Login As",
+        "Student": "Student",
+        "Teacher": "Teacher",
+        "Admin": "Admin"
     },
     "dashboard": {
         "dashboard": "Dashboard"
@@ -93,7 +97,8 @@
         "Back to students": "Back to students",
         "created_at": "Created at",
         "updated_at": "Updated at",
-        "not updated yet": "(not updated yet)"
+        "not updated yet": "(not updated yet)",
+        "No results": "No results"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",

@@ -20,7 +20,7 @@ const LangDropDown = ({
   const nextPathName = useNextPathName();
 
   return (
-    <div className="relative flex justify-center items-center">
+    <div className="relative flex justify-center items-center z-999">
       <button
         onClick={() => setLangDropdownOpen(!langDropdownOpen)}
         type="button"
@@ -42,8 +42,8 @@ const LangDropDown = ({
         initial={{ top: "90%", opacity: 0.5, scale: 0, right: "10%" }}
         animate={
           langDropdownOpen
-            ? { top: "115%", opacity: 1, scale: 1, right: "0%"  }
-            : { top: "90%", opacity: 0.5, scale: 0, right: "10%"  }
+            ? { top: "115%", opacity: 1, scale: 1, right: "0%" }
+            : { top: "90%", opacity: 0.5, scale: 0, right: "10%" }
         }
         transition={{ type: "spring", duration: 0.3, ease: "easeIn" }}
         className={cn(
@@ -72,6 +72,17 @@ const LangDropDown = ({
           )}
         >
           Русский
+        </Link>
+        <Link
+          href={pathName}
+          onClick={() => setLangDropdownOpen(false)}
+          locale="en"
+          className={cn(
+            "z-1 px-2 py-0.5 hover:bg-primary rounded-sm transition-colors duration-150 text-black dark:text-white",
+            nextPathName.includes("/ru") && "bg-primary/50"
+          )}
+        >
+          English
         </Link>
       </motion.div>
     </div>
