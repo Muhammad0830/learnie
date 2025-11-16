@@ -1,7 +1,7 @@
 "use client";
 
-import { DataTable } from "@/components/students/DataTable";
-import Pagination from "@/components/students/Pagination";
+import { DataTable } from "@/components/TableComponents/DataTable";
+import Pagination from "@/components/TableComponents/Pagination";
 import { columns } from "@/components/students/TableColumns";
 import useApiQuery from "@/hooks/useApiQuery";
 import { StudentListResponse } from "@/types/types";
@@ -40,8 +40,8 @@ const Page = () => {
   };
 
   const {
-    students: data = [],
-    totalStudents = 0,
+    users: data = [],
+    totalUsers = 0,
     totalPages = 0,
   } = studentsData || {};
 
@@ -64,10 +64,18 @@ const Page = () => {
         <div className="md:min-w-[350px] lg:min-w-[400px] sm:min-w-[300px] w-full sm:w-[30%] h-full">
           <input
             type="text"
-            className="w-full h-full p-2 pl-3 rounded bg-primary/20 dark:bg-primary/30 border border-foreground"
+            className="md:hidden flex w-full h-full p-2 pl-3 rounded bg-primary/20 dark:bg-primary/30 border border-foreground"
             placeholder={`${t("type to search")}`}
             value={search}
             onChange={onSearchChange}
+          />
+          <input
+            type="text"
+            className="md:flex hidden w-full h-full p-2 pl-3 rounded bg-primary/20 dark:bg-primary/30 border border-foreground"
+            placeholder={`${t("type to search")}`}
+            value={search}
+            onChange={onSearchChange}
+            autoFocus
           />
         </div>
       </div>
@@ -78,14 +86,16 @@ const Page = () => {
           isLoading={isLoading}
           columns={columns(refetch)}
           data={data}
+          translateFrom={"Students"}
         />
       </div>
 
       <Pagination
-        totalStudents={totalStudents}
+        totalUsers={totalUsers}
         setPage={setPage}
         page={page}
         totalPages={totalPages}
+        translateFrom={"Students"}
       />
     </div>
   );

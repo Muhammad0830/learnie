@@ -4,17 +4,19 @@ import { useTranslations } from "next-intl";
 import React from "react";
 
 const Pagination = ({
-  totalStudents,
+  totalUsers,
   totalPages,
   setPage,
   page,
+  translateFrom,
 }: {
-  totalStudents: number;
+  totalUsers: number;
   totalPages: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   page: number;
+  translateFrom: string;
 }) => {
-  const t = useTranslations("Students");
+  const t = useTranslations(translateFrom);
   if (!totalPages) {
     return null;
   }
@@ -23,7 +25,7 @@ const Pagination = ({
     <div className="flex gap-2 items-center justify-between mb-4">
       <div className="flex items-center gap-2">
         <span className="font-semibold">
-          {t("totalStudents")}: {totalStudents}
+          {t("totalUsers")}: {totalUsers}
         </span>
       </div>
       <div className="flex items-center gap-2 justify-end">

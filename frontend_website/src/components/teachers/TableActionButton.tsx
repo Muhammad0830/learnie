@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-import { Student } from "@/types/types";
+import { Teacher } from "@/types/types";
 import { useTranslations } from "next-intl";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useCustomToast } from "@/context/CustomToastContext";
@@ -16,25 +16,25 @@ const TableActionButton = ({
   payment,
   refetch,
 }: {
-  payment: Student;
+  payment: Teacher;
   refetch: () => void;
 }) => {
-  const t = useTranslations("Students");
+  const t = useTranslations("Teachers");
   const toastT = useTranslations("Toast");
 
   const { showToast } = useCustomToast();
 
   const handleDelete = async (id: string) => {
-    deleteStudent(id, {
+    deleteTeacher(id, {
       onSuccess: () => {
-        showToast("success", toastT("Student deleted successfully"));
+        showToast("success", toastT("Teacher deleted successfully"));
         refetch();
       },
     });
   };
 
-  const { mutate: deleteStudent } = useApiMutation(
-    (id) => `/students/delete/${id}`,
+  const { mutate: deleteTeacher } = useApiMutation(
+    (id) => `/teachers/delete/${id}`,
     "delete"
   );
 
@@ -55,7 +55,7 @@ const TableActionButton = ({
         <div className="absolute inset-0 bg-primary/10"></div>
         <DropdownMenuItem className="p-0 hover:bg-transparent!">
           <Link
-            href={`/students/view/${payment.id}`}
+            href={`/teachers/view/${payment.id}`}
             className="flex items-center gap-2 hover:bg-primary/30 cursor-pointer w-full h-full px-2 py-1.5 rounded-sm"
           >
             <Eye />
@@ -64,7 +64,7 @@ const TableActionButton = ({
         </DropdownMenuItem>
         <DropdownMenuItem className="p-0 hover:bg-transparent!">
           <Link
-            href={`/students/edit/${payment.id}`}
+            href={`/teachers/edit/${payment.id}`}
             className="flex items-center gap-2 hover:bg-primary/30 cursor-pointer w-full h-full px-2 py-1.5 rounded-sm"
           >
             <Pencil />
