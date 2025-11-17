@@ -98,7 +98,9 @@
         "created_at": "Created at",
         "updated_at": "Updated at",
         "not updated yet": "(not updated yet)",
-        "No results": "No results"
+        "No results": "No results",
+        "Editing a new Student": "Editing a new Student",
+        "Editing": "Editing..."
     },
     "Teachers": {
         "Teachers": "Teachers",
@@ -159,7 +161,9 @@
         "created_at": "Created at",
         "updated_at": "Updated at",
         "not updated yet": "(not updated yet)",
-        "No results": "No results"
+        "No results": "No results",
+        "Editing a new Teacher": "Editing a new Teacher",
+        "Editing": "Editing..."
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",

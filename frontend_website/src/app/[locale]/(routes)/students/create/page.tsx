@@ -140,6 +140,7 @@ const Page = () => {
         control={control}
         selectedCourses={selectedCourses ?? []}
         isSubmitting={isSubmitting}
+        action={"create"}
       />
     </div>
   );
