@@ -162,6 +162,7 @@ const Page = () => {
         setIsDialogOpen={setIsDialogOpen}
         control={control}
         selectedCourses={selectedCourses ?? []}
+        action={"edit"}
       />
     </div>
   );

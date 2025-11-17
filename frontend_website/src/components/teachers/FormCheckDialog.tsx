@@ -17,12 +17,14 @@ const FormCheckDialog = ({
   control,
   selectedCourses,
   isSubmitting,
+  action,
 }: {
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
   control: Control<TeacherFormData>;
   selectedCourses: Course[];
   isSubmitting: boolean;
+  action?: "create" | "edit";
 }) => {
   const t = useTranslations("Teachers");
 
@@ -30,7 +32,11 @@ const FormCheckDialog = ({
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
       <DialogContent className="max-w-none! lg:w-[70vw] md:w-[80vw] w-[90vw]">
-        <DialogTitle>{t("Creating a new Teacher")}</DialogTitle>
+        <DialogTitle>
+          {action === "create"
+            ? t("Creating a new Teacher")
+            : t("Editing a new Teacher")}
+        </DialogTitle>
         <div className="flex sm:flex-row flex-col items-start justify-between gap-6">
           <div>
             <h3 className="text-lg font-semibold">{t("Teacher")}</h3>
@@ -88,7 +94,13 @@ const FormCheckDialog = ({
             type="submit"
             form="teacher_form"
           >
-            {isSubmitting ? t("Creating") : t("Create")}
+            {action === "create" && isSubmitting
+              ? t("Creating")
+              : action === "create" && !isSubmitting
+              ? t("Create")
+              : isSubmitting
+              ? t("Editing")
+              : t("Edit")}
           </button>
         </div>
       </DialogContent>
