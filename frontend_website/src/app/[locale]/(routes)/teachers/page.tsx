@@ -26,8 +26,6 @@ const Page = () => {
     { key: ["teachers", page, limit, debouncedSearch], enabled: true }
   );
 
-  console.log('teacherData', teacherData)
-
   const handleSearch = useMemo(
     () =>
       debounce((value: string) => {

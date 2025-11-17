@@ -3,16 +3,17 @@ import { Course } from "@/types/types";
 import { Eye, FilePen, MonitorPlay, Network, Presentation } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import React from "react";
 
 const CoursesView = ({
   isLoading,
   selectedCourses,
+  translateFrom,
 }: {
   isLoading: boolean;
   selectedCourses: Course[];
+  translateFrom: string;
 }) => {
-  const t = useTranslations("Students");
+  const t = useTranslations(translateFrom);
 
   return (
     <div className="mt-10">

@@ -1,5 +1,5 @@
 "use client";
-import CoursesView from "@/components/students/CoursesView";
+import CoursesView from "@/components/CoursesView";
 import StudentView from "@/components/students/StudentView";
 import useApiQuery from "@/hooks/useApiQuery";
 import { Course, Student } from "@/types/types";
@@ -66,6 +66,7 @@ const Page = () => {
         <CoursesView
           isLoading={isLoadingCourses}
           selectedCourses={selectedCourses ?? []}
+          translateFrom="Students"
         />
       )}
     </div>
