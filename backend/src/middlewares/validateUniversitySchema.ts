@@ -30,6 +30,8 @@ export async function validateUniversitySchema(
     next();
   } catch (err: any) {
     console.error("Error checking university schema:", err);
-    return res.status(500).json({ error: err.message || "Internal server error" });
+    return res
+      .status(500)
+      .json({ error: err.message || "Internal server error" });
   }
 }

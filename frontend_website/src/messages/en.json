@@ -165,6 +165,26 @@
         "Editing a new Teacher": "Editing a new Teacher",
         "Editing": "Editing..."
     },
+    "Courses": {
+        "Courses": "Courses",
+        "Create New": "Create New",
+        "type to search": "type to search",
+        "Name": "Name",
+        "Description": "Description",
+        "Created At": "Created At",
+        "Actions": "Actions",
+        "View": "View",
+        "Edit": "Edit",
+        "Delete": "Delete",
+        "No courses found": "No courses found",
+        "No results":"No results",
+        "Loading": "Loading...",
+        "Back": "Back",
+        "Submit": "Submit",
+        "totalUsers": "Total Courses",
+        "Previous": "Previous",
+        "Next": "Next"
+    },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
         "Internal server error": "Internal server error",
@@ -175,7 +195,10 @@
         "Student deleted successfully": "Student deleted successfully",
         "Teacher created successfully": "Teacher created successfully",
         "Teacher edited successfully": "Teacher edited successfully",
-        "Teacher deleted successfully": "Teacher deleted successfully"
+        "Teacher deleted successfully": "Teacher deleted successfully",
+        "Course created successfully": "Course created successfully",
+        "Course edited successfully": "Course edited successfully",
+        "Course deleted successfully": "Course deleted successfully"
     },
     "skeleton": {
         "No results": "No results",
@@ -189,6 +212,7 @@
         "Email": "Email",
         "Student Id": "Student Id",
         "Created At": "Created At",
-        "Actions": "Actions"
+        "Actions": "Actions",
+        "Description": "Description"
     }
 }

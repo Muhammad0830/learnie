@@ -59,7 +59,7 @@ const Page = () => {
         </Link>
       </div>
 
-      {/* search & filter */}
+      {/* search */}
       <div className="flex gap-2 items-center justify-between w-full h-10 mb-4 z-10 relative">
         <div className="md:min-w-[350px] lg:min-w-[400px] sm:min-w-[300px] w-full sm:w-[30%] h-full">
           <input

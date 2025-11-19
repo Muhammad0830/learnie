@@ -1,8 +1,20 @@
 import { queryGlobal, queryUniversity } from "../utils/helper";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 
-export async function getCoursesList({ schemaName }: { schemaName: string }) {
+export async function getCoursesList({
+  schemaName,
+  page,
+  limit,
+  search,
+}: {
+  schemaName: string;
+  page: number;
+  limit: number;
+  search: string;
+}) {
   try {
+    const searchCondition = search ? `(c.name LIKE :search)` : "1=1";
+
     const sql = `
         SELECT
             c.*,
@@ -15,13 +27,28 @@ export async function getCoursesList({ schemaName }: { schemaName: string }) {
             LEFT JOIN lectures l ON c.id = l.course_id
             LEFT JOIN assignments a ON c.id = a.course_id
             LEFT JOIN presentations p ON c.id = p.course_id
+            WHERE ${searchCondition} 
             GROUP BY c.id, c.name, c.description, c.has_topics
-            ORDER BY c.id;
-    `;
+            ORDER BY c.created_at DESC LIMIT ${limit} 
+            OFFSET ${(page - 1) * limit}`;
 
-    const rows = await queryUniversity<RowDataPacket[]>(schemaName, sql);
+    const rows = await queryUniversity<RowDataPacket[]>(schemaName, sql, {
+      search: `%${search}%`,
+    });
 
-    return rows;
+    if (rows.length === 0) {
+      throw new Error("No courses found");
+    }
+
+    const totalResult = await queryUniversity<any>(
+      schemaName,
+      `SELECT COUNT(*) as count FROM courses where ${searchCondition}`,
+      { search: `%${search}%` }
+    );
+    const totalCourses = totalResult[0].count;
+    const totalPages = Math.ceil(totalCourses / limit);
+
+    return { courses: rows, page, limit, totalCourses, totalPages };
   } catch (error: any) {
     throw new Error(error.message || "Error fetching courses:");
   }
