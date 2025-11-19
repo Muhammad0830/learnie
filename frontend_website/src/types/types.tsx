@@ -63,6 +63,14 @@ export interface TeacherListResponse {
   totalPages: number;
 }
 
+export interface CoursesListResponse {
+  courses: Course[];
+  page: number;
+  limit: number;
+  totalCourses: number;
+  totalPages: number;
+}
+
 export interface Course {
   id: string;
   name: string;

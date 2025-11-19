@@ -29,8 +29,24 @@ const coursesRouter = express.Router();
 coursesRouter.get("/", validateUniversitySchema, async (req, res) => {
   try {
     const schemaName = (req as any).universitySchema;
+    const {
+      page = "1",
+      limit = "10",
+      search = "",
+    } = req.query as { page: string; limit: string; search: string };
 
-    const result = await getCoursesList({ schemaName });
+    const parsedPage = parseInt(page);
+    const parsedLimit = parseInt(limit);
+    if (isNaN(parsedPage) || isNaN(parsedLimit)) {
+      return res.status(400).json({ error: "Invalid page or limit" });
+    }
+
+    const result = await getCoursesList({
+      schemaName,
+      page: parsedPage,
+      limit: parsedLimit,
+      search,
+    });
 
     res.json(result);
   } catch (error: any) {
