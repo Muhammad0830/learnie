@@ -183,7 +183,19 @@
         "Submit": "Submit",
         "totalUsers": "Total Courses",
         "Previous": "Previous",
-        "Next": "Next"
+        "Next": "Next",
+        "Create New Course": "Create New Course",
+        "Course": "Course",
+        "Cancel": "Cancel",
+        "Create": "Create",
+        "Back to courses": "Back to courses",
+        "EnterCourseName": "Enter Course Name",
+        "EnterCourseDescription": "Enter Course Description",
+        "Name is required": "Name is required",
+        "Description is required": "Description is required",
+        "TopicAdd?": "Do you want to add a topic to this course?",
+        "No": "No",
+        "Yes": "Yes"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",

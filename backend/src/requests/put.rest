@@ -6,7 +6,7 @@ Content-Type: application/json
     "name": "Student Eshmatov",
     "age": null,
     "phoneNumber": "50155251",
-    "courseIds": ["1", "5"]
+    "courseIds": ["1", "2"]
 }
 
 ###

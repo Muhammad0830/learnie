@@ -228,6 +228,14 @@ export async function createCourseTopic({
       { courseId, title, description }
     );
 
+    const updateCourse = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `UPDATE courses 
+        SET has_topics = 1
+        WHERE id = :courseId`,
+      { courseId }
+    )
+
     return {
       id: rows.insertId,
       title,
@@ -484,6 +492,22 @@ export async function deleteCourseTopic({
       `DELETE FROM course_topics WHERE course_id = :courseId AND id = :topicId`,
       { courseId, topicId }
     );
+
+    const course = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT Count(*) as count FROM course_topics WHERE course_id = :courseId`,
+      { courseId }
+    );
+
+    if(course[0].count === 0){
+      await queryUniversity<ResultSetHeader>(
+        schemaName,
+        `UPDATE courses 
+          SET has_topics = 0
+          WHERE id = :courseId`,
+        { courseId }
+      )
+    }
 
     return {
       id: topicId,

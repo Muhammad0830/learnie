@@ -2,11 +2,11 @@ DELETE http://localhost:3001/users/6
 x-university-schema: university_harvard_university
 
 ###
-DELETE http://localhost:3001/courses/2
+DELETE http://localhost:3001/courses/3
 x-university-schema: university_harvard_university
 
 ###
-DELETE http://localhost:3001/courses/1/topics/4
+DELETE http://localhost:3001/courses/2/topics/6
 x-university-schema: university_harvard_university
 
 ###
