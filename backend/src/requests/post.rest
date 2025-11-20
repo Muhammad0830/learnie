@@ -21,8 +21,8 @@ x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
-    "name": "Dancing",
-    "description": "Dancing is maybe the most fun Course"
+    "name": "Math",
+    "description": "Math is not that difficult subject"
 }
 
 ###
@@ -38,13 +38,13 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3001/courses/1/topics
+POST http://localhost:3001/courses/2/topics
 x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
-    "title": "Topic 3",
-    "description": "Topic 3 description"
+    "title": "Topic 1",
+    "description": "Topic 1 description"
 }
 
 ###
