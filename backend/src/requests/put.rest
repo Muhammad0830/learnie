@@ -1,12 +1,12 @@
-PUT http://localhost:3001/users/1
+PUT http://localhost:3001/users/15
 x-university-schema: university_harvard_university
 Content-Type: application/json
 
 {
-    "name": "Student Eshmatov",
-    "age": null,
-    "phoneNumber": "50155251",
-    "courseIds": ["1", "2"]
+    "name": "Muhammad Again",
+    "age": 12,
+    "phoneNumber": "+998944101551",
+    "courseIds": ["6"]
 }
 
 ###

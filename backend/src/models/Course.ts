@@ -83,13 +83,30 @@ export async function getEachCourse({
 
     const students = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      `SELECT u.id, u.name FROM users as u
+      `SELECT u.id, u.name, u.studentId FROM users as u
         LEFT JOIN users_courses uc ON u.id = uc.user_id
         WHERE uc.course_id = :id and u.role = 'student'`,
       { id }
     );
 
-    return { course: rows[0], teachers: teachers, students: students };
+    const topicsRow = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT id FROM course_topics WHERE course_id = :id`,
+      { id }
+    );
+    const topicsIds = topicsRow.map((topic) => topic.id);
+    const topics = [];
+    for (const topicId of topicsIds) {
+      const topic = await getCourseTopic({ courseId: id, topicId, schemaName });
+      topics.push(topic);
+    }
+
+    return {
+      course: rows[0],
+      teachers: teachers,
+      students: students,
+      topics,
+    };
   } catch (err: any) {
     throw new Error(err.message || "Error fetching course:");
   }

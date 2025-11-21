@@ -1,9 +1,11 @@
-import React from 'react'
+"use client";
 
 const Page = () => {
   return (
-    <div>Admins Page</div>
-  )
-}
+    <div>
+      <div>Admins Page</div>
+    </div>
+  );
+};
 
-export default Page
+export default Page;

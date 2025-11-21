@@ -2,11 +2,10 @@
 import CoursesView from "@/components/CoursesView";
 import StudentView from "@/components/students/StudentView";
 import useApiQuery from "@/hooks/useApiQuery";
-import { Course, Student } from "@/types/types";
+import { CoursesListResponse, Student } from "@/types/types";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
 
 const Page = () => {
   const t = useTranslations("Students");
@@ -19,16 +18,16 @@ const Page = () => {
     key: ["students"],
   });
 
-  const { data: courses, isLoading: isLoadingCourses } = useApiQuery<Course[]>(
-    "/courses",
-    { key: "CourseList" }
-  );
+  const { data: courses, isLoading: isLoadingCourses } =
+    useApiQuery<CoursesListResponse>("/courses", { key: "CourseList" });
 
   const selectedCoursesIds = student?.courses.map((course) =>
     String(course.id)
   );
 
-  const selectedCourses = courses?.filter((course) =>
+  console.log("courses", courses);
+
+  const selectedCourses = courses?.courses.filter((course) =>
     selectedCoursesIds?.includes(String(course.id))
   );
 
@@ -60,7 +59,7 @@ const Page = () => {
         <StudentView student={student?.user} />
       )}
 
-      {courses?.length === 0 ? (
+      {courses?.courses?.length === 0 ? (
         <div>{t("no courses found")}</div>
       ) : (
         <CoursesView
