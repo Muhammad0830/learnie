@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  createBothCourseAndTopic,
   createCourse,
   createCourseTopic,
   createCourseTopicAssignment,
@@ -173,6 +174,43 @@ coursesRouter.post(
         courseId,
         title,
         description,
+      });
+
+      res.status(201).json({
+        data: result,
+      });
+    } catch (err: any) {
+      console.error("Error inserting course topic:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
+    }
+  }
+);
+
+coursesRouter.post(
+  "/coursestopics",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
+
+      const { name, description, topicTitle, topicDescription } = req.body;
+
+      if (!name) {
+        return res.status(400).json({ error: "Missing course title" });
+      } else if (!description) {
+        return res.status(400).json({ error: "Missing course description" });
+      } else if (!topicTitle) {
+        return res.status(400).json({ error: "Missing topic title" });
+      } else if (!topicDescription) {
+        return res.status(400).json({ error: "Missing topic description" });
+      }
+
+      const result = await createBothCourseAndTopic({
+        schemaName,
+        title: name,
+        description,
+        topicTitle,
+        topicDescription,
       });
 
       res.status(201).json({

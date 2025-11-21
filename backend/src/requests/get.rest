@@ -10,11 +10,11 @@ GET http://localhost:3001/courses/
 x-university-schema: university_harvard_university
 
 ###
-GET http://localhost:3001/courses/2
+GET http://localhost:3001/courses/6
 x-university-schema: university_harvard_university
 
 ###
-GET http://localhost:3001/courses/1/topics
+GET http://localhost:3001/courses/6/topics
 x-university-schema: university_harvard_university
 
 ###
