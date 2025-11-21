@@ -6,7 +6,7 @@ import { useCustomToast } from "@/context/CustomToastContext";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import useApiQuery from "@/hooks/useApiQuery";
 import { StudentFormData, StudentSchema } from "@/schemas/studentSchema";
-import { Course, Student } from "@/types/types";
+import { CoursesListResponse, Student } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -29,10 +29,8 @@ const Page = () => {
     key: ["students"],
   });
 
-  const { data: courses, isLoading: isLoadingCourses } = useApiQuery<Course[]>(
-    "/courses",
-    { key: "CourseList" }
-  );
+  const { data: courses, isLoading: isLoadingCourses } =
+    useApiQuery<CoursesListResponse>("/courses", { key: "CourseList" });
 
   const {
     register,
@@ -92,7 +90,7 @@ const Page = () => {
     name: "courseIds",
   });
 
-  const selectedCourses = courses?.filter((course) =>
+  const selectedCourses = courses?.courses.filter((course) =>
     selectedCoursesIds?.includes(String(course.id))
   );
 
@@ -130,12 +128,12 @@ const Page = () => {
 
       {isLoadingCourses ? (
         <div>{t("Loading")}</div>
-      ) : courses?.length === 0 ? (
+      ) : courses?.courses?.length === 0 ? (
         <div className="mt-10">{t("no courses found")}</div>
       ) : (
         <AddingCourseToStudent
           isLoading={isLoading}
-          courses={courses ?? []}
+          courses={courses?.courses ?? []}
           selectedCoursesIds={selectedCoursesIds}
           setValue={setValue}
         />

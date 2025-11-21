@@ -83,3 +83,57 @@ export interface Course {
   assignments_count: number;
   presentations_count: number;
 }
+
+export interface Topic {
+  id: number;
+  course_id: number;
+  title: string;
+  description: string;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface Lecture {
+  id: number;
+  title: string;
+  content: string;
+  image_url: string | null;
+  video_url: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
+
+interface AssignmentImage {
+  url: string;
+  title: string;
+}
+
+export interface Assignment {
+  id: number;
+  title: string;
+  description: string;
+  due_date: string;
+  images: AssignmentImage[];
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface Presentation {
+  id: number;
+  title: string;
+  file_url: string;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface EachCourseResponseData {
+  course: Course;
+  topics: {
+    course_topics: Topic;
+    assignments: Assignment[];
+    lectures: Lecture[];
+    presentations: Presentation[];
+  }[];
+  teachers: Teacher[];
+  students: Student[];
+}

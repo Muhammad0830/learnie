@@ -2,7 +2,7 @@
 import CoursesView from "@/components/CoursesView";
 import TeacherView from "@/components/teachers/TeacherView";
 import useApiQuery from "@/hooks/useApiQuery";
-import { Course, Teacher } from "@/types/types";
+import { CoursesListResponse, Teacher } from "@/types/types";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -18,16 +18,14 @@ const Page = () => {
     key: ["teachers"],
   });
 
-  const { data: courses, isLoading: isLoadingCourses } = useApiQuery<Course[]>(
-    "/courses",
-    { key: "CourseList" }
-  );
+  const { data: courses, isLoading: isLoadingCourses } =
+    useApiQuery<CoursesListResponse>("/courses", { key: "CourseList" });
 
   const selectedCoursesIds = teacher?.courses.map((course) =>
     String(course.id)
   );
 
-  const selectedCourses = courses?.filter((course) =>
+  const selectedCourses = courses?.courses.filter((course) =>
     selectedCoursesIds?.includes(String(course.id))
   );
 
@@ -59,7 +57,7 @@ const Page = () => {
         <TeacherView teacher={teacher?.user} />
       )}
 
-      {courses?.length === 0 ? (
+      {courses?.courses.length === 0 ? (
         <div>{t("no courses found")}</div>
       ) : (
         <CoursesView
