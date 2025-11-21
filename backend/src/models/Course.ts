@@ -234,12 +234,66 @@ export async function createCourseTopic({
         SET has_topics = 1
         WHERE id = :courseId`,
       { courseId }
-    )
+    );
 
     return {
       id: rows.insertId,
       title,
       description,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error inserting course topic:");
+  }
+}
+
+export async function createBothCourseAndTopic({
+  schemaName,
+  title,
+  description,
+  topicTitle,
+  topicDescription,
+}: {
+  schemaName: string;
+  title: string;
+  description: string;
+  topicTitle: string;
+  topicDescription: string;
+}) {
+  try {
+    const result = await createCourse({
+      schemaName,
+      name: title,
+      description: description,
+    });
+
+    if (!result.id) {
+      throw new Error("Error creating course");
+    }
+
+    const courseId = result.id;
+
+    const rows = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `INSERT INTO course_topics (course_id, title, description) 
+        VALUES (:courseId, :title, :description)`,
+      { courseId, title: topicTitle, description: topicDescription }
+    );
+
+    const updateCourse = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `UPDATE courses 
+        SET has_topics = 1
+        WHERE id = :courseId`,
+      { courseId }
+    );
+
+    return {
+      courseId: courseId,
+      topicId: rows.insertId,
+      courseTitle: title,
+      courseDescription: description,
+      topicTitle: topicTitle,
+      topicDescription: topicDescription,
     };
   } catch (err: any) {
     throw new Error(err.message || "Error inserting course topic:");
@@ -499,14 +553,14 @@ export async function deleteCourseTopic({
       { courseId }
     );
 
-    if(course[0].count === 0){
+    if (course[0].count === 0) {
       await queryUniversity<ResultSetHeader>(
         schemaName,
         `UPDATE courses 
           SET has_topics = 0
           WHERE id = :courseId`,
         { courseId }
-      )
+      );
     }
 
     return {

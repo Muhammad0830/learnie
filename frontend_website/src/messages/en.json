@@ -195,7 +195,13 @@
         "Description is required": "Description is required",
         "TopicAdd?": "Do you want to add a topic to this course?",
         "No": "No",
-        "Yes": "Yes"
+        "Yes": "Yes",
+        "EnterTopicTitle": "Enter Topic Title",
+        "EnterTopicDescription": "Enter Topic Description",
+        "TopicDescription": "TopicDescription",
+        "TopicTitle": "TopicTitle",
+        "Title is required": "Title is required",
+        "Submitting": "Submitting..."
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
@@ -210,7 +216,10 @@
         "Teacher deleted successfully": "Teacher deleted successfully",
         "Course created successfully": "Course created successfully",
         "Course edited successfully": "Course edited successfully",
-        "Course deleted successfully": "Course deleted successfully"
+        "Course deleted successfully": "Course deleted successfully",
+        "Topic created successfully": "Topic created successfully",
+        "Topic edited successfully": "Topic edited successfully",
+        "Topic deleted successfully": "Topic deleted successfully"
     },
     "skeleton": {
         "No results": "No results",

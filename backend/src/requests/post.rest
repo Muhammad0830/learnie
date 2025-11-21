@@ -48,6 +48,18 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:3001/courses/coursesTopics
+x-university-schema: university_harvard_university
+Content-Type: application/json
+
+{
+    "title": "CourseWithTopic1",
+    "description": "CourseWithTopic1 description",
+    "topicTitle": "Topic 1",
+    "topicDescription": "Topic 1 description"
+}
+
+###
 POST http://localhost:3001/courses/1/topics/2/assignments
 x-university-schema: university_harvard_university
 Content-Type: application/json
