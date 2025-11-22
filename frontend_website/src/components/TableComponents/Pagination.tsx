@@ -33,7 +33,7 @@ const Pagination = ({
           onClick={() => setPage(page - 1)}
           disabled={page === 1}
           className={cn(
-            "border border-primary bg-primary/40 dark:bg-primary/20 hover:bg-primary/60 dark:hover:bg-primary/10 cursor-pointer px-2 py-0.5 rounded-sm ",
+            "border border-primary bg-primary/40 hover:bg-primary/30 cursor-pointer px-2 py-0.5 rounded-sm",
             page === 1
               ? "opacity-50 cursor-default hover:bg-primary/40 dark:hover:bg-primary/20"
               : ""
@@ -44,20 +44,20 @@ const Pagination = ({
         <button
           onClick={() => setPage(1)}
           className={cn(
-            "border border-primary bg-primary/40 dark:bg-primary/20 hover:bg-primary/60 dark:hover:bg-primary/10 cursor-pointer px-2 py-0.5 rounded-sm ",
+            "border border-primary bg-primary/40 hover:bg-primary/30 cursor-pointer px-2 py-0.5 rounded-sm",
             page === 1 ? "hidden" : "flex"
           )}
         >
           1
         </button>
-        <div className="px-2 py-0.5 border border-primary rounded-sm cursor-default">
+        <div className="px-2 py-0.5 border border-primary bg-primary/10 rounded-sm cursor-default opacity-50">
           {page}
         </div>
         <button
           onClick={() => setPage(totalPages)}
           disabled={page === totalPages}
           className={cn(
-            "border border-primary bg-primary/40 dark:bg-primary/20 hover:bg-primary/60 dark:hover:bg-primary/10 cursor-pointer px-2 py-0.5 rounded-sm ",
+            "border border-primary bg-primary/40 hover:bg-primary/30 cursor-pointer px-2 py-0.5 rounded-sm",
             page === totalPages ? "hidden" : "flex"
           )}
         >
@@ -67,7 +67,7 @@ const Pagination = ({
           onClick={() => setPage(page + 1)}
           disabled={page === totalPages}
           className={cn(
-            "border border-primary bg-primary/40 dark:bg-primary/20 hover:bg-primary/60 dark:hover:bg-primary/10 cursor-pointer px-2 py-0.5 rounded-sm ",
+            "border border-primary bg-primary/40 hover:bg-primary/30 cursor-pointer px-2 py-0.5 rounded-sm",
             page === totalPages
               ? "opacity-50 cursor-default hover:bg-primary/40 dark:hover:bg-primary/20"
               : ""
