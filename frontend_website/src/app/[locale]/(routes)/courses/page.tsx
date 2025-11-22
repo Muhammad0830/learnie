@@ -20,10 +20,13 @@ const Page = () => {
     data: coursesData,
     isLoading,
     refetch,
-  } = useApiQuery<CoursesListResponse>(`/courses`, {
-    key: ["students", page, limit, debouncedSearch],
-    enabled: true,
-  });
+  } = useApiQuery<CoursesListResponse>(
+    `/courses?page=${page}&limit=${limit}&search=${debouncedSearch}`,
+    {
+      key: ["courses", page, limit, debouncedSearch],
+      enabled: true,
+    }
+  );
 
   const handleSearch = useMemo(
     () =>
