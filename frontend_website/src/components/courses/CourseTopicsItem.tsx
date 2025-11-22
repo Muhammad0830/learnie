@@ -21,15 +21,13 @@ const CourseTopicsItem = ({
 }) => {
   const t = useTranslations("Courses");
 
-  console.log("topic", topic);
-
   return (
     <AccordionItem
       key={topic.course_topics.id}
       value={`${topic.course_topics.id}`}
       className="border-b-0"
     >
-      <AccordionTrigger className="w-full flex items-center justify-between p-3 font-semibold cursor-pointer border border-primary bg-[#ffffff] dark:bg-[#000000] rounded-md relative overflow-hidden py-2 text-[15px] leading-6 hover:no-underline focus-visible:ring-0">
+      <AccordionTrigger className="w-full flex items-center justify-between p-3 font-semibold cursor-pointer border border-primary bg-[#ffffff] dark:bg-[#000000] rounded-sm relative overflow-hidden py-2 text-[15px] leading-6 hover:no-underline focus-visible:ring-0">
         <span className="z-1">{topic.course_topics.title}</span>
         <div className="bg-primary/5 absolute inset-0 z-0" />
       </AccordionTrigger>
@@ -47,12 +45,14 @@ const CourseTopicsItem = ({
                 <h4 className="font-semibold flex items-center gap-2">
                   <MonitorPlay className="w-4 h-4" /> {t("Lectures")}
                 </h4>
-                <Link
-                  href={`/courses/${topic.course_topics.course_id}/topics/${topic.course_topics.id}/lectures`}
-                  className="px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
-                >
-                  {"View all"}
-                </Link>
+                {topic.lectures?.length ? (
+                  <Link
+                    href={`/courses/${topic.course_topics.course_id}/topics/${topic.course_topics.id}/lectures`}
+                    className="px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
+                  >
+                    {"View all"}
+                  </Link>
+                ) : null}
               </div>
               {topic.lectures?.length ? (
                 <ul className="ml-6 list-disc space-y-1">
@@ -81,12 +81,14 @@ const CourseTopicsItem = ({
                 <h4 className="font-semibold flex items-center gap-2">
                   <PresentationIcon className="w-4 h-4" /> {t("Presentations")}
                 </h4>
-                <Link
-                  href={`/courses/${topic.course_topics.course_id}/topics/${topic.course_topics.id}/presentations`}
-                  className="px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
-                >
-                  {"View all"}
-                </Link>
+                {topic.presentations?.length ? (
+                  <Link
+                    href={`/courses/${topic.course_topics.course_id}/topics/${topic.course_topics.id}/presentations`}
+                    className="px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
+                  >
+                    {"View all"}
+                  </Link>
+                ) : null}
               </div>
               {topic.presentations?.length ? (
                 <ul className="ml-6 list-disc space-y-1">
@@ -116,12 +118,14 @@ const CourseTopicsItem = ({
                 <h4 className="font-semibold flex items-center gap-2">
                   <FilePen className="w-4 h-4" /> {t("Assignments")}
                 </h4>
-                <Link
-                  href={`/courses/${topic.course_topics.course_id}/topics/${topic.course_topics.id}/assignments`}
-                  className="px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
-                >
-                  {"View all"}
-                </Link>
+                {topic.assignments.length ? (
+                  <Link
+                    href={`/courses/${topic.course_topics.course_id}/topics/${topic.course_topics.id}/assignments`}
+                    className="px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
+                  >
+                    {"View all"}
+                  </Link>
+                ) : null}
               </div>
               {topic.assignments?.length ? (
                 <ul className="ml-6 list-disc space-y-1">

@@ -32,9 +32,10 @@ const CourseViewPage = () => {
   return (
     <div>
       {/* HEADER */}
-      <div className="flex items-center justify-between gap-4 mb-6">
+      <div className="flex items-center justify-between gap-4 mb-4">
         <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
-          {t("Course View")}
+          <span className="sm:hidden">{t("Course")}</span>
+          <span className="max-sm:hidden">{t("Course View")}</span>
         </h1>
 
         <div className="flex gap-2">
@@ -58,7 +59,7 @@ const CourseViewPage = () => {
       <CourseInfo course={course} />
 
       {/* TEACHERS / STUDENTS */}
-      <div className="mt-6 grid lg:grid-cols-2 gap-4">
+      <div className="mt-4 grid lg:grid-cols-2 gap-4">
         {/* Teachers */}
         <CourseConnectedUsersDialog
           users={course.teachers}
@@ -66,6 +67,7 @@ const CourseViewPage = () => {
           title={t("Teachers")}
           emptyText={t("no teachers found")}
           link="teachers"
+          courseId={course.course.id}
         />
 
         {/* Students */}
@@ -75,12 +77,13 @@ const CourseViewPage = () => {
           title={t("Students")}
           emptyText={t("no students found")}
           link="students"
+          courseId={course.course.id}
         />
       </div>
 
       {/* TOPICS SECTION */}
-      <div className="mt-10">
-        <h3 className="text-lg font-semibold mb-3">{t("Topics")}</h3>
+      <div className="mt-6">
+        <h3 className="md:text-xl text-lg font-semibold mb-3">{t("Topics")}</h3>
 
         {course.topics.length === 0 ? (
           <div className="w-full h-20 border border-primary bg-primary/5 rounded-md flex justify-center items-center">

@@ -62,16 +62,12 @@ const Page = () => {
     }
   }, [student, setValue]);
 
-  console.log("student", student);
-
   const { mutate: editStudent } = useApiMutation<
     { success: boolean },
     StudentFormData
   >(`/users/${id}`, "put");
 
   const onSubmit = (data: StudentFormData) => {
-    console.log("Form submitted:", data);
-
     editStudent(data, {
       onSuccess: () => {
         reset();

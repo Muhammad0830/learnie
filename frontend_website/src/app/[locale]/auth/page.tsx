@@ -55,8 +55,6 @@ const Page = () => {
   };
 
   const onSubmit = (data: LoginFormData) => {
-    console.log("Form submitted:", data);
-
     mutate(data, {
       onSuccess: () => {
         reset();

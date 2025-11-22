@@ -114,7 +114,7 @@ const Page = () => {
         </h1>
 
         <Link
-          href={"/students"}
+          href={"/courses"}
           className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
         >
           {t("Back to courses")}

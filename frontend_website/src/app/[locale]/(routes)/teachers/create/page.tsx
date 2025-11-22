@@ -50,8 +50,6 @@ const Page = () => {
   );
 
   const onSubmit = (data: TeacherFormData) => {
-    console.log("Form submitted:", data);
-
     mutate(data, {
       onSuccess: () => {
         reset();
@@ -90,8 +88,6 @@ const Page = () => {
   const selectedCourses = courses?.courses.filter((course) =>
     selectedCoursesIds?.includes(String(course.id))
   );
-
-  console.log("selectedCoursesIds", selectedCoursesIds);
 
   return (
     <div>

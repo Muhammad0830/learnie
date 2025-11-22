@@ -25,8 +25,6 @@ const Page = () => {
     String(course.id)
   );
 
-  console.log("courses", courses);
-
   const selectedCourses = courses?.courses.filter((course) =>
     selectedCoursesIds?.includes(String(course.id))
   );
