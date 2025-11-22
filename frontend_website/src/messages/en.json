@@ -223,7 +223,14 @@
         "View all teachers": "View all teachers",
         "View all": "View all",
         "Close": "Close",
-        "Type to search": "Type to search"
+        "Type to search": "Type to search",
+        "Move to the page": "Move to the page",
+        "Back to course": "Back to course",
+        "PhoneNumber": "Phone Number",
+        "Email": "Email",
+        "Student ID": "Student ID",
+        "ID": "ID",
+        "Phone": "Phone"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",

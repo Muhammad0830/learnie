@@ -6,6 +6,7 @@ import { Dialog, DialogClose, DialogContent, DialogTitle } from "../ui/dialog";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Eye } from "lucide-react";
+import CustomButton from "../ui/customButton";
 
 const CourseConnectedUsersDialog = ({
   users,
@@ -13,6 +14,7 @@ const CourseConnectedUsersDialog = ({
   title,
   emptyText,
   link,
+  courseId,
 }: {
   users:
     | EachCourseResponseData["teachers"]
@@ -21,6 +23,7 @@ const CourseConnectedUsersDialog = ({
   title: string;
   emptyText: string;
   link: string;
+  courseId: string;
 }) => {
   const t = useTranslations("Courses");
   const [isOpen, setIsOpen] = useState(false);
@@ -46,34 +49,31 @@ const CourseConnectedUsersDialog = ({
         <h3 className="font-semibold text-lg flex items-center gap-2">
           {icon} {title}
         </h3>
-        {users.length > 5 && (
-          <button
-            onClick={() => setIsOpen(true)}
-            className="sm:px-3 sm:py-1 px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
-          >
-            <span className="sm:flex hidden">{t(`View all ${link}`)}</span>
-            <span className="sm:hidden flex">{t(`View all`)}</span>
-          </button>
-        )}
+        <CustomButton
+          onClick={() => setIsOpen(true)}
+          className="sm:px-3 sm:py-1 px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
+        >
+          <span className=" flex">{t(`View all`)}</span>
+        </CustomButton>
       </div>
 
       {users.length ? (
         <div>
           <ul className="list-disc ml-6 space-y-1">
             {users.map((user, index) => {
-              if (index < 5)
+              if (index < 4)
                 return (
                   <div
-                    key={user.id}
+                    key={`${user.id}_${index}`}
                     className="flex items-center justify-between"
                   >
-                    <li key={user.id} className="font-medium">
+                    <li className="font-medium">
                       <span>{user.name}</span>
                     </li>
 
                     <Link
                       href={`/${link}/view/${user.id}`}
-                      className="sm:px-2 sm:py-1 p-1.5 flex gap-2 items-center rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
+                      className="sm:px-2 sm:py-1 p-1.5 flex gap-2 items-center rounded-sm border border-primary bg-primary/5 hover:bg-primary/10 cursor-pointer"
                     >
                       <Eye className="w-4 h-4" />
                       <span className="sm:flex hidden">{t("View")}</span>
@@ -88,7 +88,10 @@ const CourseConnectedUsersDialog = ({
       )}
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-[600px]! sm:w-[50vw]! w-[80vw] max-sm:max-w-[500px]! sm:min-w-[500px]! min-w-[300px]! max-h-[90vh]! h-[90vh] flex-col flex overflow-y-auto p-4 z-9999">
+        <DialogContent
+          aria-describedby={`course_connected_users_dialog`}
+          className="max-w-[600px]! sm:w-[50vw]! w-[80vw] max-sm:max-w-[500px]! sm:min-w-[500px]! min-w-[300px]! max-h-[90vh]! h-[90vh] flex-col flex overflow-y-auto p-4 z-9999"
+        >
           <div className="flex-1 overflow-y-auto">
             <DialogTitle className="lg:text-2xl text-xl">{title}</DialogTitle>
 
@@ -105,7 +108,7 @@ const CourseConnectedUsersDialog = ({
             <div className="px-2 flex flex-col gap-2 flex-1">
               {fitleredUsers.map((user, index) => (
                 <div
-                  key={user.id}
+                  key={`dialog_item_${user.id}_${index}`}
                   className={cn(
                     "font-medium flex justify-between items-center",
                     fitleredUsers.length - 1 !== index &&
@@ -129,13 +132,18 @@ const CourseConnectedUsersDialog = ({
             </div>
           </div>
 
-          <DialogClose asChild>
-            <div className="flex justify-end">
-              <button className="px-6 py-2 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer">
+          <div className="flex justify-end gap-2 items-center">
+            <Link href={`/courses/${courseId}/${link}`}>
+              <CustomButton variants="outline" className="px-6 py-2">
+                {t("Move to the page")}
+              </CustomButton>
+            </Link>
+            <DialogClose asChild>
+              <CustomButton variants="primary" className="px-6 py-2">
                 {t("Close")}
-              </button>
-            </div>
-          </DialogClose>
+              </CustomButton>
+            </DialogClose>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

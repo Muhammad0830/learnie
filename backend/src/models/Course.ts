@@ -75,7 +75,7 @@ export async function getEachCourse({
 
     const teachers = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      `SELECT u.id, u.name FROM users as u
+      `SELECT u.id, u.name, u.email, u.phoneNumber, u.age, u.created_at, u.updated_at, u.image FROM users as u
         LEFT JOIN users_courses uc ON u.id = uc.user_id
         WHERE uc.course_id = :id and u.role = 'teacher'`,
       { id }
@@ -83,7 +83,7 @@ export async function getEachCourse({
 
     const students = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      `SELECT u.id, u.name, u.studentId FROM users as u
+      `SELECT u.id, u.name, u.email, u.phoneNumber, u.age, u.created_at, u.updated_at, u.image, u.studentId FROM users as u
         LEFT JOIN users_courses uc ON u.id = uc.user_id
         WHERE uc.course_id = :id and u.role = 'student'`,
       { id }
@@ -198,6 +198,45 @@ export async function deleteCourse({
     };
   } catch (err: any) {
     throw new Error(err.message || "Error deleting course:");
+  }
+}
+
+export async function getCourseUsers({
+  courseId,
+  schemaName,
+  role,
+}: {
+  courseId: string;
+  schemaName: string;
+  role: "student" | "teacher";
+}) {
+  try {
+    const course = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT name, id FROM courses WHERE id = :id`,
+      { id: courseId }
+    );
+
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT u.id, u.name, u.email, u.phoneNumber, u.age, u.created_at, u.updated_at, u.image, u.studentId FROM users as u
+        LEFT JOIN users_courses uc ON u.id = uc.user_id
+        WHERE uc.course_id = :id and u.role = '${role}'`,
+      { id: courseId }
+    );
+
+    if (rows.length === 0) {
+      throw new Error(`Course ${role}s not found`);
+    }
+
+    const users = rows.map((user) => ({
+      ...user,
+      courseName: course[0].name,
+    }));
+
+    return users;
+  } catch (err: any) {
+    throw new Error(err.message || `Error fetching course ${role}s:`);
   }
 }
 

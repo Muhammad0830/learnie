@@ -14,6 +14,7 @@ import {
   getCoursesList,
   getCourseTopic,
   getCourseTopicsList,
+  getCourseUsers,
   getEachAssignment,
   getEachCourse,
   getEachLecture,
@@ -125,6 +126,33 @@ coursesRouter.post("/", validateUniversitySchema, async (req, res) => {
     res.status(500).json({ error: err.message || "Internal Server Error" });
   }
 });
+
+coursesRouter.get(
+  "/:courseId/users",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
+      const { role } = req.query as { role: "student" | "teacher" };
+
+      if (!role) {
+        return res.status(400).json({ error: "Missing role" });
+      }
+
+      const courseId = req.params.courseId;
+      if (!courseId) {
+        return res.status(400).json({ error: "Missing courseId" });
+      }
+
+      const result = await getCourseUsers({ courseId, schemaName, role });
+
+      res.json(result);
+    } catch (err: any) {
+      console.error("Error fetching course students:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
+    }
+  }
+);
 
 coursesRouter.get(
   "/:courseId/topics/:topicId",

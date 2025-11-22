@@ -67,8 +67,6 @@ const Page = () => {
   >(`/users/${id}`, "put");
 
   const onSubmit = (data: TeacherFormData) => {
-    console.log("Form submitted:", data);
-
     editTeacher(data, {
       onSuccess: () => {
         reset();

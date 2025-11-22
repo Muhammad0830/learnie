@@ -44,7 +44,6 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        console.log("university schema", universitySchema);
         const res = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
           {},
@@ -57,7 +56,6 @@ api.interceptors.response.use(
         setUniversitySchema(newUniversitySchema);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         originalRequest.headers["x-university-schema"] = newUniversitySchema;
-        console.log("university schema", universitySchema);
         return api(originalRequest);
       } catch (err) {
         console.error("refresh token error", err);
