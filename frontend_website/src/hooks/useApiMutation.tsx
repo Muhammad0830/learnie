@@ -39,6 +39,7 @@ export function useApiMutation<TResponse = unknown, TVariables = unknown>(
         toastT("Failed to perform the action"),
         toastT("Internal server error")
       );
+      console.error("fetch error", error);
       throw error;
     },
   });

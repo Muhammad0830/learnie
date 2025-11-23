@@ -180,39 +180,50 @@ coursesRouter.get(
   }
 );
 
-coursesRouter.post(
-  "/:courseId/topics",
-  validateUniversitySchema,
-  async (req, res) => {
-    try {
-      const schemaName = (req as any).universitySchema;
+coursesRouter.post("/topics", validateUniversitySchema, async (req, res) => {
+  try {
+    const schemaName = (req as any).universitySchema;
 
-      const courseId = req.params.courseId;
-      const { title, description } = req.body;
+    const { topics, courseId } = req.body;
 
-      if (!title) {
-        return res.status(400).json({ error: "Missing topic title" });
-      }
+    if (!topics || topics.length === 0) {
+      return res.status(400).json({ error: "Missing topics" });
+    } else if (!courseId) {
+      return res.status(400).json({ error: "Missing courseId" });
+    } else if (
+      !topics.every(
+        (topic: { title: string; description: string }) =>
+          topic.title && topic.description
+      )
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Missing topic title or description" });
+    }
 
-      // this checks existance of the course
-      await getEachCourse({ courseId, schemaName });
+    // this checks existance of the course
+    await getEachCourse({ courseId, schemaName });
 
-      const result = await createCourseTopic({
+    const result = [];
+
+    for (const topic of topics) {
+      const resultObject = await createCourseTopic({
         schemaName,
         courseId,
-        title,
-        description,
+        title: topic.title,
+        description: topic.description,
       });
-
-      res.status(201).json({
-        data: result,
-      });
-    } catch (err: any) {
-      console.error("Error inserting course topic:", err);
-      res.status(500).json({ error: err.message || "Internal Server Error" });
+      result.push(resultObject);
     }
+
+    res.status(201).json({
+      data: result,
+    });
+  } catch (err: any) {
+    console.error("Error inserting course topic:", err);
+    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
-);
+});
 
 coursesRouter.post(
   "/coursestopics",

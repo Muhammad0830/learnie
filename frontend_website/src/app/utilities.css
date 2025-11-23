@@ -1,0 +1,139 @@
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fade Out */
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Zoom In (scale from 0.95 → 1) */
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Zoom Out */
+@keyframes zoom-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Slide from sides */
+@keyframes slide-in-from-top {
+  from {
+    transform: translateY(-12px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-from-bottom {
+  from {
+    transform: translateY(12px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-from-left {
+  from {
+    transform: translateX(-12px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-from-right {
+  from {
+    transform: translateX(12px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ========= UTILITY CLASSES (mimic tailwindcss-animate) ========= */
+
+/* animate-in */
+[data-state="open"].animate-in,
+.animate-in[data-state="open"] {
+  animation-duration: 150ms;
+  animation-fill-mode: both;
+}
+
+/* animate-out */
+[data-state="closed"].animate-out,
+.animate-out[data-state="closed"] {
+  animation-duration: 150ms;
+  animation-fill-mode: both;
+}
+
+/* fade-in-0 */
+[data-state="open"].fade-in-0 {
+  animation-name: fade-in;
+}
+
+/* fade-out-0 */
+[data-state="closed"].fade-out-0 {
+  animation-name: fade-out;
+}
+
+/* zoom-in-95 */
+[data-state="open"].zoom-in-95 {
+  animation-name: zoom-in;
+}
+
+/* zoom-out-95 */
+[data-state="closed"].zoom-out-95 {
+  animation-name: zoom-out;
+}
+
+/* slide-in-from-top-2 */
+[data-state="open"].slide-in-from-top-2,
+[data-side="bottom"].slide-in-from-top-2 {
+  animation-name: slide-in-from-top;
+}
+
+/* slide-in-from-bottom-2 */
+[data-state="open"].slide-in-from-bottom-2,
+[data-side="top"].slide-in-from-bottom-2 {
+  animation-name: slide-in-from-bottom;
+}
+
+/* slide-in-from-left-2 */
+[data-state="open"].slide-in-from-left-2,
+[data-side="right"].slide-in-from-left-2 {
+  animation-name: slide-in-from-left;
+}
+
+/* slide-in-from-right-2 */
+[data-state="open"].slide-in-from-right-2,
+[data-side="left"].slide-in-from-right-2 {
+  animation-name: slide-in-from-right;
+}

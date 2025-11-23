@@ -1,6 +1,5 @@
 "use client";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { debounce } from "lodash";
 import useApiQuery from "@/hooks/useApiQuery";
@@ -8,6 +7,7 @@ import { CoursesListResponse } from "@/types/types";
 import { DataTable } from "@/components/TableComponents/DataTable";
 import { columns } from "@/components/courses/TableColumns";
 import Pagination from "@/components/TableComponents/Pagination";
+import CreateCourseDropdown from "@/components/courses/CreateCourseDropdown";
 
 const Page = () => {
   const t = useTranslations("Courses");
@@ -53,12 +53,8 @@ const Page = () => {
         <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
           {t("Courses")}
         </h1>
-        <Link
-          href={"/courses/create"}
-          className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
-        >
-          {t("Create New")}
-        </Link>
+
+        <CreateCourseDropdown />
       </div>
 
       {/* Search */}

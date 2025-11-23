@@ -2,7 +2,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --primary: oklch(56.506% 0.23919 262.659);
+  --primary: #1d65ff;
   --backgroundSecondary: #eaf5ff;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -131,13 +131,21 @@
 }
 
 @keyframes accordion-down {
-  from { height: 0 }
-  to { height: var(--radix-accordion-content-height) }
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
 }
 
 @keyframes accordion-up {
-  from { height: var(--radix-accordion-content-height) }
-  to { height: 0 }
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
 
 body {
