@@ -230,7 +230,25 @@
         "Email": "Email",
         "Student ID": "Student ID",
         "ID": "ID",
-        "Phone": "Phone"
+        "Phone": "Phone",
+        "New Course": "New Course",
+        "New Topic": "New Topic",
+        "New Lectures": "New Lectures",
+        "New Assignments": "New Assignments",
+        "New Presentations": "New Presentations",
+        "Create Topics": "Create Topics",
+        "Select Course": "Select Course",
+        "Select a course": "Select a course",
+        "Add another topic": "Add another topic",
+        "Remove": "Remove",
+        "Topic Title": "Topic Title",
+        "Enter topic title": "Enter topic title",
+        "Topic Description": "Topic Description",
+        "Enter topic description": "Enter topic description",
+        "At least one topic is required": "At least one topic is required",
+        "Selected course:": "Selected course:",
+        "Change": "Change",
+        "Invalid input: expected number, received undefined": "Course must be selected"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
@@ -248,7 +266,9 @@
         "Course deleted successfully": "Course deleted successfully",
         "Topic created successfully": "Topic created successfully",
         "Topic edited successfully": "Topic edited successfully",
-        "Topic deleted successfully": "Topic deleted successfully"
+        "Topic deleted successfully": "Topic deleted successfully",
+        "Failed to create topics": "Failed to create topics",
+        "Topics created successfully": "Topics created successfully"
     },
     "skeleton": {
         "No results": "No results",

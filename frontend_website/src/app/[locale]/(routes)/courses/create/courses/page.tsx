@@ -4,7 +4,7 @@ import TopicCreateForm from "@/components/courses/TopicCreateForm";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { CourseFormData, CourseSchema } from "@/schemas/courseSchema";
-import { TopicFormData, TopicSchema } from "@/schemas/topicShema";
+import { TopicItemFormData, TopicItemSchema } from "@/schemas/topicShema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -54,8 +54,8 @@ const Page = () => {
     formState: { errors: topicErrors, isSubmitting: isTopicSubmitting },
     reset: topicReset,
     trigger: topicTrigger,
-  } = useForm<TopicFormData>({
-    resolver: zodResolver(TopicSchema),
+  } = useForm<TopicItemFormData>({
+    resolver: zodResolver(TopicItemSchema),
   });
 
   const { mutate } = useApiMutation<{ id: number }, CourseFormData>(
@@ -83,7 +83,7 @@ const Page = () => {
     }
   };
 
-  const onTopicSubmit = (data: TopicFormData) => {
+  const onTopicSubmit = (data: TopicItemFormData) => {
     addTopicWithCourse(
       {
         name: formValues.name,

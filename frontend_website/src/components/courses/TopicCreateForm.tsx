@@ -3,15 +3,15 @@ import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import React from "react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { TopicFormData } from "@/schemas/topicShema";
+import { TopicItemFormData } from "@/schemas/topicShema";
 
 const TopicCreateForm = ({
   register,
   errors,
   onSubmit,
 }: {
-  register: UseFormRegister<TopicFormData>;
-  errors: FieldErrors<TopicFormData>;
+  register: UseFormRegister<TopicItemFormData>;
+  errors: FieldErrors<TopicItemFormData>;
   onSubmit: React.FormEventHandler<HTMLFormElement>;
 }) => {
   const t = useTranslations("Courses");
