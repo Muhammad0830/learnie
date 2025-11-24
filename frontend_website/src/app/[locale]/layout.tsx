@@ -5,6 +5,8 @@ import { ThemeProvider } from "next-themes";
 import Providers from "@/context/ReactQueryProvider";
 import { AuthProvider } from "@/context/AuthContext";
 import { CustomToastProvider } from "@/context/CustomToastContext";
+import CustomToast from "@/components/CustomToast";
+
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -33,6 +35,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                     enableSystem
                   >
                     {children}
+                    <CustomToast />
                   </ThemeProvider>
                 </NextIntlClientProvider>
               </CustomToastProvider>
