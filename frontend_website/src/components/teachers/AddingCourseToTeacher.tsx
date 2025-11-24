@@ -24,7 +24,7 @@ const AddingCourseToTeacher = ({
 
   return (
     <>
-      <div className="mt-10">
+      <div className="mt-6">
         <h2 className="sm:text-2xl text-xl font-semibold mb-2">
           {t("Courses")}
         </h2>

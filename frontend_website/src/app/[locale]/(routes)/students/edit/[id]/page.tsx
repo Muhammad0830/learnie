@@ -51,7 +51,6 @@ const Page = () => {
   useEffect(() => {
     if (student) {
       setValue("name", student.user.name);
-      setValue("email", student.user.email);
       setValue("studentId", student.user.studentId);
       if (student.user.age) setValue("age", student.user.age);
       if (student.courses.length > 0) {

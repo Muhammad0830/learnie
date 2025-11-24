@@ -51,7 +51,6 @@ const Page = () => {
   useEffect(() => {
     if (teacher) {
       setValue("name", teacher.user.name);
-      setValue("email", teacher.user.email);
       if (teacher.user.age) setValue("age", teacher.user.age);
       if (teacher.courses.length > 0) {
         const courseIds = teacher.courses.map((course) => String(course.id));
@@ -124,7 +123,7 @@ const Page = () => {
       {isLoadingCourses ? (
         <div>{t("Loading")}</div>
       ) : courses?.courses.length === 0 ? (
-        <div className="mt-10">{t("no courses found")}</div>
+        <div className="mt-6">{t("no courses found")}</div>
       ) : (
         <AddingCourseToTeacher
           isLoading={isLoading}
