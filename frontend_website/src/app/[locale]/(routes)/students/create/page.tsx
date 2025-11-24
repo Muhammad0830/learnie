@@ -92,7 +92,6 @@ const Page = () => {
       showToast("error", "Invalid phone number");
       return;
     }
-    console.log("isValid", isValid);
     setIsDialogOpen(isValid && isPasswordValid && isEmailValid);
   };
 
