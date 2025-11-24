@@ -100,7 +100,8 @@
         "not updated yet": "(not updated yet)",
         "No results": "No results",
         "Editing a new Student": "Editing a new Student",
-        "Editing": "Editing..."
+        "Editing": "Editing...",
+        "Email is required": "Email is required"
     },
     "Teachers": {
         "Teachers": "Teachers",

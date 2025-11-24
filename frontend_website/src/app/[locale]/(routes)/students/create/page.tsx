@@ -20,6 +20,7 @@ const Page = () => {
   const t = useTranslations("Students");
   const toastT = useTranslations("Toast");
   const [passwordError, setPasswordError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const {
     register,
     handleSubmit,
@@ -63,21 +64,35 @@ const Page = () => {
     });
   };
 
+  const checkValidity = (value: "email" | "password") => {
+    if (value === "password") {
+      if (control._formValues.password.length < 6) {
+        setPasswordError("Password must be at least 6 characters");
+        return false;
+      } else {
+        setPasswordError("");
+        return true;
+      }
+    } else {
+      if (!control._formValues.email) {
+        setEmailError("Email is required");
+        return false;
+      } else {
+        setEmailError("");
+        return true;
+      }
+    }
+  };
+
   const validateValues = async () => {
     const isValid = await trigger();
-    let isPasswordValid;
-    if (control._formValues.password.length < 6) {
-      setPasswordError("Password must be at least 6 characters");
-      isPasswordValid = false;
-    } else {
-      setPasswordError("");
-      isPasswordValid = true;
-    }
+    const isPasswordValid = checkValidity("password");
+    const isEmailValid = checkValidity("email");
     if (!isPhoneValid) {
       showToast("error", "Invalid phone number");
       return;
     }
-    setIsDialogOpen(isValid && isPasswordValid);
+    setIsDialogOpen(isValid && isPasswordValid && isEmailValid);
   };
 
   const selectedCoursesIds = useWatch({
@@ -112,6 +127,7 @@ const Page = () => {
         setValue={setValue}
         onPhoneValidityChange={setIsPhoneValid}
         passwordError={passwordError}
+        emailError={emailError}
       />
 
       {courses?.courses.length === 0 ? (

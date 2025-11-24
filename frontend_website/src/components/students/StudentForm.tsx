@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import { StudentFormData } from "@/schemas/studentSchema";
 import { useTranslations } from "next-intl";
-import React from "react";
+import React, { useState } from "react";
 import {
   Control,
   FieldErrors,
@@ -20,6 +20,7 @@ type StudentFormProps = {
   onPhoneValidityChange?: (isValid: boolean) => void;
   editPage?: boolean;
   passwordError?: string;
+  emailError?: string;
 };
 
 const StudentForm = ({
@@ -31,8 +32,10 @@ const StudentForm = ({
   onPhoneValidityChange,
   editPage,
   passwordError,
+  emailError,
 }: StudentFormProps) => {
   const t = useTranslations("Students");
+  const [isPhoneValid, setIsPhoneValid] = useState(true);
 
   return (
     <form id="student_form" onSubmit={onSubmit} className="space-y-4">
@@ -56,24 +59,57 @@ const StudentForm = ({
           )}
         </div>
 
-        {/* email */}
-        <div className="relative flex-1">
-          <label className="block mb-0.5 font-semibold">{t("Email")}</label>
-          <input
-            type="email"
-            {...register("email")}
-            className={cn(
-              "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
-              errors.email && "border-red-600"
+        {editPage ? (
+          <div className="relative flex-1">
+            {/* age */}
+            <label className="block mb-0.5 font-semibold">
+              <span>{t("Age")} </span>
+              <span className="text-xs font-normal">({t("optional")})</span>
+            </label>
+            <input
+              type="text"
+              {...register("age", {
+                required: t("AgeIsRequired") as string,
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: t("AgeMustBeNumber") as string,
+                },
+                onChange: (e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              })}
+              className={cn(
+                "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
+                errors.age && "border-red-600"
+              )}
+              placeholder={t("EnterStudentAge") as string}
+            />
+            {errors.age && (
+              <p className="text-red-500 sm:text-sm absolute text-xs">
+                {t(`${errors.age.message}`)}
+              </p>
             )}
-            placeholder={t("EnterStudentEmail") as string}
-          />
-          {errors.email && (
-            <p className="text-red-500 sm:text-sm absolute text-xs">
-              {t(`${errors.email.message}`)}
-            </p>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="relative flex-1">
+            {/* email */}
+            <label className="block mb-0.5 font-semibold">{t("Email")}</label>
+            <input
+              type="email"
+              {...register("email")}
+              className={cn(
+                "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
+                (emailError || errors.email) && "border-red-600"
+              )}
+              placeholder={t("EnterStudentEmail") as string}
+            />
+            {(emailError || errors.email) && (
+              <p className="text-red-500 sm:text-sm absolute text-xs">
+                {t(`${emailError || errors?.email?.message}`)}
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="flex sm:gap-2 gap-4 sm:flex-row flex-col">
@@ -88,14 +124,15 @@ const StudentForm = ({
             onChange={(value) => {
               if (value) {
                 setValue("phoneNumber", value);
-              }
+                setIsPhoneValid(true);
+              } else setIsPhoneValid(false);
             }}
             onValidityChange={onPhoneValidityChange}
             placeholder={t("EnterStudentPhoneNumber") as string}
           />
-          {errors.phoneNumber && (
+          {(errors.phoneNumber || !isPhoneValid) && (
             <p className="text-red-500 sm:text-sm absolute text-xs">
-              {t(`${errors.phoneNumber.message}`)}
+              {t(`${errors?.phoneNumber?.message || "Invalid phone number"}`)}
             </p>
           )}
         </div>
@@ -129,40 +166,40 @@ const StudentForm = ({
         </div>
       </div>
 
-      <div className="flex sm:flex-row flex-col sm:gap-2 gap-4">
-        {/* age */}
-        <div className="relative flex-1">
-          <label className="block mb-0.5 font-semibold">
-            <span>{t("Age")} </span>
-            <span className="text-xs font-normal">({t("optional")})</span>
-          </label>
-          <input
-            type="text"
-            {...register("age", {
-              required: t("AgeIsRequired") as string,
-              pattern: {
-                value: /^[0-9]+$/,
-                message: t("AgeMustBeNumber") as string,
-              },
-              onChange: (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-              },
-            })}
-            className={cn(
-              "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
-              errors.age && "border-red-600"
+      {!editPage ? (
+        <div className="flex sm:flex-row flex-col sm:gap-2 gap-4">
+          {/* age */}
+          <div className="relative flex-1">
+            <label className="block mb-0.5 font-semibold">
+              <span>{t("Age")} </span>
+              <span className="text-xs font-normal">({t("optional")})</span>
+            </label>
+            <input
+              type="text"
+              {...register("age", {
+                required: t("AgeIsRequired") as string,
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: t("AgeMustBeNumber") as string,
+                },
+                onChange: (e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              })}
+              className={cn(
+                "border border-foreground/60 rounded p-2 w-full h-10 bg-background-secondary",
+                errors.age && "border-red-600"
+              )}
+              placeholder={t("EnterStudentAge") as string}
+            />
+            {errors.age && (
+              <p className="text-red-500 sm:text-sm absolute text-xs">
+                {t(`${errors.age.message}`)}
+              </p>
             )}
-            placeholder={t("EnterStudentAge") as string}
-          />
-          {errors.age && (
-            <p className="text-red-500 sm:text-sm absolute text-xs">
-              {t(`${errors.age.message}`)}
-            </p>
-          )}
-        </div>
+          </div>
 
-        {/* password */}
-        {!editPage ? (
+          {/* password */}
           <div className="relative flex-1">
             <label className="block mb-0.5 font-semibold">
               {t("password")}
@@ -182,10 +219,8 @@ const StudentForm = ({
               </p>
             )}
           </div>
-        ) : (
-          <div className="flex-1 max-sm:hidden"></div>
-        )}
-      </div>
+        </div>
+      ) : null}
     </form>
   );
 };

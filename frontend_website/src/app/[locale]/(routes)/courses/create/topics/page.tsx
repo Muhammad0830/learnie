@@ -61,8 +61,6 @@ export default function CreateTopicsPage() {
   const { mutate } = useApiMutation("/courses/topics", "post");
 
   const onSubmit = (data: TopicsForCourseFormData) => {
-    console.log("submitted data", data);
-
     mutate(
       { ...data, courseId: Number(data.courseId) },
       {
