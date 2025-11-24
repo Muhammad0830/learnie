@@ -44,7 +44,7 @@ const useApiQuery = <T,>(
     queryOptions,
   }: UseApiQueryOptions<T>
 ) => {
-  const { showToast } = useCustomToast();
+  const { showToast, showLoadingToast, hideLoadingToast } = useCustomToast();
   const toastT = useTranslations("Toast");
   const hasShownError = useRef(false);
 
@@ -64,6 +64,21 @@ const useApiQuery = <T,>(
     refetchOnWindowFocus,
     ...queryOptions,
   });
+
+  const loading = useRef(false);
+  useEffect(() => {
+    if (isLoading) {
+      setTimeout(() => {
+        if (isLoading && !loading.current) {
+          showLoadingToast(toastT("Loading"));
+          loading.current = true;
+        }
+      }, 300);
+    } else {
+      loading.current = false;
+      hideLoadingToast();
+    }
+  }, [isLoading]); // eslint-disable-line
 
   useEffect(() => {
     if (error && !hasShownError.current) {

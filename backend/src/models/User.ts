@@ -276,7 +276,7 @@ export async function deleteUser({
     );
 
     if (user.length === 0) {
-      throw new Error("Student not found");
+      throw new Error("User not found");
     }
 
     const rows = await queryUniversity<ResultSetHeader>(
