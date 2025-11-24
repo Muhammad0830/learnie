@@ -11,6 +11,16 @@ import { useTranslations } from "next-intl";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useCustomToast } from "@/context/CustomToastContext";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+} from "../ui/dialog";
+import CustomButton from "../ui/customButton";
+import { useState } from "react";
 
 const TableActionButton = ({
   payment,
@@ -21,6 +31,7 @@ const TableActionButton = ({
 }) => {
   const t = useTranslations("Teachers");
   const toastT = useTranslations("Toast");
+  const [open, setOpen] = useState(false);
 
   const { showToast } = useCustomToast();
 
@@ -34,7 +45,7 @@ const TableActionButton = ({
   };
 
   const { mutate: deleteTeacher } = useApiMutation(
-    (id) => `/teachers/delete/${id}`,
+    (id) => `/users/${id}`,
     "delete"
   );
 
@@ -73,7 +84,7 @@ const TableActionButton = ({
         </DropdownMenuItem>
         <DropdownMenuItem className="p-0 hover:bg-transparent!">
           <button
-            onClick={() => handleDelete(payment.id)}
+            onClick={() => setOpen(true)}
             className="flex items-center gap-2 hover:bg-primary/30 cursor-pointer w-full h-full px-2 py-1.5 rounded-sm"
           >
             <Trash2 />
@@ -81,6 +92,35 @@ const TableActionButton = ({
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="p-4 max-w-[600px]! lg:w-[50vw] sm:w-[70vw] sm:min-w-[400px] w-[90vw] min-w-[300px]">
+          <DialogTitle className="text-xl sm:text-2xl">
+            {t("Are you sure to delete this teacher?")}
+          </DialogTitle>
+
+          <DialogDescription className="flex flex-col gap-1">
+            <span>
+              {t("Name")}: {payment.name}
+            </span>
+          </DialogDescription>
+
+          <DialogFooter className="flex justify-end gap-2">
+            <DialogClose asChild>
+              <CustomButton className="px-6 py-2" variants="outline">
+                {t("Close")}
+              </CustomButton>
+            </DialogClose>
+            <CustomButton
+              onClick={() => handleDelete(payment.id)}
+              className="px-6 py-2"
+              variants="primary"
+            >
+              {t("Delete")}
+            </CustomButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DropdownMenu>
   );
 };

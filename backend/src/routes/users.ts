@@ -202,6 +202,8 @@ usersRouter.delete("/:userId", validateUniversitySchema, async (req, res) => {
 
     const userId = req.params.userId;
 
+    if (!userId) return res.status(400).json({ error: "Missing userId" });
+
     const updated = await deleteUser({
       schemaName,
       userId,

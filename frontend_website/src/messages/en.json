@@ -101,7 +101,9 @@
         "No results": "No results",
         "Editing a new Student": "Editing a new Student",
         "Editing": "Editing...",
-        "Email is required": "Email is required"
+        "Email is required": "Email is required",
+        "Are you sure to delete this student?": "Are you sure to delete this student?",
+        "Close": "Close"
     },
     "Teachers": {
         "Teachers": "Teachers",
@@ -164,7 +166,9 @@
         "not updated yet": "(not updated yet)",
         "No results": "No results",
         "Editing a new Teacher": "Editing a new Teacher",
-        "Editing": "Editing..."
+        "Editing": "Editing...",
+        "Close": "Close",
+        "Are you sure to delete this teacher?": "Are you sure to delete this teacher?"
     },
     "Courses": {
         "Courses": "Courses",
@@ -249,7 +253,8 @@
         "At least one topic is required": "At least one topic is required",
         "Selected course:": "Selected course:",
         "Change": "Change",
-        "Invalid input: expected number, received undefined": "Course must be selected"
+        "Invalid input: expected number, received undefined": "Course must be selected",
+        "Are you sure to delete this course?": "Are you sure to delete this course?"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
@@ -269,7 +274,8 @@
         "Topic edited successfully": "Topic edited successfully",
         "Topic deleted successfully": "Topic deleted successfully",
         "Failed to create topics": "Failed to create topics",
-        "Topics created successfully": "Topics created successfully"
+        "Topics created successfully": "Topics created successfully",
+        "Loading": "Loading..."
     },
     "skeleton": {
         "No results": "No results",
