@@ -13,7 +13,7 @@ export async function getCoursesList({
   search: string;
 }) {
   try {
-    const searchCondition = search ? `(c.name LIKE :search)` : "1=1";
+    const searchCondition = search ? `(name LIKE :search)` : "1=1";
 
     const sql = `
         SELECT
