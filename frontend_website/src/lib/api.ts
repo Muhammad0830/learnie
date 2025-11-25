@@ -71,3 +71,6 @@ api.interceptors.response.use(
   }
 );
 export default api;
+export function getUniversitySchema() {
+  return universitySchema;
+}
