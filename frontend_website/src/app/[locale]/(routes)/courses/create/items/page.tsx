@@ -16,9 +16,6 @@ import {
   LectureSchema,
   AssignmentSchema,
   PresentationSchema,
-  LectureFormType,
-  AssignmentFormType,
-  PresentationFormType,
   FormType,
 } from "@/schemas/courseItemsSchema";
 
@@ -108,7 +105,7 @@ export default function CreateItemPage() {
   console.log("formValues", formValues);
 
   const { mutate } = useApiMutation(
-    type ? `/courses/create/${type}/something` : "/courses/create/invalid",
+    type ? `/courses/create/${type}` : "/courses/create/invalid",
     "post"
   );
 
@@ -128,7 +125,7 @@ export default function CreateItemPage() {
     console.log("submitted data", confirmedData);
     mutate(confirmedData, {
       onSuccess: () => {
-        showToast("success", t("Created successfully"));
+        showToast("success", t(`${type} created successfully`));
         reset();
         router.push("/courses");
       },

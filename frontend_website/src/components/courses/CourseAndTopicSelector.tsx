@@ -53,7 +53,7 @@ export default function CourseAndTopicSelector({
     <div className="space-y-4">
       <div className="relative">
         <label className="font-semibold">{t("Select Course")}</label>
-        {isLoading && (
+        {!isLoading ? (
           <select
             {...register("courseId", { required: true })}
             className="border rounded p-2 w-full"
@@ -65,6 +65,8 @@ export default function CourseAndTopicSelector({
               </option>
             ))}
           </select>
+        ) : (
+          <div>{t("Loading")}</div>
         )}
         {errors.courseId && (
           <p className="absolute -bottom-[25%] text-red-500 text-xs">
@@ -75,7 +77,7 @@ export default function CourseAndTopicSelector({
 
       <div className="relative">
         <label className="font-semibold">{t("Select Topic")}</label>
-        {isLoadingTopics && (
+        {!isLoadingTopics ? (
           <select
             {...register("topicId", { required: true })}
             className="border rounded p-2 w-full"
@@ -87,6 +89,8 @@ export default function CourseAndTopicSelector({
               </option>
             ))}
           </select>
+        ) : (
+          <div>{t("Loading")}</div>
         )}
         {errors.topicId && (
           <p className="absolute -bottom-[25%] text-red-500 text-xs">
