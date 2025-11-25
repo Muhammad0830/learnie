@@ -271,7 +271,10 @@
         "Due_date": "Due date",
         "Content is required": "Content is required",
         "Due_date is required": "Due_date is required",
-        "File url is required": "File url is required"
+        "File url is required": "File url is required",
+        "lecture created successfully": "Lecture created successfully",
+        "assignment created successfully": "Assignment created successfully",
+        "presentation created successfully": "Presentation created successfully"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",

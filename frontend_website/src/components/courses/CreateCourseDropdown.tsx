@@ -9,10 +9,10 @@ const createLinks = [
   { label: "Course", href: "/courses/create/courses" },
   { label: "Topic", href: "/courses/create/topics" },
   { label: "Lectures", href: "/courses/create/items?pageType=lecture" },
-  { label: "Assignments", href: "/courses/create/items?pageType=assignments" },
+  { label: "Assignments", href: "/courses/create/items?pageType=assignment" },
   {
     label: "Presentations",
-    href: "/courses/create/items?pageType=presentations",
+    href: "/courses/create/items?pageType=presentation",
   },
 ];
 

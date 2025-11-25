@@ -329,15 +329,14 @@ coursesRouter.get(
 );
 
 coursesRouter.post(
-  "/:courseId/topics/:topicId/assignments",
+  "/create/assignment",
   validateUniversitySchema,
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
-      const { title, description, due_date, images } = req.body;
+      const { title, description, due_date, images, courseId, topicId } =
+        req.body;
 
-      const courseId = req.params.courseId;
-      const topicId = req.params.topicId;
       if (!courseId) {
         return res.status(400).json({ error: "Missing courseId" });
       } else if (!title) {
@@ -368,20 +367,19 @@ coursesRouter.post(
 );
 
 coursesRouter.post(
-  "/:courseId/topics/:topicId/lectures",
+  "/create/lecture",
   validateUniversitySchema,
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
-      const { title, content, image, video } = req.body;
+      const { title, content, image_url, video_url, courseId, topicId } =
+        req.body;
 
-      const courseId = req.params.courseId;
-      const topicId = req.params.topicId;
       if (!courseId) {
         return res.status(400).json({ error: "Missing courseId" });
       } else if (!title) {
         return res.status(400).json({ error: "Missing title" });
-      } else if (!image && !video) {
+      } else if (!image_url && !video_url) {
         return res.status(400).json({ error: "Missing both image and video" });
       }
 
@@ -394,8 +392,8 @@ coursesRouter.post(
         schemaName,
         title,
         content,
-        video,
-        image,
+        video: video_url,
+        image: image_url,
       });
 
       res.json(result);
@@ -407,15 +405,13 @@ coursesRouter.post(
 );
 
 coursesRouter.post(
-  "/:courseId/topics/:topicId/presentations",
+  "/create/presentation",
   validateUniversitySchema,
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
-      const { title, file_url } = req.body;
+      const { title, file_url, courseId, topicId } = req.body;
 
-      const courseId = req.params.courseId;
-      const topicId = req.params.topicId;
       if (!courseId) {
         return res.status(400).json({ error: "Missing courseId" });
       } else if (!title) {
