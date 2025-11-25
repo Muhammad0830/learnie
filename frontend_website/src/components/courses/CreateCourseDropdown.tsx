@@ -8,9 +8,12 @@ import { useState } from "react";
 const createLinks = [
   { label: "Course", href: "/courses/create/courses" },
   { label: "Topic", href: "/courses/create/topics" },
-  { label: "Lectures", href: "/courses/create/lectures" },
-  { label: "Assignments", href: "/courses/create/assignments" },
-  { label: "Presentations", href: "/courses/create/presentations" },
+  { label: "Lectures", href: "/courses/create/items?pageType=lecture" },
+  { label: "Assignments", href: "/courses/create/items?pageType=assignments" },
+  {
+    label: "Presentations",
+    href: "/courses/create/items?pageType=presentations",
+  },
 ];
 
 const CreateCourseDropdown = () => {

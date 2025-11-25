@@ -34,7 +34,7 @@ type UseApiQueryOptions<T> = {
 };
 
 const useApiQuery = <T,>(
-  url: string,
+  url: string | null,
   {
     key,
     enabled = true,
@@ -54,11 +54,12 @@ const useApiQuery = <T,>(
   >({
     queryKey: Array.isArray(key) ? [...key] : [key], // ✅ make sure it's an array
     queryFn: async () => {
+      if (!url) return null as T;
       const response = await api.get(url);
       return response.data;
     },
     retry: 1,
-    enabled,
+    enabled: Boolean(enabled && url),
     staleTime,
     refetchOnMount,
     refetchOnWindowFocus,
