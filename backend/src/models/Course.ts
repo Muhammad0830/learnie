@@ -503,12 +503,28 @@ export async function createCourseTopicAssignment({
 }) {
   try {
     const imagesJson = JSON.stringify(images);
+    const hasTopic = topicId && topicId.trim().length > 0;
+
+    const sql = hasTopic
+      ? `INSERT INTO assignments (course_id, topic_id, title, description, images, due_date) 
+        VALUES (:courseId, :topicId, :title, :description, :images, :due_date)`
+      : `INSERT INTO assignments (course_id, title, description, images, due_date) 
+        VALUES (:courseId, :title, :description, :images, :due_date)`;
+
+    const params: any = {
+      courseId,
+      title,
+      description,
+      images: imagesJson,
+      due_date,
+    };
+
+    if (hasTopic) params.topicId = topicId;
 
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
-      `INSERT INTO assignments (course_id, topic_id, title, description, images, due_date) 
-        VALUES (:courseId, :topicId, :title, :description, :images, :due_date)`,
-      { courseId, topicId, title, description, images: imagesJson, due_date }
+      sql,
+      params
     );
 
     return {
@@ -540,16 +556,40 @@ export async function createCourseTopicLectures({
   image: string;
 }) {
   try {
+    const hasImage = image && image.trim().length > 0;
+    const hasVideo = video && video.trim().length > 0;
+
+    if (!hasImage && !hasVideo) {
+      throw new Error("Either image_url or video_url must be provided.");
+    }
+
+    const hasTopic = topicId && topicId.trim().length > 0;
+
+    const sql = hasTopic
+      ? `INSERT INTO lectures (course_id, topic_id, title, content, image_url, video_url)
+         VALUES (:courseId, :topicId, :title, :content, :image, :video)`
+      : `INSERT INTO lectures (course_id, title, content, image_url, video_url)
+         VALUES (:courseId, :title, :content, :image, :video)`;
+
+    const params: any = {
+      courseId,
+      title,
+      content,
+      image: hasImage ? image : null,
+      video: hasVideo ? video : null,
+    };
+
+    if (hasTopic) params.topicId = topicId;
+
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
-      `INSERT INTO lectures (course_id, topic_id, title, content, image_url, video_url) 
-        VALUES (:courseId, :topicId, :title, :content, :image, :video)`,
-      { courseId, topicId, title, content, image, video }
+      sql,
+      params
     );
 
     return {
       id: result.insertId,
-      title: title,
+      title,
       description: content,
     };
   } catch (err: any) {
@@ -571,11 +611,26 @@ export async function createCourseTopicPresentations({
   file_url: string;
 }) {
   try {
+    const hasTopic = topicId && topicId.trim().length > 0;
+
+    const sql = hasTopic
+      ? `INSERT INTO presentations (course_id, topic_id, title, file_url) 
+        VALUES (:courseId, :topicId, :title, :file_url)`
+      : `INSERT INTO presentations (course_id, title, file_url) 
+        VALUES (:courseId, :title, :file_url)`;
+
+    const params: any = {
+      courseId,
+      title,
+      file_url,
+    };
+
+    if (hasTopic) params.topicId = topicId;
+
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
-      `INSERT INTO presentations (course_id, topic_id, title, file_url) 
-        VALUES (:courseId, :topicId, :title, :file_url)`,
-      { courseId, topicId, title, file_url }
+      sql,
+      params
     );
 
     return {
