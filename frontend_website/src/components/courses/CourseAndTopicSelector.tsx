@@ -7,28 +7,34 @@ import {
   PresentationFormType,
 } from "@/schemas/courseItemsSchema";
 import { Course, Topic } from "@/types/types";
-import { useTranslations } from "next-intl";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormSetValue } from "react-hook-form";
+import CourseSelectDropdown from "./CourseSelectDropdown";
+import TopicSelectDropdown from "./TopicSelectDropdown";
+import { useEffect } from "react";
 
 type FormType = LectureFormType | AssignmentFormType | PresentationFormType;
 
 export default function CourseAndTopicSelector({
-  register,
   errors,
   selectedCourseId,
+  setValue,
+  selectedTopicId,
 }: {
-  register: UseFormRegister<FormType>;
   errors: FieldErrors<FormType>;
   selectedCourseId: number | null | undefined;
+  setValue: UseFormSetValue<FormType>;
+  selectedTopicId: string;
 }) {
-  const t = useTranslations("Courses");
-
   const { data: courses, isLoading } = useApiQuery<{ courses: Course[] }>(
     "/courses",
     {
       key: ["courses"],
     }
   );
+
+  useEffect(() => {
+    setValue("topicId", "");
+  }, [selectedCourseId, setValue]);
 
   const selectedCourse = courses?.courses?.find(
     (c) => Number(c.id) === Number(selectedCourseId)
@@ -47,57 +53,34 @@ export default function CourseAndTopicSelector({
     }
   );
 
-  console.log("Another errors", errors);
+  const handleSelectCourse = (courseId: number) => {
+    setValue("courseId", String(courseId));
+  };
+
+  const handleSelectTopic = (topicId: number) => {
+    setValue("topicId", String(topicId));
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="relative">
-        <label className="font-semibold">{t("Select Course")}</label>
-        {!isLoading ? (
-          <select
-            {...register("courseId", { required: true })}
-            className="border rounded p-2 w-full"
-          >
-            <option value="">{t("Select Course")}</option>
-            {courses?.courses?.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <div>{t("Loading")}</div>
-        )}
-        {errors.courseId && (
-          <p className="absolute -bottom-[25%] text-red-500 text-xs">
-            {t("Course is required")}
-          </p>
-        )}
-      </div>
+    <div className="space-y-0">
+      <CourseSelectDropdown
+        coursesData={courses}
+        errors={errors}
+        selectedCourseId={Number(selectedCourseId)}
+        handleSelectCourse={handleSelectCourse}
+        className="min-w-[200px]"
+        isLoading={isLoading}
+      />
 
-      <div className="relative">
-        <label className="font-semibold">{t("Select Topic")}</label>
-        {!isLoadingTopics ? (
-          <select
-            {...register("topicId", { required: true })}
-            className="border rounded p-2 w-full"
-          >
-            <option value="">{t("Select Topic")}</option>
-            {topics?.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.title}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <div>{t("Loading")}</div>
-        )}
-        {errors.topicId && (
-          <p className="absolute -bottom-[25%] text-red-500 text-xs">
-            {t("Topic is required")}
-          </p>
-        )}
-      </div>
+      <TopicSelectDropdown
+        topics={topics}
+        errors={errors}
+        selectedTopicId={Number(selectedTopicId)}
+        handleSelectTopic={handleSelectTopic}
+        className="min-w-[200px]"
+        isLoading={isLoadingTopics}
+        selectedCourseId={selectedCourseId}
+      />
     </div>
   );
 }

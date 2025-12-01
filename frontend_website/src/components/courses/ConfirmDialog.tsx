@@ -6,23 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-interface defaultLectureType {
-  title: string;
-  content: string;
-  image_url: string;
-  video_url: string;
-}
-interface defaultAssignmentType {
-  title: string;
-  description: string;
-  due_date: string;
-  images: string[];
-}
-interface defaultPresentationType {
-  title: string;
-  file_url: string;
-}
+import { FormType } from "@/schemas/courseItemsSchema";
 
 export default function ConfirmDialog({
   open,
@@ -33,11 +17,7 @@ export default function ConfirmDialog({
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  data:
-    | defaultLectureType
-    | defaultAssignmentType
-    | defaultPresentationType
-    | null;
+  data: FormType | null;
 }) {
   if (!data) return null;
 
