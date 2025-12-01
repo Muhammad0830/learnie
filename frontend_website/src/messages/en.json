@@ -274,7 +274,15 @@
         "File url is required": "File url is required",
         "lecture created successfully": "Lecture created successfully",
         "assignment created successfully": "Assignment created successfully",
-        "presentation created successfully": "Presentation created successfully"
+        "presentation created successfully": "Presentation created successfully",
+        "Course id is required": "Course id is required",
+        "Topic id is required": "Topic id is required",
+        "Selected topic:": "Selected topic:",
+        "Select a Topic": "Select a Topic",
+        "Do you want to create topics first?": "Do you want to create topics first?",
+        "No topics found inside this course": "No topics found inside this course",
+        "Create Topic": "Create Topic",
+        "Either image URL or video URL is required": "Either image URL or video URL is required"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",

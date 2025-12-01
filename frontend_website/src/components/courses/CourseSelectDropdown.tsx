@@ -23,11 +23,15 @@ const CourseSelectDropdown = ({
   errors,
   selectedCourseId,
   handleSelectCourse,
+  className,
+  isLoading,
 }: {
   coursesData: Courses | undefined;
   errors: FieldErrors<TopicsForCourseFormData>;
   selectedCourseId: number;
   handleSelectCourse: (courseId: number) => void;
+  className?: string;
+  isLoading?: boolean;
 }) => {
   const t = useTranslations("Courses");
   const [search, setSearch] = useState("");
@@ -50,16 +54,27 @@ const CourseSelectDropdown = ({
   )?.name;
 
   return (
-    <div className="mb-5">
+    <div className="mb-2">
       <label className="font-semibold block mb-1">{t("Select a course")}</label>
 
       <div className="flex items-center gap-2">
         <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
-            <CustomButton variants="primary" type="button">
-              {selectedCourse ? t("Change") : t("Select a course")}
+            <CustomButton
+              variants="primary"
+              type="button"
+              className={cn(
+                "relative z-10 bg-[#ffffff] dark:bg-[#000000] group",
+                className
+              )}
+            >
+              <span className="relative z-10">
+                {selectedCourse ? t("Change") : t("Select a course")}
+              </span>
+              <div className="absolute inset-0 bg-primary/30 group-hover:bg-primary/0 z-0" />
             </CustomButton>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent
             align="start"
             side="bottom"
@@ -82,32 +97,36 @@ const CourseSelectDropdown = ({
             </div>
 
             {/* courses list */}
-            <div className="flex-1 flex flex-col gap-1 overflow-auto w-full">
-              {filteredCourses?.map((course: Course) => (
-                <button
-                  key={course.id}
-                  onClick={() => {
-                    handleSelectCourse(Number(course.id));
-                    setOpen(false);
-                  }}
-                  className={cn(
-                    "flex items-center rounded border border-primary/50 bg-primary/5 justify-start group hover:bg-primary/10 gap-2 px-2 py-1.5 text-sm cursor-pointer",
-                    selectedCourseId === Number(course.id) &&
-                      "bg-primary/20 hover:bg-primary/20"
-                  )}
-                >
-                  {course.name}
-                  <span
+            {isLoading ? (
+              <div className="px-2 pb-1">{t("Loading")}</div>
+            ) : (
+              <div className="flex-1 flex flex-col gap-1 overflow-auto w-full">
+                {filteredCourses?.map((course: Course) => (
+                  <button
+                    key={course.id}
+                    onClick={() => {
+                      handleSelectCourse(Number(course.id));
+                      setOpen(false);
+                    }}
                     className={cn(
-                      "text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-100",
-                      selectedCourseId === Number(course.id) && "opacity-100"
+                      "flex items-center rounded border border-primary/50 bg-primary/5 justify-start group hover:bg-primary/10 gap-2 px-2 py-1.5 text-sm cursor-pointer",
+                      selectedCourseId === Number(course.id) &&
+                        "bg-primary/20 hover:bg-primary/20"
                     )}
                   >
-                    ✓
-                  </span>
-                </button>
-              ))}
-            </div>
+                    {course.name}
+                    <span
+                      className={cn(
+                        "text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-100",
+                        selectedCourseId === Number(course.id) && "opacity-100"
+                      )}
+                    >
+                      ✓
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -118,6 +137,7 @@ const CourseSelectDropdown = ({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="z-0 relative w-full truncate"
             >
               {t("Selected course:")}{" "}
               <span className="text-primary font-semibold">

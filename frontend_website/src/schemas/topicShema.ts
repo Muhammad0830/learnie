@@ -10,5 +10,11 @@ export const TopicsForCourseSchema = z.object({
   topics: z.array(TopicItemSchema).min(1, "At least one topic is required"),
 });
 
+export const SelectedTopicsForCourseSchema = z.object({
+  courseId: z.number().int(),
+  topicId: z.number().int(),
+});
+
 export type TopicsForCourseFormData = z.infer<typeof TopicsForCourseSchema>;
+export type SelectedTopicForCourseFormData = z.infer<typeof SelectedTopicsForCourseSchema>;
 export type TopicItemFormData = z.infer<typeof TopicItemSchema>;

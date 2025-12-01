@@ -1,9 +1,8 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm, UseFormRegister, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence } from "framer-motion";
 
 import CourseAndTopicSelector from "@/components/courses/CourseAndTopicSelector";
 import ConfirmDialog from "@/components/courses/ConfirmDialog";
@@ -17,6 +16,9 @@ import {
   AssignmentSchema,
   PresentationSchema,
   FormType,
+  LectureFormType,
+  AssignmentFormType,
+  PresentationFormType,
 } from "@/schemas/courseItemsSchema";
 
 import { useApiMutation } from "@/hooks/useApiMutation";
@@ -25,18 +27,24 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 interface defaultLectureType {
+  courseId: string;
+  topicId: string;
   title: string;
   content: string;
   image_url: string;
   video_url: string;
 }
 interface defaultAssignmentType {
+  courseId: string;
+  topicId: string;
   title: string;
   description: string;
   due_date: string;
   images: string[];
 }
 interface defaultPresentationType {
+  courseId: string;
+  topicId: string;
   title: string;
   file_url: string;
 }
@@ -50,24 +58,64 @@ export default function CreateItemPage() {
   const { showToast } = useCustomToast();
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogData, setDialogData] = useState<
-    defaultLectureType | defaultAssignmentType | defaultPresentationType | null
-  >(null);
+  const [dialogData, setDialogData] = useState<FormType | null>(null);
 
   const formMap = {
     lecture: {
       schema: LectureSchema,
-      defaults: { title: "", content: "", image_url: "", video_url: "" },
+      defaults: {
+        title: "",
+        content: "",
+        image_url: "",
+        video_url: "",
+        courseId: "",
+        topicId: "",
+      },
     },
     assignment: {
       schema: AssignmentSchema,
-      defaults: { title: "", description: "", due_date: "", images: [] },
+      defaults: {
+        title: "",
+        description: "",
+        due_date: "",
+        images: [],
+        courseId: "",
+        topicId: "",
+      },
     },
     presentation: {
       schema: PresentationSchema,
-      defaults: { title: "", file_url: "" },
+      defaults: {
+        title: "",
+        file_url: "",
+        courseId: "",
+        topicId: "",
+      },
     },
-  } as const;
+  } as {
+    lecture: {
+      schema: typeof LectureSchema;
+      defaults: {
+        title: string;
+        content: string;
+        image_url: string;
+        video_url: string;
+      };
+    };
+    assignment: {
+      schema: typeof AssignmentSchema;
+      defaults: {
+        title: string;
+        description: string;
+        due_date: string;
+        images: string[];
+      };
+    };
+    presentation: {
+      schema: typeof PresentationSchema;
+      defaults: { title: string; file_url: string };
+    };
+  };
 
   function isValidType(value: string | null): value is keyof typeof formMap {
     return (
@@ -95,11 +143,11 @@ export default function CreateItemPage() {
     trigger,
     formState: { errors },
     reset,
+    setValue,
     control,
   } = form;
 
   const selectedCourseId = useWatch({ control, name: "courseId" });
-  const selectedCourse = selectedCourseId;
   const selectedTopicId = useWatch({ control, name: "topicId" });
   const formValues = useWatch({ control });
   console.log("formValues", formValues);
@@ -109,19 +157,12 @@ export default function CreateItemPage() {
     "post"
   );
 
-  const onSubmit = async (
-    data: defaultLectureType | defaultAssignmentType | defaultPresentationType
-  ) => {
+  const onSubmit = async (data: FormType) => {
     setDialogData(data);
     setDialogOpen(true);
   };
 
-  const sendToServer = (
-    confirmedData:
-      | defaultLectureType
-      | defaultAssignmentType
-      | defaultPresentationType
-  ) => {
+  const sendToServer = (confirmedData: FormType) => {
     console.log("submitted data", confirmedData);
     mutate(confirmedData, {
       onSuccess: () => {
@@ -150,30 +191,38 @@ export default function CreateItemPage() {
           </h1>
 
           <CourseAndTopicSelector
-            register={register}
             errors={errors}
-            selectedCourseId={selectedCourseId}
+            selectedCourseId={Number(selectedCourseId)}
+            setValue={setValue}
+            selectedTopicId={selectedTopicId}
           />
 
           <div className="mt-6">
             {type === "lecture" && (
-              <LectureForm register={register} errors={errors} />
+              <LectureForm
+                register={register as UseFormRegister<LectureFormType>}
+                errors={errors}
+              />
             )}
             {type === "assignment" && (
-              <AssignmentForm register={register} errors={errors} />
+              <AssignmentForm
+                register={register as UseFormRegister<AssignmentFormType>}
+                errors={errors}
+              />
             )}
             {type === "presentation" && (
-              <PresentationForm register={register} errors={errors} />
+              <PresentationForm
+                register={register as UseFormRegister<PresentationFormType>}
+                errors={errors}
+              />
             )}
           </div>
 
           <button
             type="submit"
-            className="mt-6 px-3 py-1.5 border rounded bg-primary/20 hover:bg-primary/30"
+            className="mt-6 mb-3 px-3 py-1.5 border rounded bg-primary/20 hover:bg-primary/30"
             onClick={async () => {
               const valid = await trigger();
-              console.log("errors", errors);
-              console.log("valid", valid);
               if (valid) handleSubmit(onSubmit)();
             }}
           >
