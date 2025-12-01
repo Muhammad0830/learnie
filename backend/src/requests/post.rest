@@ -75,7 +75,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3001/courses/6/topics/14/lectures
+POST http://localhost:3001/courses/create/lecture
 x-university-schema: university_harvard_university
 Content-Type: application/json
 
