@@ -25,6 +25,7 @@ import { useApiMutation } from "@/hooks/useApiMutation";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { Course, Topic } from "@/types/types";
 
 interface defaultLectureType {
   courseId: string;
@@ -59,6 +60,8 @@ export default function CreateItemPage() {
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogData, setDialogData] = useState<FormType | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
 
   const formMap = {
     lecture: {
@@ -149,8 +152,6 @@ export default function CreateItemPage() {
 
   const selectedCourseId = useWatch({ control, name: "courseId" });
   const selectedTopicId = useWatch({ control, name: "topicId" });
-  const formValues = useWatch({ control });
-  console.log("formValues", formValues);
 
   const { mutate } = useApiMutation(
     type ? `/courses/create/${type}` : "/courses/create/invalid",
@@ -163,7 +164,6 @@ export default function CreateItemPage() {
   };
 
   const sendToServer = (confirmedData: FormType) => {
-    console.log("submitted data", confirmedData);
     mutate(confirmedData, {
       onSuccess: () => {
         showToast("success", t(`${type} created successfully`));
@@ -195,6 +195,8 @@ export default function CreateItemPage() {
             selectedCourseId={Number(selectedCourseId)}
             setValue={setValue}
             selectedTopicId={selectedTopicId}
+            setSelectedCourse={setSelectedCourse}
+            setSelectedTopic={setSelectedTopic}
           />
 
           <div className="mt-6">
@@ -234,6 +236,8 @@ export default function CreateItemPage() {
             onClose={() => setDialogOpen(false)}
             onConfirm={() => dialogData && sendToServer(dialogData)}
             data={dialogData}
+            selectedCourse={selectedCourse}
+            selectedTopic={selectedTopic}
           />
         </>
       )}
