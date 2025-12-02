@@ -399,7 +399,7 @@ export async function getCourseTopic({
     }
 
     return {
-      course_topics: couserTopics[0],
+      course_topic: couserTopics[0],
       assignments: assignments,
       lectures: lectures,
       presentations: presentations,

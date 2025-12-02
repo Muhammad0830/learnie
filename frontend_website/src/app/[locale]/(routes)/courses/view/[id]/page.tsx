@@ -16,10 +16,13 @@ const CourseViewPage = () => {
   const t = useTranslations("Courses");
   const { id } = useParams();
 
-  const { data: course, isLoading } = useApiQuery<EachCourseResponseData>(
-    `/courses/${id}`,
-    { key: ["courses"] }
-  );
+  const {
+    data: course,
+    isLoading,
+    refetch,
+  } = useApiQuery<EachCourseResponseData>(`/courses/${id}`, {
+    key: ["courses"],
+  });
 
   if (isLoading) {
     return <div className="my-10">{t("Loading")}...</div>;
@@ -97,7 +100,12 @@ const CourseViewPage = () => {
               className="flex flex-col gap-2"
             >
               {course.topics.map((topic) => (
-                <CourseTopicsItem key={topic.course_topics.id} topic={topic} />
+                <CourseTopicsItem
+                  key={topic.course_topic.id}
+                  topic={topic}
+                  courseId={course.course.id}
+                  refetch={refetch}
+                />
               ))}
             </Accordion>
           </div>
