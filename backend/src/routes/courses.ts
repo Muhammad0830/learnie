@@ -13,6 +13,7 @@ import {
   deleteCourseTopicPresentation,
   getCoursesList,
   getCourseTopic,
+  getCourseTopicById,
   getCourseTopicsList,
   getCourseUsers,
   getEachAssignment,
@@ -20,6 +21,7 @@ import {
   getEachLecture,
   getEachPresentation,
   updateCourse,
+  updateCourseTopic,
   updateCourseTopicAssignment,
   updateCourseTopicLecture,
   updateCourseTopicPresentation,
@@ -91,6 +93,8 @@ coursesRouter.get(
       await getEachCourse({ courseId, schemaName });
 
       const result = await getCourseTopicsList({ courseId, schemaName });
+
+      if (typeof result === "string") res.json({ message: result });
 
       res.json(result);
     } catch (err: any) {
@@ -257,6 +261,47 @@ coursesRouter.post(
       });
     } catch (err: any) {
       console.error("Error inserting course topic:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
+    }
+  }
+);
+
+coursesRouter.put(
+  "/topics/:topicId",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
+
+      const topicId = req.params.topicId;
+      const { title, description } = req.body;
+
+      if (!title) {
+        return res.status(400).json({ error: "Missing title" });
+      }
+      if (!description) {
+        return res.status(400).json({ error: "Missing description" });
+      }
+
+      // Optional: verify that the topic exists
+      const topic = await getCourseTopicById({ schemaName, topicId });
+      if (!topic) {
+        return res.status(404).json({ error: "Topic not found" });
+      }
+
+      const result = await updateCourseTopic({
+        schemaName,
+        topicId,
+        title,
+        description,
+      });
+
+      res.json({
+        message: "Topic updated successfully",
+        data: result,
+      });
+    } catch (err: any) {
+      console.error("Error updating course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
   }

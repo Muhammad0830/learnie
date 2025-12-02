@@ -191,10 +191,16 @@ export default function ConfirmDialog({
 
         <div className="flex justify-end gap-2 mt-4">
           <CustomButton variants="outline" onClick={onClose}>
-            Close
+            {t("Close")}
           </CustomButton>
-          <CustomButton variants="primary" onClick={onConfirm}>
-            Create
+          <CustomButton
+            variants="primary"
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}
+          >
+            {t("Create")}
           </CustomButton>
         </div>
       </DialogContent>
