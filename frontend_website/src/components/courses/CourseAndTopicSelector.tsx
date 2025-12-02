@@ -19,11 +19,15 @@ export default function CourseAndTopicSelector({
   selectedCourseId,
   setValue,
   selectedTopicId,
+  setSelectedCourse,
+  setSelectedTopic,
 }: {
   errors: FieldErrors<FormType>;
   selectedCourseId: number | null | undefined;
   setValue: UseFormSetValue<FormType>;
   selectedTopicId: string;
+  setSelectedCourse: React.Dispatch<React.SetStateAction<Course | null>>;
+  setSelectedTopic: React.Dispatch<React.SetStateAction<Topic | null>>;
 }) {
   const { data: courses, isLoading } = useApiQuery<{ courses: Course[] }>(
     "/courses",
@@ -31,10 +35,6 @@ export default function CourseAndTopicSelector({
       key: ["courses"],
     }
   );
-
-  useEffect(() => {
-    setValue("topicId", "");
-  }, [selectedCourseId, setValue]);
 
   const selectedCourse = courses?.courses?.find(
     (c) => Number(c.id) === Number(selectedCourseId)
@@ -52,6 +52,35 @@ export default function CourseAndTopicSelector({
       enabled: Boolean(isSelectedCourseIdValid),
     }
   );
+
+  useEffect(() => {
+    setValue("topicId", "");
+    setSelectedTopic(null);
+    const selectedCourse = courses?.courses?.find(
+      (c) => Number(c.id) === Number(selectedCourseId)
+    );
+    if (selectedCourse) {
+      setSelectedCourse(selectedCourse);
+    }
+  }, [
+    selectedCourseId,
+    setValue,
+    setSelectedCourse,
+    courses,
+    setSelectedTopic,
+  ]);
+
+  useEffect(() => {
+    if (selectedTopicId) {
+      const selectedTopic = topics?.find(
+        (t) => Number(t.id) === Number(selectedTopicId)
+      );
+
+      if (selectedTopic) {
+        setSelectedTopic(selectedTopic);
+      }
+    }
+  }, [selectedTopicId, setSelectedTopic, topics]);
 
   const handleSelectCourse = (courseId: number) => {
     setValue("courseId", String(courseId));

@@ -282,7 +282,18 @@
         "Do you want to create topics first?": "Do you want to create topics first?",
         "No topics found inside this course": "No topics found inside this course",
         "Create Topic": "Create Topic",
-        "Either image URL or video URL is required": "Either image URL or video URL is required"
+        "Either image URL or video URL is required": "Either image URL or video URL is required",
+        "Confirm creation": "Confirm creation",
+        "topic is not selected": "topic is not selected",
+        "image is not selected": "image  is not selected",
+        "video is not selected": "video  is not selected",
+        "Topic ID": "Topic ID",
+        "Image URL": "Image URL",
+        "Video URL": "Video URL",
+        "Course ID": "Course ID",
+        "Topic": "Topic",
+        "Due Date": "Due Date",
+        "File URL": "File URL"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
