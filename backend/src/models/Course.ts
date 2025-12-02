@@ -256,7 +256,7 @@ export async function getCourseTopicsList({
     );
 
     if (rows.length === 0) {
-      throw new Error("Course topics not found");
+      return "Course topics not found";
     }
 
     return rows;
@@ -406,6 +406,52 @@ export async function getCourseTopic({
     };
   } catch (err: any) {
     throw new Error(err.message || "Error fetching course topic:");
+  }
+}
+
+export async function getCourseTopicById({
+  schemaName,
+  topicId,
+}: {
+  schemaName: string;
+  topicId: string;
+}) {
+  const [rows] = await queryUniversity<any[]>(
+    schemaName,
+    `SELECT * FROM course_topics WHERE id = :topicId`,
+    { topicId }
+  );
+
+  return rows?.[0] || null;
+}
+
+export async function updateCourseTopic({
+  schemaName,
+  topicId: id,
+  title,
+  description,
+}: {
+  schemaName: string;
+  topicId: string;
+  title: string;
+  description: string;
+}) {
+  try {
+    const rows = await queryUniversity<ResultSetHeader>(
+      schemaName,
+      `UPDATE course_topics
+       SET title = :title, description = :description
+       WHERE id = :id`,
+      { title, description, id }
+    );
+
+    return {
+      id,
+      title,
+      description,
+    };
+  } catch (err: any) {
+    throw new Error(err.message || "Error updating course topic");
   }
 }
 
