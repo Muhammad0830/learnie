@@ -21,7 +21,6 @@ export default function CourseEditPage() {
   const router = useRouter();
   const { id: courseId } = useParams() as { id: string };
 
-  // Fetch course
   const {
     data: course,
     isLoading: isCourseLoading,
@@ -31,14 +30,12 @@ export default function CourseEditPage() {
     { key: ["course", courseId] }
   );
 
-  // Fetch topics within this course
   const { data: topics, isLoading: isTopicsLoading } = useApiQuery<
     { id: number; title: string; description: string }[] | { message: string }
   >(`/courses/${courseId}/topics`, {
     key: ["topics", courseId],
   });
 
-  // Update course mutation
   const {
     mutate: updateCourse,
     isPending: isUpdating,
@@ -55,7 +52,6 @@ export default function CourseEditPage() {
     CourseFormData
   >(`/courses/${courseId}`, "put");
 
-  // React Hook Form
   const form = useForm<CourseFormData>({
     resolver: zodResolver(CourseSchema),
     defaultValues: { name: "", description: "" },
@@ -68,7 +64,6 @@ export default function CourseEditPage() {
     formState: { errors },
   } = form;
 
-  // fill form when data arrives
   React.useEffect(() => {
     if (course) {
       reset({
@@ -78,7 +73,6 @@ export default function CourseEditPage() {
     }
   }, [course, reset]);
 
-  // Handle submit
   const onSubmit = (data: CourseFormData) => {
     updateCourse(data, {
       onSuccess: () => {
@@ -112,14 +106,11 @@ export default function CourseEditPage() {
         </Link>
       </div>
 
-      {/* COURSE EDIT FORM */}
-
       <form
         className="space-y-4 mb-10"
         id="course_edit_form"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {/* Name */}
         <div className="flex flex-col relative">
           <label className="font-semibold mb-1">{t("Name")}</label>
           <input
@@ -137,7 +128,6 @@ export default function CourseEditPage() {
           )}
         </div>
 
-        {/* Description */}
         <div className="flex flex-col relative">
           <label className="font-semibold mb-1">{t("Description")}</label>
           <textarea
@@ -174,8 +164,6 @@ export default function CourseEditPage() {
           )}
         </CustomButton>
       </form>
-
-      {/* TOPICS SECTION */}
 
       <div className="mb-4">
         <h2 className="text-xl font-bold mb-3">{t("Topics in this course")}</h2>

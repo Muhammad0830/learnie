@@ -303,7 +303,8 @@
         "No topics found": "No topics found",
         "Failed to fetch course": "Failed to fetch course",
         "Saving": "Saving...",
-        "Saved": "Saved"
+        "Saved": "Saved",
+        "Are you sure to delete this topic?": "Are you sure to delete this topic?"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",

@@ -129,7 +129,7 @@ export interface Presentation {
 export interface EachCourseResponseData {
   course: Course;
   topics: {
-    course_topics: Topic;
+    course_topic: Topic;
     assignments: Assignment[];
     lectures: Lecture[];
     presentations: Presentation[];
