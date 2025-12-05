@@ -276,6 +276,9 @@ coursesRouter.put(
       const topicId = req.params.topicId;
       const { title, description } = req.body;
 
+      if(!topicId) {
+        return res.status(400).json({ error: "Missing topicId" });
+      }
       if (!title) {
         return res.status(400).json({ error: "Missing title" });
       }
