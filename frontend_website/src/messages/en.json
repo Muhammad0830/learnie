@@ -317,7 +317,11 @@
         "No lecture found": "No lectures found",
         "No assignment found": "No assignments found",
         "No presentation found": "No presentations found",
-        "Failed to to get Course and Topic": "Failed to to get Course and Topic"
+        "Failed to to get Course and Topic": "Failed to to get Course and Topic",
+        "Error Fetching Topic": "Error Fetching Topic",
+        "Invalid topic id": "Invalid topic id",
+        "Invalid course id": "Invalid course id",
+        "Edit Topic": "Edit Topic"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
@@ -339,7 +343,10 @@
         "Failed to create topics": "Failed to create topics",
         "Topics created successfully": "Topics created successfully",
         "Loading": "Loading...",
-        "Course updated successfully": "Course edited successfully"
+        "Course updated successfully": "Course edited successfully",
+        "Error Fetching Topic": "Error Fetching Topic",
+        "Topic updated successfully": "Topic updated successfully",
+        "Failed to update topic": "Failed to update topic"
     },
     "skeleton": {
         "No results": "No results",

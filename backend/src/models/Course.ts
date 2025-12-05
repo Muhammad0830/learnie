@@ -416,7 +416,7 @@ export async function getCourseTopicById({
   schemaName: string;
   topicId: string;
 }) {
-  const [rows] = await queryUniversity<any[]>(
+  const rows = await queryUniversity<any[]>(
     schemaName,
     `SELECT * FROM course_topics WHERE id = :topicId`,
     { topicId }
