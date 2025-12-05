@@ -14,12 +14,12 @@ import { useApiMutation } from "@/hooks/useApiMutation";
 import TopicInput from "@/components/courses/TopicInput";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { Course } from "@/types/types";
 import CustomButton from "@/components/ui/customButton";
 import CourseSelectDropdown from "@/components/courses/CourseSelectDropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CreateTopicsPage() {
   const t = useTranslations("Courses");
@@ -27,10 +27,19 @@ export default function CreateTopicsPage() {
   const router = useRouter();
   const { showToast } = useCustomToast();
   const [selectedCourseId, setSelectedCourseId] = useState(0);
+  const searchParams = useSearchParams();
+  const courseId = searchParams.get("courseId");
 
   const { data: coursesData } = useApiQuery<{ courses: Course[] }>("/courses", {
     key: ["all-courses"],
   });
+
+  useEffect(() => {
+    if (courseId) {
+      // eslint-disable-next-line
+      setSelectedCourseId(Number(courseId));
+    }
+  }, [courseId]);
 
   const {
     register,

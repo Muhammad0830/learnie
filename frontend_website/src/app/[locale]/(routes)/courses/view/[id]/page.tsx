@@ -6,11 +6,12 @@ import useApiQuery from "@/hooks/useApiQuery";
 
 import { EachCourseResponseData } from "@/types/types";
 
-import { Users } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import CourseTopicsItem from "@/components/courses/CourseTopicsItem";
 import CourseInfo from "@/components/courses/CourseInfo";
 import CourseConnectedUsersDialog from "@/components/courses/CourseConnectedUsersDialog";
+import CustomButton from "@/components/ui/customButton";
 
 const CourseViewPage = () => {
   const t = useTranslations("Courses");
@@ -86,7 +87,20 @@ const CourseViewPage = () => {
 
       {/* TOPICS SECTION */}
       <div className="mt-6">
-        <h3 className="md:text-xl text-lg font-semibold mb-3">{t("Topics")}</h3>
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <h3 className="md:text-xl text-lg font-semibold">{t("Topics")}</h3>
+
+          <Link href={`/courses/create/topics?courseId=${course.course.id}`}>
+            <CustomButton
+              variants="primary"
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              <span className="sm:flex hidden">{t("Add New Topic")}</span>
+              <span className="sm:hidden flex">{t("Add New")}</span>
+            </CustomButton>
+          </Link>
+        </div>
 
         {course.topics.length === 0 ? (
           <div className="w-full h-20 border border-primary bg-primary/5 rounded-md flex justify-center items-center">
