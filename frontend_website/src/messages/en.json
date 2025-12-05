@@ -304,7 +304,20 @@
         "Failed to fetch course": "Failed to fetch course",
         "Saving": "Saving...",
         "Saved": "Saved",
-        "Are you sure to delete this topic?": "Are you sure to delete this topic?"
+        "Are you sure to delete this topic?": "Are you sure to delete this topic?",
+        "Failed to load topic or topic not found": "Failed to load topic or topic not found",
+        "Topic View": "Topic View",
+        "Updated At": "Updated At",
+        "Add New Lecture": "Add New Lecture",
+        "Add New Assignment": "Add New Assignment",
+        "Add New Presentation": "Add New Presentation",
+        "Add New": "Add New",
+        "Add": "Add",
+        "All associated content (lectures, assignments, presentations) will be lost": "All associated content (lectures, assignments, presentations) will be lost.",
+        "No lecture found": "No lectures found",
+        "No assignment found": "No assignments found",
+        "No presentation found": "No presentations found",
+        "Failed to to get Course and Topic": "Failed to to get Course and Topic"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
