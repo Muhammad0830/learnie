@@ -81,7 +81,7 @@ const CourseTopicsItem = ({
           <div className="flex gap-2 items-center">
             {/* view */}
             <Link
-              href={`/courses/${courseId}/topics/${topic.course_topic.course_id}`}
+              href={`/courses/${courseId}/topics/${topic.course_topic.id}`}
             >
               <CustomButton
                 variants="outline"
@@ -94,7 +94,7 @@ const CourseTopicsItem = ({
 
             {/* edit */}
             <Link
-              href={`/courses/${courseId}/topics/edit/${topic.course_topic.course_id}`}
+              href={`/courses/${courseId}/topics/edit/${topic.course_topic.id}`}
             >
               <CustomButton
                 variants="outline"

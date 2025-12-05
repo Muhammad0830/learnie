@@ -126,14 +126,16 @@ export interface Presentation {
   updated_at: string | null;
 }
 
+export interface EachTopicResponseData {
+  course_topic: Topic;
+  assignments: Assignment[];
+  lectures: Lecture[];
+  presentations: Presentation[];
+}
+
 export interface EachCourseResponseData {
   course: Course;
-  topics: {
-    course_topic: Topic;
-    assignments: Assignment[];
-    lectures: Lecture[];
-    presentations: Presentation[];
-  }[];
+  topics: EachTopicResponseData[];
   teachers: Teacher[];
   students: Student[];
 }
