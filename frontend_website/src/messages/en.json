@@ -322,7 +322,16 @@
         "Invalid topic id": "Invalid topic id",
         "Invalid course id": "Invalid course id",
         "Edit Topic": "Edit Topic",
-        "Back to the course": "Back to the course"
+        "Back to the course": "Back to the course",
+        "View Image": "View Image",
+        "View Video": "View Video",
+        "All": "All",
+        "New": "New",
+        "No assignments found": "No assignments found",
+        "No lectures found": "No lectures found",
+        "No presentations found": "No presentations found",
+        "No image": "No image",
+        "Open File": "Open File"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",

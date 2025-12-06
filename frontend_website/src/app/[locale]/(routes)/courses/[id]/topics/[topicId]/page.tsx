@@ -103,6 +103,7 @@ const CourseTopicViewPage = () => {
     type: "lecture" | "assignment" | "presentation"
   ) => {
     const addHref = `/courses/create/items?pageType=${type}&courseId=${courseId}&topicId=${topicId}`;
+    const viewHref = `/courses/${courseId}/topics/${topicId}/${type}s`;
 
     return (
       <div className="space-y-3 p-4 border border-primary/30 rounded-md bg-primary/5">
@@ -110,20 +111,34 @@ const CourseTopicViewPage = () => {
           <h2 className="text-xl font-bold flex items-center gap-2">
             {icon} {t(title)}
           </h2>
-          <Link href={addHref}>
-            <CustomButton
-              variants="primary"
-              className="px-3 py-1.5 max-[400px]:px-1.5 text-sm gap-1 flex items-center flex-nowrap"
-            >
-              <Plus className="w-4 h-4" />
-              <span className="sm:flex hidden">
-                {t(`Add New ${title.slice(0, -1)}`)}
-              </span>
-              <span className="sm:hidden sm-[400px]:flex max-[400px]:hidden">
-                {t(`Add New`)}
-              </span>
-            </CustomButton>
-          </Link>
+          <div className="flex gap-2 items-center">
+            <Link href={viewHref}>
+              <CustomButton
+                variants="primary"
+                className="px-3 py-1.5 max-[400px]:px-2 max-[400px]:py-2 text-sm gap-1 flex items-center flex-nowrap"
+              >
+                <Eye className="w-4 h-4" />
+                <span className="sm:flex hidden">{t(`View all`)}</span>
+                <span className="sm:hidden sm-[400px]:flex max-[400px]:hidden">
+                  {t(`All`)}
+                </span>
+              </CustomButton>
+            </Link>
+            <Link href={addHref}>
+              <CustomButton
+                variants="primary"
+                className="px-3 py-1.5 max-[400px]:px-2 max-[400px]:py-2 text-sm gap-1 flex items-center flex-nowrap"
+              >
+                <Plus className="w-4 h-4" />
+                <span className="sm:flex hidden">
+                  {t(`Add New ${title.slice(0, -1)}`)}
+                </span>
+                <span className="sm:hidden sm-[400px]:flex max-[400px]:hidden">
+                  {t(`New`)}
+                </span>
+              </CustomButton>
+            </Link>
+          </div>
         </div>
 
         {contentList.length === 0 ? (

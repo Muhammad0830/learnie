@@ -455,6 +455,83 @@ export async function updateCourseTopic({
   }
 }
 
+export async function getCourseTopicLectures({
+  topicId,
+  schemaName,
+}: {
+  topicId: string;
+  schemaName: string;
+}) {
+  try {
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM lectures
+        WHERE topic_id = :topicId`,
+      { topicId }
+    );
+
+    if (rows.length === 0) {
+      throw new Error("Lectures not found");
+    }
+
+    return rows;
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching course topic lectures:");
+  }
+}
+
+export async function getCourseTopicPresentations({
+  topicId,
+  schemaName,
+}: {
+  topicId: string;
+  schemaName: string;
+}) {
+  try {
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM presentations
+        WHERE topic_id = :topicId`,
+      { topicId }
+    );
+
+    if (rows.length === 0) {
+      throw new Error("Presentations not found");
+    }
+
+    return rows;
+  } catch (err: any) {
+    throw new Error(
+      err.message || "Error fetching course topic presentations:"
+    );
+  }
+}
+
+export async function getCourseTopicAssignments({
+  topicId,
+  schemaName,
+}: {
+  topicId: string;
+  schemaName: string;
+}) {
+  try {
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `SELECT * FROM assignments
+        WHERE topic_id = :topicId`,
+      { topicId }
+    );
+
+    if (rows.length === 0) {
+      throw new Error("Assignments not found");
+    }
+
+    return rows;
+  } catch (err: any) {
+    throw new Error(err.message || "Error fetching course topic assignments:");
+  }
+}
+
 export async function getEachLecture({
   schemaName,
   lectureId,

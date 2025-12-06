@@ -13,7 +13,10 @@ import {
   deleteCourseTopicPresentation,
   getCoursesList,
   getCourseTopic,
+  getCourseTopicAssignments,
   getCourseTopicById,
+  getCourseTopicLectures,
+  getCourseTopicPresentations,
   getCourseTopicsList,
   getCourseUsers,
   getEachAssignment,
@@ -276,7 +279,7 @@ coursesRouter.put(
       const topicId = req.params.topicId;
       const { title, description } = req.body;
 
-      if(!topicId) {
+      if (!topicId) {
         return res.status(400).json({ error: "Missing topicId" });
       }
       if (!title) {
@@ -305,6 +308,71 @@ coursesRouter.put(
       });
     } catch (err: any) {
       console.error("Error updating course topic:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
+    }
+  }
+);
+
+coursesRouter.get("/lectures/list", validateUniversitySchema, async (req, res) => {
+  try {
+    const schemaName = (req as any).universitySchema;
+
+    const { topicId } = req.query as { topicId: string };
+
+    if (!topicId) {
+      return res.status(400).json({ error: "Missing topicId" });
+    }
+
+    const result = await getCourseTopicLectures({ topicId, schemaName });
+
+    res.json(result);
+  } catch (err: any) {
+    console.error("Error fetching course topic:", err);
+    res.status(500).json({ error: err.message || "Internal Server Error" });
+  }
+});
+
+coursesRouter.get(
+  "/presentations/list",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
+
+      const { topicId } = req.query as { topicId: string };
+
+      if (!topicId) {
+        return res.status(400).json({ error: "Missing topicId" });
+      }
+
+      const result = await getCourseTopicPresentations({ topicId, schemaName });
+
+      res.json(result);
+    } catch (err: any) {
+      console.error("Error fetching course topic:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
+    }
+  }
+);
+
+coursesRouter.get(
+  "/assignments/list",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
+
+      const { topicId } = req.query as { topicId: string };
+
+      if (!topicId) {
+        return res.status(400).json({ error: "Missing topicId" });
+      }
+
+      const result = await getCourseTopicAssignments({ topicId, schemaName });
+
+      res.json(result);
+    } catch (err: any) {
+      console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
   }
