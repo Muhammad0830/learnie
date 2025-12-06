@@ -24,8 +24,9 @@ import {
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Course, Topic } from "@/types/types";
+import Link from "next/link";
 
 interface defaultLectureType {
   courseId: string;
@@ -53,6 +54,8 @@ interface defaultPresentationType {
 export default function CreateItemPage() {
   const searchParams = useSearchParams();
   const type = searchParams.get("pageType"); // lecture | assignment | presentation
+  const courseId = searchParams.get("courseId");
+  const topicId = searchParams.get("topicId");
 
   const router = useRouter();
   const t = useTranslations("Courses");
@@ -150,6 +153,18 @@ export default function CreateItemPage() {
     control,
   } = form;
 
+  useEffect(() => {
+    if (courseId) {
+      setValue("courseId", courseId);
+    }
+  }, [courseId, setValue]);
+
+  useEffect(() => {
+    if (topicId) {
+      setValue("topicId", topicId);
+    }
+  }, [topicId, setValue]);
+
   const selectedCourseId = useWatch({ control, name: "courseId" });
   const selectedTopicId = useWatch({ control, name: "topicId" });
 
@@ -184,11 +199,20 @@ export default function CreateItemPage() {
         </div>
       ) : (
         <>
-          <h1 className="text-3xl font-bold mb-4">
-            {type
-              ? t(`Create ${type.charAt(0).toUpperCase() + type.slice(1)}`)
-              : "Craete Item"}
-          </h1>
+          <div className="flex items-center gap-2 justify-between mb-2">
+            <h1 className="text-3xl font-bold mb-4">
+              {type
+                ? t(`Create ${type.charAt(0).toUpperCase() + type.slice(1)}`)
+                : "Craete Item"}
+            </h1>
+
+            <Link
+              href={courseId ? `/courses/view/${courseId}` : "/courses"}
+              className="px-3 py-1.5 max-sm:text-sm rounded border border-primary bg-primary/10 hover:bg-primary/20"
+            >
+              {courseId ? t("Back to the course") : t("Back to courses")}
+            </Link>
+          </div>
 
           <CourseAndTopicSelector
             errors={errors}

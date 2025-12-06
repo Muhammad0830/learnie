@@ -10,7 +10,7 @@ import { Course, Topic } from "@/types/types";
 import { FieldErrors, UseFormSetValue } from "react-hook-form";
 import CourseSelectDropdown from "./CourseSelectDropdown";
 import TopicSelectDropdown from "./TopicSelectDropdown";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 type FormType = LectureFormType | AssignmentFormType | PresentationFormType;
 
@@ -53,20 +53,34 @@ export default function CourseAndTopicSelector({
     }
   );
 
+  const prevCourseId = useRef<string | null>(null);
+
   useEffect(() => {
-    setValue("topicId", "");
-    setSelectedTopic(null);
+    const currentId = selectedCourseId ? String(selectedCourseId) : null;
+
+    // First render: store the initial courseId and do NOT reset
+    if (prevCourseId.current === null) {
+      prevCourseId.current = currentId;
+    } else {
+      // Reset ONLY when user changes the course
+      if (prevCourseId.current !== currentId) {
+        setValue("topicId", "");
+        setSelectedTopic(null);
+      }
+      prevCourseId.current = currentId;
+    }
+
     const selectedCourse = courses?.courses?.find(
-      (c) => Number(c.id) === Number(selectedCourseId)
+      (c) => Number(c.id) === Number(currentId)
     );
     if (selectedCourse) {
       setSelectedCourse(selectedCourse);
     }
   }, [
     selectedCourseId,
+    courses,
     setValue,
     setSelectedCourse,
-    courses,
     setSelectedTopic,
   ]);
 

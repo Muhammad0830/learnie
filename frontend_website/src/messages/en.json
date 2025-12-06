@@ -321,7 +321,8 @@
         "Error Fetching Topic": "Error Fetching Topic",
         "Invalid topic id": "Invalid topic id",
         "Invalid course id": "Invalid course id",
-        "Edit Topic": "Edit Topic"
+        "Edit Topic": "Edit Topic",
+        "Back to the course": "Back to the course"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
