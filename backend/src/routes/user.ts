@@ -18,7 +18,7 @@ userRouter.get(
 
     // Do not send password_hash
     const { password_hash, ...safe } = user;
-    return res.json({ user: safe });
+    return res.json(safe);
   }
 );
 

@@ -23,6 +23,7 @@ type AuthContextType = {
   setSuccess: React.Dispatch<
     React.SetStateAction<"login" | "signup" | "logout" | null>
   >;
+  refetchProfile: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,6 +45,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
   }, [pathname]);
+
+  const refetchProfile = () => {
+    getProfile()
+      .then((u) => setUser(u))
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  };
 
   const login = async (email: string, password: string) => {
     try {
@@ -92,6 +100,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setError,
         success,
         setSuccess,
+        refetchProfile,
       }}
     >
       {children}

@@ -104,7 +104,7 @@ export default function TopicEditPage() {
           className="rounded-sm px-3 py-1.5 text-nowrap bg-primary/5 hover:bg-primary/10 border border-primary text-black dark:text-white flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span className="sm:flex hidden">{t("Back to courses")}</span>
+          <span className="sm:flex hidden">{t("Back to course")}</span>
           <span className="lg:hidden flex">{t("Back")}</span>
         </Link>
       </div>

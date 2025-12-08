@@ -133,7 +133,7 @@ const EditCourseItemDialog = ({
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="z-99999 md:w-[60vw] sm:w-[80vw] max-w-[90vw]">
           <DialogTitle>{t(`Edit ${type}`)}</DialogTitle>
           <div className="flex flex-col gap-2 mt-2">
             <p className="text-sm text-muted-foreground">
