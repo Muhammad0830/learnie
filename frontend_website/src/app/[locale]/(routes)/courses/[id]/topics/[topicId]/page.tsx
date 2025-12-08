@@ -44,6 +44,7 @@ const CourseTopicViewPage = () => {
     data: topicData,
     isLoading,
     isError,
+    refetch,
   } = useApiQuery<EachTopicResponseData>(
     `/courses/${courseId}/topics/${topicId}`,
     {
@@ -154,6 +155,7 @@ const CourseTopicViewPage = () => {
                 type={type}
                 courseId={courseId}
                 topicId={topicId}
+                refetch={refetch}
               />
             ))}
           </div>

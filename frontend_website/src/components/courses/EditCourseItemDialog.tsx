@@ -36,6 +36,7 @@ const EditCourseItemDialog = ({
   type,
   topicId,
   courseId,
+  refetch,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,6 +44,7 @@ const EditCourseItemDialog = ({
   type: string;
   topicId: string;
   courseId: string;
+  refetch: () => void;
 }) => {
   const t = useTranslations("Courses");
   const toastT = useTranslations("Toast");
@@ -78,21 +80,9 @@ const EditCourseItemDialog = ({
   } = form;
 
   const { mutate } = useApiMutation(
-    type ? `/courses/create/${type}` : "/courses/create/invalid",
+    type ? `/courses/${type}s/${item.id}` : "/courses/type/is/invalid",
     "put"
   );
-
-  useEffect(() => {
-    if (courseId) {
-      setValue("courseId", courseId);
-    }
-  }, [courseId, setValue]);
-
-  useEffect(() => {
-    if (topicId) {
-      setValue("topicId", topicId);
-    }
-  }, [topicId, setValue]);
 
   useEffect(() => {
     if (!open) {
@@ -101,6 +91,13 @@ const EditCourseItemDialog = ({
   }, [open, reset]);
 
   useEffect(() => {
+    if (courseId) {
+      setValue("courseId", courseId);
+    }
+    if (topicId) {
+      setValue("topicId", topicId);
+    }
+
     if ((item as Lecture).content !== undefined) {
       const lectureItem = item as Lecture;
       setValue("title", lectureItem.title);
@@ -117,12 +114,14 @@ const EditCourseItemDialog = ({
       setValue("title", presentationItem.title);
       setValue("file_url", presentationItem.file_url);
     }
-  }, [item, type, open, setValue]);
+  }, [item, type, open, courseId, topicId, setValue]);
 
   const onSubmit = (confirmedData: FormType) => {
     mutate(confirmedData, {
       onSuccess: () => {
-        showToast("success", toastT(`${type} created successfully`));
+        showToast("success", toastT(`${type} edited successfully`));
+        refetch();
+        setOpen(false);
         reset();
       },
       onError: () => {
@@ -182,7 +181,7 @@ const EditCourseItemDialog = ({
                 const valid = await trigger();
                 if (valid) handleSubmit(onSubmit)();
               }}
-              disabled={open}
+              disabled={!open}
             >
               <span>{t("Save")}</span>
               <span className="w-4 h-4">

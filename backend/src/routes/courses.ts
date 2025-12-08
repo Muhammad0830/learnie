@@ -313,24 +313,28 @@ coursesRouter.put(
   }
 );
 
-coursesRouter.get("/lectures/list", validateUniversitySchema, async (req, res) => {
-  try {
-    const schemaName = (req as any).universitySchema;
+coursesRouter.get(
+  "/lectures/list",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
 
-    const { topicId } = req.query as { topicId: string };
+      const { topicId } = req.query as { topicId: string };
 
-    if (!topicId) {
-      return res.status(400).json({ error: "Missing topicId" });
+      if (!topicId) {
+        return res.status(400).json({ error: "Missing topicId" });
+      }
+
+      const result = await getCourseTopicLectures({ topicId, schemaName });
+
+      res.json(result);
+    } catch (err: any) {
+      console.error("Error fetching course topic:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-
-    const result = await getCourseTopicLectures({ topicId, schemaName });
-
-    res.json(result);
-  } catch (err: any) {
-    console.error("Error fetching course topic:", err);
-    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
-});
+);
 
 coursesRouter.get(
   "/presentations/list",
@@ -628,13 +632,16 @@ coursesRouter.put(
         return res.status(400).json({ error: "Missing due_date" });
       }
 
+      console.log("due_date", due_date);
+      const updated_due_date = new Date(due_date).toLocaleDateString("en-CA");
+
       const result = await updateCourseTopicAssignment({
         assignmentId,
         schemaName,
         title,
         description,
         images,
-        due_date,
+        due_date: `${updated_due_date} 23:59:59`,
       });
 
       return res.status(200).json({
@@ -642,7 +649,7 @@ coursesRouter.put(
         data: result,
       });
     } catch (err: any) {
-      console.error("Error upadating assignment", err.message);
+      throw new Error(err.message || "Error updating assignment");
     }
   }
 );
@@ -655,13 +662,13 @@ coursesRouter.put(
       const schemaName = (req as any).universitySchema;
 
       const lectureId = req.params.lectureId;
-      const { title, content, video, image } = req.body;
+      const { title, content, video_url, image_url } = req.body;
 
       if (!lectureId) {
         return res.status(400).json({ error: "Missing lecture Id" });
       } else if (!title) {
         return res.status(400).json({ error: "Missing title" });
-      } else if (!image && !video) {
+      } else if (!video_url && !image_url) {
         return res.status(400).json({ error: "Missing both video and image" });
       }
 
@@ -670,8 +677,8 @@ coursesRouter.put(
         schemaName,
         title,
         content,
-        image,
-        video,
+        image: image_url,
+        video: video_url,
       });
 
       return res.status(200).json({
