@@ -4,6 +4,8 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import CustomButton from "../ui/customButton";
 import { Eye, Pencil } from "lucide-react";
+import { useState } from "react";
+import EditCourseItemDialog from "./EditCourseItemDialog";
 
 type ContentItem = Lecture | Assignment | Presentation;
 
@@ -19,12 +21,11 @@ const ContentListItem = ({
   topicId: string;
 }) => {
   const t = useTranslations("Courses");
+  const [open, setOpen] = useState(false);
   const isPresentation = type === "presentation";
   const viewHref = isPresentation
     ? (item as Presentation).file_url
     : `/courses/${courseId}/topics/${topicId}/${type}s?selected=${item.id}`;
-
-  const editHref = `/courses/${courseId}/topics/${topicId}/${type}/edit/${item.id}`;
 
   const target = isPresentation ? "_blank" : undefined;
   const rel = isPresentation ? "noopener noreferrer" : undefined;
@@ -51,16 +52,24 @@ const ContentListItem = ({
           </CustomButton>
         </Link>
 
-        <Link href={editHref}>
-          <CustomButton
-            variants="outline"
-            className="max-sm:px-2 max-sm:py-2 flex gap-2 items-center"
-          >
-            <span className="hidden sm:block">{t("Edit")}</span>
-            <Pencil className="w-4 h-4" />
-          </CustomButton>
-        </Link>
+        <CustomButton
+          onClick={() => setOpen(true)}
+          variants="outline"
+          className="max-sm:px-2 max-sm:py-2 flex gap-2 items-center"
+        >
+          <span className="hidden sm:block">{t("Edit")}</span>
+          <Pencil className="w-4 h-4" />
+        </CustomButton>
       </div>
+
+      <EditCourseItemDialog
+        open={open}
+        setOpen={setOpen}
+        item={item}
+        type={type}
+        topicId={topicId}
+        courseId={courseId}
+      />
     </div>
   );
 };

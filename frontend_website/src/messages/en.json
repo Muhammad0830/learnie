@@ -331,7 +331,12 @@
         "No lectures found": "No lectures found",
         "No presentations found": "No presentations found",
         "No image": "No image",
-        "Open File": "Open File"
+        "Open File": "Open File",
+        "Edit lecture": "Edit lecture",
+        "Edit assignment": "Edit assignment",
+        "Edit presentation": "Edit presentation",
+        "Save": "Save",
+        "Due date is required": "Due date is required"
     },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
@@ -356,7 +361,11 @@
         "Course updated successfully": "Course edited successfully",
         "Error Fetching Topic": "Error Fetching Topic",
         "Topic updated successfully": "Topic updated successfully",
-        "Failed to update topic": "Failed to update topic"
+        "Failed to update topic": "Failed to update topic",
+        "Failed to edit an item": "Failed to edit an item",
+        "Lecture created successfully": "Lecture created successfully",
+        "Assignment created successfully": "Assignment created successfully",
+        "Presentation created successfully": "Presentation created successfully"
     },
     "skeleton": {
         "No results": "No results",

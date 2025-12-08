@@ -50,3 +50,62 @@ export type FormType =
   | LectureFormType
   | AssignmentFormType
   | PresentationFormType;
+
+export interface FormMapType {
+  lecture: {
+    schema: typeof LectureSchema;
+    defaults: {
+      title: string;
+      content: string;
+      image_url: string;
+      video_url: string;
+    };
+  };
+  assignment: {
+    schema: typeof AssignmentSchema;
+    defaults: {
+      title: string;
+      description: string;
+      due_date: string;
+      images: string[];
+    };
+  };
+  presentation: {
+    schema: typeof PresentationSchema;
+    defaults: { title: string; file_url: string };
+  };
+}
+
+export const formMap = {
+  lecture: {
+    schema: LectureSchema,
+    defaults: {
+      title: "",
+      content: "",
+      image_url: "",
+      video_url: "",
+      courseId: "",
+      topicId: "",
+    },
+  },
+  assignment: {
+    schema: AssignmentSchema,
+    defaults: {
+      title: "",
+      description: "",
+      due_date: "",
+      images: [],
+      courseId: "",
+      topicId: "",
+    },
+  },
+  presentation: {
+    schema: PresentationSchema,
+    defaults: {
+      title: "",
+      file_url: "",
+      courseId: "",
+      topicId: "",
+    },
+  },
+} as FormMapType;

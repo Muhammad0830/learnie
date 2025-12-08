@@ -12,9 +12,7 @@ import AssignmentForm from "@/components/courses/forms/AssignmentForm";
 import PresentationForm from "@/components/courses/forms/PresentationForm";
 
 import {
-  LectureSchema,
-  AssignmentSchema,
-  PresentationSchema,
+  formMap,
   FormType,
   LectureFormType,
   AssignmentFormType,
@@ -25,31 +23,14 @@ import { useApiMutation } from "@/hooks/useApiMutation";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { Course, Topic } from "@/types/types";
+import {
+  Course,
+  Topic,
+  defaultLectureType,
+  defaultAssignmentType,
+  defaultPresentationType,
+} from "@/types/types";
 import Link from "next/link";
-
-interface defaultLectureType {
-  courseId: string;
-  topicId: string;
-  title: string;
-  content: string;
-  image_url: string;
-  video_url: string;
-}
-interface defaultAssignmentType {
-  courseId: string;
-  topicId: string;
-  title: string;
-  description: string;
-  due_date: string;
-  images: string[];
-}
-interface defaultPresentationType {
-  courseId: string;
-  topicId: string;
-  title: string;
-  file_url: string;
-}
 
 export default function CreateItemPage() {
   const searchParams = useSearchParams();
@@ -65,63 +46,6 @@ export default function CreateItemPage() {
   const [dialogData, setDialogData] = useState<FormType | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
-
-  const formMap = {
-    lecture: {
-      schema: LectureSchema,
-      defaults: {
-        title: "",
-        content: "",
-        image_url: "",
-        video_url: "",
-        courseId: "",
-        topicId: "",
-      },
-    },
-    assignment: {
-      schema: AssignmentSchema,
-      defaults: {
-        title: "",
-        description: "",
-        due_date: "",
-        images: [],
-        courseId: "",
-        topicId: "",
-      },
-    },
-    presentation: {
-      schema: PresentationSchema,
-      defaults: {
-        title: "",
-        file_url: "",
-        courseId: "",
-        topicId: "",
-      },
-    },
-  } as {
-    lecture: {
-      schema: typeof LectureSchema;
-      defaults: {
-        title: string;
-        content: string;
-        image_url: string;
-        video_url: string;
-      };
-    };
-    assignment: {
-      schema: typeof AssignmentSchema;
-      defaults: {
-        title: string;
-        description: string;
-        due_date: string;
-        images: string[];
-      };
-    };
-    presentation: {
-      schema: typeof PresentationSchema;
-      defaults: { title: string; file_url: string };
-    };
-  };
 
   function isValidType(value: string | null): value is keyof typeof formMap {
     return (

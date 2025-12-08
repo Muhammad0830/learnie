@@ -139,3 +139,26 @@ export interface EachCourseResponseData {
   teachers: Teacher[];
   students: Student[];
 }
+
+export interface defaultLectureType {
+  courseId: string;
+  topicId: string;
+  title: string;
+  content: string;
+  image_url: string;
+  video_url: string;
+}
+export interface defaultAssignmentType {
+  courseId: string;
+  topicId: string;
+  title: string;
+  description: string;
+  due_date: string;
+  images: string[];
+}
+export interface defaultPresentationType {
+  courseId: string;
+  topicId: string;
+  title: string;
+  file_url: string;
+}

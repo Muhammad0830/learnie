@@ -76,7 +76,7 @@ const TopicAssignmentsPage = () => {
       {/* ADD BUTTON */}
       <div className="flex justify-end mb-4">
         <Link
-          href={`/courses/create/assignments?courseId=${id}&topicId=${topicId}`}
+          href={`/courses/create/items?pageType=assignment&courseId=${id}&topicId=${topicId}`}
         >
           <CustomButton variants="primary" className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
