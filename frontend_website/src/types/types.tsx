@@ -2,8 +2,12 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  createdAt: string;
-  updatedAt: string;
+  role: "student" | "teacher" | "admin";
+  phoneNumber: string;
+  created_at: string;
+  updated_at: string;
+  age: string | null;
+  studentId?: string | null;
 }
 
 export interface LoginFormData {

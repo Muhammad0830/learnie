@@ -338,6 +338,21 @@
         "Save": "Save",
         "Due date is required": "Due date is required"
     },
+    "Admin": {
+        "Name": "Name",
+        "Email": "Email",
+        "Phone Number": "Phone Number",
+        "Age": "Age",
+        "Role": "Role",
+        "Created At": "Created At",
+        "Edit Profile": "Edit Profile",
+        "Cancel": "Cancel",
+        "Save": "Save",
+        "Admin Profile": "Admin Profile",
+        "student": "Student",
+        "teacher": "Teacher",
+        "admin": "Admin"
+    },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
         "Internal server error": "Internal server error",
@@ -365,7 +380,8 @@
         "Failed to edit an item": "Failed to edit an item",
         "lecture edited successfully": "Lecture edited successfully",
         "assignment edited successfully": "Assignment edited successfully",
-        "presentation edited successfully": "Presentation edited successfully"
+        "presentation edited successfully": "Presentation edited successfully",
+        "Profile updated successfully": "Profile updated successfully"
     },
     "skeleton": {
         "No results": "No results",
