@@ -14,11 +14,13 @@ const ContentListItem = ({
   type,
   courseId,
   topicId,
+  refetch,
 }: {
   item: ContentItem;
   type: "lecture" | "assignment" | "presentation";
   courseId: string;
   topicId: string;
+  refetch: () => void;
 }) => {
   const t = useTranslations("Courses");
   const [open, setOpen] = useState(false);
@@ -69,6 +71,7 @@ const ContentListItem = ({
         type={type}
         topicId={topicId}
         courseId={courseId}
+        refetch={refetch}
       />
     </div>
   );

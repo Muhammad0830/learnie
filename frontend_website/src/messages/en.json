@@ -363,9 +363,9 @@
         "Topic updated successfully": "Topic updated successfully",
         "Failed to update topic": "Failed to update topic",
         "Failed to edit an item": "Failed to edit an item",
-        "Lecture created successfully": "Lecture created successfully",
-        "Assignment created successfully": "Assignment created successfully",
-        "Presentation created successfully": "Presentation created successfully"
+        "lecture edited successfully": "Lecture edited successfully",
+        "assignment edited successfully": "Assignment edited successfully",
+        "presentation edited successfully": "Presentation edited successfully"
     },
     "skeleton": {
         "No results": "No results",
