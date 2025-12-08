@@ -3,7 +3,7 @@ import React from "react";
 
 interface CustomButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variants?: "primary" | "outline";
+  variants?: "primary" | "outline" | "destructive";
 }
 
 const CustomButton = ({
@@ -19,6 +19,8 @@ const CustomButton = ({
         variants === "primary" &&
           "bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40",
         variants === "outline" && "bg-primary/5 hover:bg-primary/10",
+        variants === "destructive" &&
+          "border-red-600/40 dark:border-red-600/20 dark:bg-red-600/5 bg-red-600/20 hover:bg-red-600/30 dark:hover:bg-red-600/15",
         className
       )}
       {...rest}
