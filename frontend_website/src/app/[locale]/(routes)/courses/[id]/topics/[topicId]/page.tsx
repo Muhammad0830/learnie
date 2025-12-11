@@ -174,7 +174,7 @@ const CourseTopicViewPage = () => {
 
         <div className="flex gap-2 items-center">
           <Link
-            href={`/courses/view/${courseId}`}
+            href={`/courses/${courseId}/view`}
             className="rounded-sm px-3 py-1.5 max-[400px]:py-2.5 text-nowrap bg-primary/5 hover:bg-primary/10 border border-primary text-black dark:text-white flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -184,7 +184,7 @@ const CourseTopicViewPage = () => {
             </span>
           </Link>
           <Link
-            href={`/courses/${courseId}/topics/edit/${course_topic.id}`}
+            href={`/courses/${courseId}/topics/${course_topic.id}/edit`}
             className="rounded-sm flex gap-2 items-center px-3 py-1.5 max-sm:py-2.5 bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white text-xs sm:text-[16px]"
           >
             <Pencil className="w-4 h-4" />

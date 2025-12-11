@@ -26,7 +26,7 @@ const ProfileButton = ({ collapsed }: { collapsed: boolean }) => {
             layout
             className="ml-0.5 py-0.5"
           >
-            <User className="w-4 h-4" />
+            <User className="w-5 h-5" />
           </motion.div>
         </AnimatePresence>
         <AnimatePresence mode="wait" initial={false}>
