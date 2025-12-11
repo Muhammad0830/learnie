@@ -94,7 +94,7 @@ const CourseTopicsItem = ({
 
             {/* edit */}
             <Link
-              href={`/courses/${courseId}/topics/edit/${topic.course_topic.id}`}
+              href={`/courses/${courseId}/topics/${topic.course_topic.id}/edit`}
             >
               <CustomButton
                 variants="outline"

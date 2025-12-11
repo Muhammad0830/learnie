@@ -6,7 +6,11 @@
         "Courses": "Courses",
         "Admins": "Admins",
         "Settings": "Settings",
-        "Profile": "Profile"
+        "Profile": "Profile",
+        "List": "List",
+        "View Each": "View Each",
+        "Edit": "Edit",
+        "Topic View": "Topic View" 
     },
     "AuthPage": {
         "Sign in": "Sign in",

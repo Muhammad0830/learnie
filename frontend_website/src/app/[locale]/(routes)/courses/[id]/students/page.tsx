@@ -44,7 +44,7 @@ const StudentsPage = () => {
           <span>{data?.[0].courseName}:</span> <span>{t("Students")}</span>
         </h1>
 
-        <Link href={`/courses/view/${id}`}>
+        <Link href={`/courses/${id}/view`}>
           <CustomButton variants="outline">
             <span className="max-sm:hidden">{t("Back to course")}</span>
             <span className="sm:hidden">{t("Back")}</span>
@@ -99,7 +99,7 @@ const StudentsPage = () => {
                 </div>
 
                 <Link
-                  href={`/students/view/${std.id}`}
+                  href={`/students/${std.id}/view`}
                   className="p-2 sm:flex hidden rounded-sm border border-primary bg-primary/20 hover:bg-primary/30"
                 >
                   <Eye className="w-4 h-4" />
@@ -107,7 +107,7 @@ const StudentsPage = () => {
               </div>
 
               <Link
-                href={`/students/view/${std.id}`}
+                href={`/students/${std.id}/view`}
                 className="p-2 sm:hidden flex rounded-sm border border-primary bg-primary/20 hover:bg-primary/30"
               >
                 <Eye className="w-4 h-4" />

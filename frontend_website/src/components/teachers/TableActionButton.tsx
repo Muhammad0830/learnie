@@ -66,7 +66,7 @@ const TableActionButton = ({
         <div className="absolute inset-0 bg-primary/10"></div>
         <DropdownMenuItem className="p-0 hover:bg-transparent!">
           <Link
-            href={`/teachers/view/${payment.id}`}
+            href={`/teachers/${payment.id}/view`}
             className="flex items-center gap-2 hover:bg-primary/30 cursor-pointer w-full h-full px-2 py-1.5 rounded-sm"
           >
             <Eye />
@@ -75,7 +75,7 @@ const TableActionButton = ({
         </DropdownMenuItem>
         <DropdownMenuItem className="p-0 hover:bg-transparent!">
           <Link
-            href={`/teachers/edit/${payment.id}`}
+            href={`/teachers/${payment.id}/edit`}
             className="flex items-center gap-2 hover:bg-primary/30 cursor-pointer w-full h-full px-2 py-1.5 rounded-sm"
           >
             <Pencil />

@@ -78,7 +78,7 @@ export default function CourseEditPage() {
       onSuccess: () => {
         showToast("success", toastT("Course updated successfully"));
         setTimeout(() => {
-          router.push(`/courses/view/${courseId}`);
+          router.push(`/courses/${courseId}/view`);
         }, 1000);
       },
       onError: () => {

@@ -51,7 +51,7 @@ const CourseViewPage = () => {
           </Link>
 
           <Link
-            href={`/courses/edit/${course.course.id}`}
+            href={`/courses/${course.course.id}/edit`}
             className="rounded-sm px-3 py-1.5 bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white text-xs sm:text-[16px]"
           >
             {t("Edit")}

@@ -72,7 +72,7 @@ const CourseConnectedUsersDialog = ({
                     </li>
 
                     <Link
-                      href={`/${link}/view/${user.id}`}
+                      href={`/${link}/${user.id}/view`}
                       className="sm:px-2 sm:py-1 p-1.5 flex gap-2 items-center rounded-sm border border-primary bg-primary/5 hover:bg-primary/10 cursor-pointer"
                     >
                       <Eye className="w-4 h-4" />
@@ -122,7 +122,7 @@ const CourseConnectedUsersDialog = ({
                     </span>
                   </div>
                   <Link
-                    href={`/${link}/view/${user.id}`}
+                    href={`/${link}/${user.id}/view`}
                     className="p-1 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
                   >
                     <Eye className="w-4 h-4" />

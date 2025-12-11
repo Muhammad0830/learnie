@@ -24,7 +24,7 @@ import MenuSheet from "./MenuSheet";
 
 const navLinksData = [
   {
-    icon: <LayoutDashboard className="w-5 h-5" />,
+    icon: <LayoutDashboard className="w-5 h-6" />,
     label: "dashboard",
     url: "/dashboard",
   },
@@ -39,17 +39,17 @@ const navLinksData = [
     url: "/teachers",
   },
   {
-    icon: <Presentation className="w-5 h-5" />,
+    icon: <Presentation className="w-5 h-6" />,
     label: "Courses",
     url: "/courses",
   },
   {
-    icon: <ShieldUser className="w-5 h-5" />,
+    icon: <ShieldUser className="w-5 h-6" />,
     label: "Admins",
     url: "/admins",
   },
   {
-    icon: <Settings className="w-5 h-5" />,
+    icon: <Settings className="w-5 h-6" />,
     label: "Settings",
     url: "/settings",
   },
@@ -122,11 +122,17 @@ const SideBar = ({ children }: { children: React.ReactNode }) => {
 
         <div className="flex-1 flex justify-between flex-col">
           {/* Nav links */}
-          <div className="flex flex-col items-center gap-1 p-2">
-            {navLinksData?.map((item, index) => (
-              <NavBarItem collapsed={collapsed} item={item} key={index} />
-            ))}
-          </div>
+          <AnimatePresence>
+            <motion.div
+              layout
+              key={"wrapper"}
+              className="flex flex-col items-center gap-1 p-2"
+            >
+              {navLinksData?.map((item, index) => (
+                <NavBarItem collapsed={collapsed} item={item} key={index} />
+              ))}
+            </motion.div>
+          </AnimatePresence>
 
           {/* Profile */}
           <ProfileButton collapsed={collapsed} />

@@ -1,12 +1,12 @@
 "use client";
-import AddingCourseToTeacher from "@/components/teachers/AddingCourseToTeacher";
-import FormCheckDialog from "@/components/teachers/FormCheckDialog";
-import TeacherEditForm from "@/components/teachers/TeacherForm";
+import AddingCourseToStudent from "@/components/students/AddingCourseToStudent";
+import FormCheckDialog from "@/components/students/FormCheckDialog";
+import StudentEditForm from "@/components/students/StudentForm";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import useApiQuery from "@/hooks/useApiQuery";
-import { TeacherFormData, TeacherSchema } from "@/schemas/teacherSchema";
-import { CoursesListResponse, Teacher } from "@/types/types";
+import { StudentFormData, StudentSchema } from "@/schemas/studentSchema";
+import { CoursesListResponse, Student } from "@/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -17,16 +17,16 @@ import { useForm, useWatch } from "react-hook-form";
 const Page = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPhoneValid, setIsPhoneValid] = useState(true);
-  const t = useTranslations("Teachers");
+  const t = useTranslations("Students");
   const toastT = useTranslations("Toast");
   const { id } = useParams();
   const { showToast } = useCustomToast();
 
-  const { data: teacher, isLoading } = useApiQuery<{
+  const { data: student, isLoading } = useApiQuery<{
     courses: { id: number; name: string }[];
-    user: Teacher;
+    user: Student;
   }>(`/users/${id}`, {
-    key: ["teachers"],
+    key: ["students"],
   });
 
   const { data: courses, isLoading: isLoadingCourses } =
@@ -40,41 +40,42 @@ const Page = () => {
     control,
     setValue,
     trigger,
-  } = useForm<TeacherFormData>({
-    resolver: zodResolver(TeacherSchema),
+  } = useForm<StudentFormData>({
+    resolver: zodResolver(StudentSchema),
     defaultValues: {
-      role: "teacher",
+      role: "student",
     },
   });
   const router = useRouter();
 
   useEffect(() => {
-    if (teacher) {
-      setValue("name", teacher.user.name);
-      if (teacher.user.age) setValue("age", teacher.user.age);
-      if (teacher.courses.length > 0) {
-        const courseIds = teacher.courses.map((course) => String(course.id));
+    if (student) {
+      setValue("name", student.user.name);
+      setValue("studentId", student.user.studentId);
+      if (student.user.age) setValue("age", student.user.age);
+      if (student.courses.length > 0) {
+        const courseIds = student.courses.map((course) => String(course.id));
         setValue("courseIds", courseIds);
       } else setValue("courseIds", []);
-      setValue("phoneNumber", teacher.user.phoneNumber);
+      setValue("phoneNumber", student.user.phoneNumber);
     }
-  }, [teacher, setValue]);
+  }, [student, setValue]);
 
-  const { mutate: editTeacher } = useApiMutation<
+  const { mutate: editStudent } = useApiMutation<
     { success: boolean },
-    TeacherFormData
+    StudentFormData
   >(`/users/${id}`, "put");
 
-  const onSubmit = (data: TeacherFormData) => {
-    editTeacher(data, {
+  const onSubmit = (data: StudentFormData) => {
+    editStudent(data, {
       onSuccess: () => {
         reset();
         setIsDialogOpen(false);
-        showToast("success", toastT("Teacher edited successfully"));
-        router.push("/teachers");
+        showToast("success", toastT("Student edited successfully"));
+        router.push(`/students/${id}/view`);
       },
       onError: (error) => {
-        console.error("teacher create failed", error);
+        console.error("student create failed", error);
       },
     });
   };
@@ -94,20 +95,20 @@ const Page = () => {
     <div>
       <div className="flex items-center justify-between gap-4 mb-4">
         <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
-          {t("Teacher Edit")}
+          {t("Student Edit")}
         </h1>
         <Link
-          href={"/teachers"}
+          href={"/students"}
           className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/5 hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/15 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
         >
-          {t("Back to teachers")}
+          {t("Back to students")}
         </Link>
       </div>
 
       {isLoading ? (
         <div>Loading...</div>
-      ) : teacher ? (
-        <TeacherEditForm
+      ) : student ? (
+        <StudentEditForm
           onSubmit={handleSubmit(onSubmit)}
           errors={errors}
           register={register}
@@ -117,15 +118,15 @@ const Page = () => {
           editPage
         />
       ) : (
-        <div>{t("no teacher found")}</div>
+        <div>{t("no student found")}</div>
       )}
 
       {isLoadingCourses ? (
         <div>{t("Loading")}</div>
-      ) : courses?.courses.length === 0 ? (
-        <div className="mt-6">{t("no courses found")}</div>
+      ) : courses?.courses?.length === 0 ? (
+        <div className="mt-10">{t("no courses found")}</div>
       ) : (
-        <AddingCourseToTeacher
+        <AddingCourseToStudent
           isLoading={isLoading}
           courses={courses?.courses ?? []}
           selectedCoursesIds={selectedCoursesIds}
