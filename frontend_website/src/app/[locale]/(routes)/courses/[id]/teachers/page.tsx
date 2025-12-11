@@ -33,6 +33,29 @@ const TeachersPage = () => {
     );
   }, [search, data]);
 
+  if (!data || data.length === 0) {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-bold flex sm:flex-row flex-col sm:gap-1">
+            <span>{t("Teachers")}</span>
+          </h1>
+
+          <Link href={`/courses/${id}/view`}>
+            <CustomButton variants="outline">
+              <span className="max-sm:hidden">{t("Back to course")}</span>
+              <span className="sm:hidden">{t("Back")}</span>
+            </CustomButton>
+          </Link>
+        </div>
+
+        <div className="flex justify-center items-center min-h-[100px] w-full border border-primary bg-primary/5 rounded-md">
+          {t("No teachers found")}
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading) return <div className="mb-10">{t("Loading")}...</div>;
 
   return (
@@ -40,7 +63,7 @@ const TeachersPage = () => {
       {/* HEADER */}
       <div className="flex items-center justify-between mb-4">
         <h1 className="lg:text-3xl md:text-2xl text-xl font-bold flex sm:flex-row flex-col sm:gap-1">
-          <span>{data?.[0].courseName}:</span> <span>{t("Teachers")}</span>
+          <span>{data?.[0]?.courseName}:</span> <span>{t("Teachers")}</span>
         </h1>
 
         <Link href={`/courses/${id}/view`}>
