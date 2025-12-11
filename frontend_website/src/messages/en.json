@@ -6,11 +6,7 @@
         "Courses": "Courses",
         "Admins": "Admins",
         "Settings": "Settings",
-        "Profile": "Profile",
-        "List": "List",
-        "View Each": "View Each",
-        "Edit": "Edit",
-        "Topic View": "Topic View" 
+        "Profile": "Profile"
     },
     "AuthPage": {
         "Sign in": "Sign in",
@@ -340,7 +336,9 @@
         "Edit assignment": "Edit assignment",
         "Edit presentation": "Edit presentation",
         "Save": "Save",
-        "Due date is required": "Due date is required"
+        "Due date is required": "Due date is required",
+        "No teachers found": "No teachers found",
+        "No students found": "No students found"
     },
     "Admin": {
         "Name": "Name",

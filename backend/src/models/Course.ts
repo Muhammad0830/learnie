@@ -226,7 +226,7 @@ export async function getCourseUsers({
     );
 
     if (rows.length === 0) {
-      throw new Error(`Course ${role}s not found`);
+      console.error({ error: `Course ${role}s not found` });
     }
 
     const users = rows.map((user) => ({
