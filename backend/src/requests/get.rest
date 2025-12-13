@@ -35,3 +35,7 @@ x-university-schema: university_harvard_university
 
 ###
 GET http://localhost:3001/university/
+
+###
+GET http://localhost:3001/dashboard/
+x-university-schema: university_harvard_university

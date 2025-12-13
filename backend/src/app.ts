@@ -8,6 +8,7 @@ import universityRouter from "./routes/university";
 import userRouter from "./routes/user";
 import authRouter from "./routes/auth";
 import cookieParser from "cookie-parser";
+import dashboardRouter from "./routes/dashboard";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/courses", coursesRouter);
 app.use("/university", universityRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
+app.use("/dashboard", dashboardRouter);
 
 app.use(unknownEndpoint);
 
