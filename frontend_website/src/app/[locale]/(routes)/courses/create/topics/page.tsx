@@ -34,13 +34,6 @@ export default function CreateTopicsPage() {
     key: ["all-courses"],
   });
 
-  useEffect(() => {
-    if (courseId) {
-      // eslint-disable-next-line
-      setSelectedCourseId(Number(courseId));
-    }
-  }, [courseId]);
-
   const {
     register,
     control,
@@ -62,6 +55,14 @@ export default function CreateTopicsPage() {
     },
   });
 
+  useEffect(() => {
+    if (courseId) {
+      // eslint-disable-next-line
+      setSelectedCourseId(Number(courseId));
+      setValue("courseId", Number(courseId));
+    }
+  }, [courseId, setValue]);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "topics",
@@ -75,7 +76,7 @@ export default function CreateTopicsPage() {
       {
         onSuccess: () => {
           showToast("success", toastT("Topics created successfully"));
-          router.push(`/courses/view/${data.courseId}`);
+          router.push(`/courses/${data.courseId}/view`);
           reset();
         },
         onError: () => {

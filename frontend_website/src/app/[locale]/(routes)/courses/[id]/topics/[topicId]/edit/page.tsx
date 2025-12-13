@@ -82,7 +82,9 @@ export default function TopicEditPage() {
     mutate(data, {
       onSuccess: () => {
         showToast("success", toastT("Topic updated successfully"));
-        if (courseId) router.push(`/courses/view/${courseId}`);
+        if (courseId && topicId)
+          router.push(`/courses/${courseId}/topics/${topicId}`);
+        else if (courseId) router.push(`/courses/${courseId}/view`);
         else router.push("/courses");
       },
       onError: (err) => {
@@ -100,7 +102,7 @@ export default function TopicEditPage() {
         </h1>
 
         <Link
-          href={`/courses/view/${courseId}`}
+          href={`/courses/${courseId}/view`}
           className="rounded-sm px-3 py-1.5 text-nowrap bg-primary/5 hover:bg-primary/10 border border-primary text-black dark:text-white flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />

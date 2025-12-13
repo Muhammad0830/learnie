@@ -62,6 +62,15 @@ const CourseTopicViewPage = () => {
     "delete"
   );
 
+  const handleDelete = (data: { courseId: string; topicId: string }) => {
+    deleteTopic(data, {
+      onSuccess: () => {
+        showToast("success", toastT("Topic deleted successfully"));
+        window.location.href = `/courses/${courseId}/view`;
+      },
+    });
+  };
+
   useEffect(() => {
     if (isDeleting) {
       showLoadingToast("Deleting...");
@@ -71,7 +80,6 @@ const CourseTopicViewPage = () => {
       setTimeout(() => {
         setIsDeleteOpen(false);
         showToast("success", toastT("Topic deleted successfully"));
-        window.history.back();
       }, 300);
     }
   }, [
@@ -96,6 +104,7 @@ const CourseTopicViewPage = () => {
   }
 
   const { course_topic, lectures, assignments, presentations } = topicData;
+  console.log("course_topic", course_topic);
 
   const renderContentSection = (
     title: string,
@@ -217,14 +226,22 @@ const CourseTopicViewPage = () => {
           <p>
             {t("Created At")}:{" "}
             <span className="font-semibold">
-              {new Date(course_topic.created_at).toLocaleDateString()}
+              {`${new Date(
+                course_topic.created_at
+              ).toLocaleDateString()} ${new Date(
+                course_topic.created_at
+              ).toLocaleTimeString()}`}
             </span>
           </p>
           <p>
             {t("Updated At")}:{" "}
             <span className="font-semibold">
               {course_topic.updated_at
-                ? new Date(course_topic.updated_at).toLocaleDateString()
+                ? `${new Date(
+                    course_topic.updated_at
+                  ).toLocaleDateString()} ${new Date(
+                    course_topic.updated_at
+                  ).toLocaleTimeString()}`
                 : t("not updated yet")}
             </span>
           </p>
@@ -256,6 +273,7 @@ const CourseTopicViewPage = () => {
           "presentation"
         )}
       </div>
+
       {/* Delete Topic Confirmation Dialog */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="p-4 max-sm:max-w-[90vw]">
@@ -286,7 +304,7 @@ const CourseTopicViewPage = () => {
             <CustomButton
               className="flex gap-2 items-center px-6 py-2 border-red-600/40 dark:border-red-600/20 dark:bg-red-600/5 bg-red-600/20 hover:bg-red-600/30 dark:hover:bg-red-600/15"
               onClick={() =>
-                deleteTopic({
+                handleDelete({
                   courseId,
                   topicId: String(course_topic.id),
                 })
