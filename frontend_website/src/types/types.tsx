@@ -166,3 +166,18 @@ export interface defaultPresentationType {
   title: string;
   file_url: string;
 }
+
+export interface DashboardDataType {
+  counts: {
+    students: number;
+    teachers: number;
+    courses: number;
+    admins: number;
+  };
+  recents: {
+    students: Student[];
+    teachers: Teacher[];
+    courses: Course[];
+    admins: User[];
+  };
+}
