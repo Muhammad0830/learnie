@@ -239,6 +239,14 @@ export async function updateUser({
           { user_id: userId, course_id: courseId }
         );
       }
+
+      if (needToAdd.length > 0 || needToDelete.length > 0) {
+        await queryUniversity<RowDataPacket[]>(
+          schemaName,
+          `UPDATE users SET updated_at = NOW() WHERE id = :id`,
+          { id: userId }
+        );
+      }
     }
 
     const updatedUser = await queryUniversity<RowDataPacket[]>(
