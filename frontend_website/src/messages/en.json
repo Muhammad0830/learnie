@@ -355,6 +355,24 @@
         "teacher": "Teacher",
         "admin": "Admin"
     },
+    "Dashboard": {
+        "Dashboard": "Dashboard",
+        "Something went wrong": "Something went wrong",
+        "Overview of the system": "Overview of the system",
+        "Students": "Students",
+        "Teachers": "Teachers",
+        "Courses": "Courses",
+        "Admins": "Admins",
+        "Recent Students": "Recent Students",
+        "Recent Teachers": "Recent Teachers",
+        "Recent Courses": "Recent Courses", 
+        "Recent Admins": "Recent Admins",
+        "No students found": "No students found",
+        "No teachers found": "No teachers found",
+        "No courses found": "No courses found",
+        "No admins found": "No admins found",
+        "View all": "View all"
+    },
     "Toast": {
         "Failed to perform the action": "Failed to perform the action",
         "Internal server error": "Internal server error",

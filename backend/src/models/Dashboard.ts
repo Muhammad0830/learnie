@@ -25,22 +25,22 @@ export async function getDashboardData({ schemaName }: { schemaName: string }) {
 
     const recentStudents = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      "SELECT id, name, email FROM users WHERE role = 'student' ORDER BY created_at DESC LIMIT 5"
+      "SELECT id, name, email, created_at FROM users WHERE role = 'student' ORDER BY created_at DESC LIMIT 5"
     );
 
     const recentTeachers = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      "SELECT id, name, email FROM users WHERE role = 'teacher' ORDER BY created_at DESC LIMIT 5"
+      "SELECT id, name, email, created_at FROM users WHERE role = 'teacher' ORDER BY created_at DESC LIMIT 5"
     );
 
     const recentAdmins = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      "SELECT id, name, email FROM users WHERE role = 'admin' ORDER BY created_at DESC LIMIT 5"
+      "SELECT id, name, email, created_at FROM users WHERE role = 'admin' ORDER BY created_at DESC LIMIT 5"
     );
 
     const recentCourses = await queryUniversity<RowDataPacket[]>(
       schemaName,
-      "SELECT id, name, description FROM courses ORDER BY created_at DESC LIMIT 5"
+      "SELECT id, name, description, created_at FROM courses ORDER BY created_at DESC LIMIT 5"
     );
 
     return {
@@ -51,10 +51,10 @@ export async function getDashboardData({ schemaName }: { schemaName: string }) {
         admins: adminCount.count,
       },
       recents: {
-        students: recentStudents,
-        teachers: recentTeachers,
-        courses: recentCourses,
-        admin: recentAdmins,
+        students: recentStudents || [],
+        teachers: recentTeachers || [],
+        courses: recentCourses || [],
+        admins: recentAdmins || [],
       },
     };
   } catch (error: any) {

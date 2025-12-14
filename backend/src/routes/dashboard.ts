@@ -4,7 +4,7 @@ import * as Dashboard from "../models/Dashboard";
 
 const dashboardRouter = express.Router();
 
-dashboardRouter.get("/", validateUniversitySchema, async (req, res) => {
+dashboardRouter.get("/summary", validateUniversitySchema, async (req, res) => {
   try {
     const schemaName = (req as any).universitySchema;
 
