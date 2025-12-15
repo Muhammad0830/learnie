@@ -2,6 +2,8 @@
 import AddingCourseToStudent from "@/components/students/AddingCourseToStudent";
 import FormCheckDialog from "@/components/students/FormCheckDialog";
 import StudentForm from "@/components/students/StudentForm";
+import CustomButton from "@/components/ui/customButton";
+import { useAuth } from "@/context/AuthContext";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import useApiQuery from "@/hooks/useApiQuery";
@@ -37,6 +39,7 @@ const Page = () => {
   });
   const { showToast } = useCustomToast();
   const router = useRouter();
+  const { user } = useAuth();
 
   const { mutate } = useApiMutation<{ success: boolean }, StudentFormData>(
     "/users",
@@ -103,6 +106,24 @@ const Page = () => {
   const selectedCourses = courses?.courses.filter((course) =>
     selectedCoursesIds?.includes(String(course.id))
   );
+
+  if (user?.role === "student" || user?.role === "teacher") {
+    return (
+      <div className="flex flex-col gap-4 items-center justify-center h-screen">
+        <div className="sm:text-2xl text-xl font-bold">
+          {t("You are not authorized to view this page")}
+        </div>
+        <CustomButton
+          onClick={() => {
+            router.back();
+          }}
+          variants="outline"
+        >
+          {t("Go back")}
+        </CustomButton>
+      </div>
+    );
+  }
 
   return (
     <div>

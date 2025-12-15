@@ -1,15 +1,20 @@
 "use client";
 import CoursesView from "@/components/CoursesView";
 import TeacherView from "@/components/teachers/TeacherView";
+import CustomButton from "@/components/ui/customButton";
+import { useAuth } from "@/context/AuthContext";
 import useApiQuery from "@/hooks/useApiQuery";
 import { CoursesListResponse, Teacher } from "@/types/types";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 const Page = () => {
   const t = useTranslations("Teachers");
   const { id } = useParams();
+
+  const { user } = useAuth();
+  const router = useRouter();
 
   const { data: teacher, isLoading } = useApiQuery<{
     courses: { id: number; name: string }[];
@@ -29,45 +34,71 @@ const Page = () => {
     selectedCoursesIds?.includes(String(course.id))
   );
 
-  return (
-    <div>
-      <div className="flex items-center justify-between gap-4 mb-4">
-        <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
-          {t("Teacher View")}
-        </h1>
-        <div className="flex gap-2">
-          <Link
-            href={"/teachers"}
-            className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/5 hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/15 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
-          >
-            {t("Back to teachers")}
-          </Link>
-          <Link
-            href={`/teachers/${teacher?.user.id}/edit`}
-            className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
-          >
-            {t("Edit")}
-          </Link>
-        </div>
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        {t("Loading")}
       </div>
+    );
+  }
 
-      {isLoading ? (
-        <div className="mb-4">{t("Loading")}</div>
-      ) : (
-        <TeacherView teacher={teacher?.user} />
-      )}
+  if (user?.role === "student" || user?.role === "teacher") {
+    return (
+      <div className="flex flex-col gap-4 items-center justify-center h-screen">
+        <div className="sm:text-2xl text-xl font-bold">
+          {t("You are not authorized to view this page")}
+        </div>
+        <CustomButton
+          onClick={() => {
+            router.back();
+          }}
+          variants="outline"
+        >
+          {t("Go back")}
+        </CustomButton>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
+            {t("Teacher View")}
+          </h1>
+          <div className="flex gap-2">
+            <Link
+              href={"/teachers"}
+              className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/5 hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/15 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
+            >
+              {t("Back to teachers")}
+            </Link>
+            <Link
+              href={`/teachers/${teacher?.user.id}/edit`}
+              className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
+            >
+              {t("Edit")}
+            </Link>
+          </div>
+        </div>
 
-      {courses?.courses.length === 0 ? (
-        <div>{t("no courses found")}</div>
-      ) : (
-        <CoursesView
-          isLoading={isLoadingCourses}
-          selectedCourses={selectedCourses ?? []}
-          translateFrom="Teachers"
-        />
-      )}
-    </div>
-  );
+        {isLoading ? (
+          <div className="mb-4">{t("Loading")}</div>
+        ) : (
+          <TeacherView teacher={teacher?.user} />
+        )}
+
+        {courses?.courses.length === 0 ? (
+          <div>{t("no courses found")}</div>
+        ) : (
+          <CoursesView
+            isLoading={isLoadingCourses}
+            selectedCourses={selectedCourses ?? []}
+            translateFrom="Teachers"
+          />
+        )}
+      </div>
+    );
+  }
 };
 
 export default Page;

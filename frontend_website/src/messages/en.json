@@ -103,7 +103,9 @@
         "Editing": "Editing...",
         "Email is required": "Email is required",
         "Are you sure to delete this student?": "Are you sure to delete this student?",
-        "Close": "Close"
+        "Close": "Close",
+        "You are not authorized to view this page": "You are not authorized to view this page",
+        "Go back": "Go back"
     },
     "Teachers": {
         "Teachers": "Teachers",
@@ -168,7 +170,9 @@
         "Editing a new Teacher": "Editing a new Teacher",
         "Editing": "Editing...",
         "Close": "Close",
-        "Are you sure to delete this teacher?": "Are you sure to delete this teacher?"
+        "Are you sure to delete this teacher?": "Are you sure to delete this teacher?",
+        "You are not authorized to view this page": "You are not authorized to view this page",
+        "Go back": "Go back"
     },
     "Courses": {
         "Courses": "Courses",
@@ -338,7 +342,9 @@
         "Save": "Save",
         "Due date is required": "Due date is required",
         "No teachers found": "No teachers found",
-        "No students found": "No students found"
+        "No students found": "No students found",
+        "You are not authorized to view this page": "You are not authorized to view this page",
+        "Go back":"Go back"
     },
     "Admin": {
         "Name": "Name",
