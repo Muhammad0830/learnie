@@ -2,6 +2,8 @@
 import AddingCourseToTeacher from "@/components/teachers/AddingCourseToTeacher";
 import FormCheckDialog from "@/components/teachers/FormCheckDialog";
 import TeacherForm from "@/components/teachers/TeacherForm";
+import CustomButton from "@/components/ui/customButton";
+import { useAuth } from "@/context/AuthContext";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import useApiQuery from "@/hooks/useApiQuery";
@@ -35,7 +37,9 @@ const Page = () => {
       role: "teacher",
     },
   });
+
   const { showToast } = useCustomToast();
+  const { user } = useAuth();
   const router = useRouter();
 
   const { mutate } = useApiMutation<{ success: boolean }, TeacherFormData>(
@@ -104,61 +108,87 @@ const Page = () => {
     selectedCoursesIds?.includes(String(course.id))
   );
 
-  return (
-    <div>
-      <div className="flex items-center justify-between gap-4 mb-4">
-        <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
-          {t("Create New Teacher")}
-        </h1>
-
-        <Link
-          href={"/teachers"}
-          className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
-        >
-          {t("Back")}
-        </Link>
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        {t("Loading")}
       </div>
+    );
+  }
 
-      <TeacherForm
-        onSubmit={handleSubmit(onSubmit)}
-        errors={errors}
-        register={register}
-        control={control}
-        setValue={setValue}
-        onPhoneValidityChange={setIsPhoneValid}
-        passwordError={passwordError}
-        emailError={emailError}
-      />
+  if (user?.role === "student" || user?.role === "teacher") {
+    return (
+      <div className="flex flex-col gap-4 items-center justify-center h-screen">
+        <div className="sm:text-2xl text-xl font-bold">
+          {t("You are not authorized to view this page")}
+        </div>
+        <CustomButton
+          onClick={() => {
+            router.back();
+          }}
+          variants="outline"
+        >
+          {t("Go back")}
+        </CustomButton>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
+            {t("Create New Teacher")}
+          </h1>
 
-      {courses?.courses.length === 0 ? (
-        <div>{t("no courses found")}</div>
-      ) : (
-        <AddingCourseToTeacher
-          isLoading={isLoading}
-          courses={courses?.courses ?? []}
-          selectedCoursesIds={selectedCoursesIds}
+          <Link
+            href={"/teachers"}
+            className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
+          >
+            {t("Back")}
+          </Link>
+        </div>
+
+        <TeacherForm
+          onSubmit={handleSubmit(onSubmit)}
+          errors={errors}
+          register={register}
+          control={control}
           setValue={setValue}
+          onPhoneValidityChange={setIsPhoneValid}
+          passwordError={passwordError}
+          emailError={emailError}
         />
-      )}
 
-      <button
-        type="button"
-        onClick={async () => await validateValues()}
-        className="mt-4 cursor-pointer px-3 py-1.5 rounded-sm bg-primary/20 hover:bg-primary/30 transition-colors duration-150 border border-primary"
-      >
-        {t("Submit")}
-      </button>
+        {courses?.courses.length === 0 ? (
+          <div>{t("no courses found")}</div>
+        ) : (
+          <AddingCourseToTeacher
+            isLoading={isLoading}
+            courses={courses?.courses ?? []}
+            selectedCoursesIds={selectedCoursesIds}
+            setValue={setValue}
+          />
+        )}
 
-      <FormCheckDialog
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        control={control}
-        selectedCourses={selectedCourses ?? []}
-        isSubmitting={isSubmitting}
-        action="create"
-      />
-    </div>
-  );
+        <button
+          type="button"
+          onClick={async () => await validateValues()}
+          className="mt-4 cursor-pointer px-3 py-1.5 rounded-sm bg-primary/20 hover:bg-primary/30 transition-colors duration-150 border border-primary"
+        >
+          {t("Submit")}
+        </button>
+
+        <FormCheckDialog
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          control={control}
+          selectedCourses={selectedCourses ?? []}
+          isSubmitting={isSubmitting}
+          action="create"
+        />
+      </div>
+    );
+  }
 };
 
 export default Page;

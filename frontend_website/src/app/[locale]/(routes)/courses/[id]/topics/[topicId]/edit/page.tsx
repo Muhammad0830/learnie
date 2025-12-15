@@ -13,16 +13,20 @@ import { useForm } from "react-hook-form";
 import { EachTopicResponseData } from "@/types/types";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import CustomButton from "@/components/ui/customButton";
+import { useAuth } from "@/context/AuthContext";
 
 export default function TopicEditPage() {
   const { id: courseId, topicId } = useParams() as {
     id: string;
     topicId: string;
   };
-  const router = useRouter();
   const t = useTranslations("Courses");
   const toastT = useTranslations("Toast");
+
   const { showToast } = useCustomToast();
+  const router = useRouter();
+  const { user } = useAuth();
 
   const {
     data: topicData,
@@ -94,29 +98,55 @@ export default function TopicEditPage() {
     });
   };
 
-  return (
-    <div>
-      <div className="flex items-center justify-between gap-4 mb-4">
-        <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
-          {t("Edit Topic")}
-        </h1>
-
-        <Link
-          href={`/courses/${courseId}/view`}
-          className="rounded-sm px-3 py-1.5 text-nowrap bg-primary/5 hover:bg-primary/10 border border-primary text-black dark:text-white flex items-center gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span className="sm:flex hidden">{t("Back to course")}</span>
-          <span className="lg:hidden flex">{t("Back")}</span>
-        </Link>
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        {t("Loading")}
       </div>
+    );
+  }
 
-      <TopicEditForm
-        register={register}
-        errors={errors}
-        onSubmit={handleSubmit(onSubmit)}
-        isSubmitting={isMutating}
-      />
-    </div>
-  );
+  if (user?.role === "student" || user?.role === "teacher") {
+    return (
+      <div className="flex flex-col gap-4 items-center justify-center h-screen">
+        <div className="sm:text-2xl text-xl font-bold">
+          {t("You are not authorized to view this page")}
+        </div>
+        <CustomButton
+          onClick={() => {
+            router.back();
+          }}
+          variants="outline"
+        >
+          {t("Go back")}
+        </CustomButton>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
+            {t("Edit Topic")}
+          </h1>
+
+          <Link
+            href={`/courses/${courseId}/view`}
+            className="rounded-sm px-3 py-1.5 text-nowrap bg-primary/5 hover:bg-primary/10 border border-primary text-black dark:text-white flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="sm:flex hidden">{t("Back to course")}</span>
+            <span className="lg:hidden flex">{t("Back")}</span>
+          </Link>
+        </div>
+
+        <TopicEditForm
+          register={register}
+          errors={errors}
+          onSubmit={handleSubmit(onSubmit)}
+          isSubmitting={isMutating}
+        />
+      </div>
+    );
+  }
 }

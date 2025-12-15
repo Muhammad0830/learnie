@@ -31,6 +31,8 @@ import {
   defaultPresentationType,
 } from "@/types/types";
 import Link from "next/link";
+import CustomButton from "@/components/ui/customButton";
+import { useAuth } from "@/context/AuthContext";
 
 export default function CreateItemPage() {
   const searchParams = useSearchParams();
@@ -38,6 +40,7 @@ export default function CreateItemPage() {
   const courseId = searchParams.get("courseId");
   const topicId = searchParams.get("topicId");
 
+  const { user } = useAuth();
   const router = useRouter();
   const t = useTranslations("Courses");
   const { showToast } = useCustomToast();
@@ -115,80 +118,106 @@ export default function CreateItemPage() {
     });
   };
 
-  return (
-    <div className="h-full">
-      {!config ? (
-        <div className="w-full h-full flex justify-center items-center">
-          {t("Invalid Page Url")}
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        {t("Loading")}
+      </div>
+    );
+  }
+
+  if (user?.role === "student") {
+    return (
+      <div className="flex flex-col gap-4 items-center justify-center h-screen">
+        <div className="sm:text-2xl text-xl font-bold">
+          {t("You are not authorized to view this page")}
         </div>
-      ) : (
-        <>
-          <div className="flex items-center gap-2 justify-between mb-2">
-            <h1 className="text-3xl font-bold mb-4">
-              {type
-                ? t(`Create ${type.charAt(0).toUpperCase() + type.slice(1)}`)
-                : "Craete Item"}
-            </h1>
+        <CustomButton
+          onClick={() => {
+            router.back();
+          }}
+          variants="outline"
+        >
+          {t("Go back")}
+        </CustomButton>
+      </div>
+    );
+  } else {
+    return (
+      <div className="h-full">
+        {!config ? (
+          <div className="w-full h-full flex justify-center items-center">
+            {t("Invalid Page Url")}
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-2 justify-between mb-2">
+              <h1 className="text-3xl font-bold mb-4">
+                {type
+                  ? t(`Create ${type.charAt(0).toUpperCase() + type.slice(1)}`)
+                  : "Craete Item"}
+              </h1>
 
-            <Link
-              href={courseId ? `/courses/view/${courseId}` : "/courses"}
-              className="px-3 py-1.5 max-sm:text-sm rounded border border-primary bg-primary/10 hover:bg-primary/20"
+              <Link
+                href={courseId ? `/courses/view/${courseId}` : "/courses"}
+                className="px-3 py-1.5 max-sm:text-sm rounded border border-primary bg-primary/10 hover:bg-primary/20"
+              >
+                {courseId ? t("Back to the course") : t("Back to courses")}
+              </Link>
+            </div>
+
+            <CourseAndTopicSelector
+              errors={errors}
+              selectedCourseId={Number(selectedCourseId)}
+              setValue={setValue}
+              selectedTopicId={selectedTopicId}
+              setSelectedCourse={setSelectedCourse}
+              setSelectedTopic={setSelectedTopic}
+            />
+
+            <div className="mt-6">
+              {type === "lecture" && (
+                <LectureForm
+                  register={register as UseFormRegister<LectureFormType>}
+                  errors={errors}
+                />
+              )}
+              {type === "assignment" && (
+                <AssignmentForm
+                  register={register as UseFormRegister<AssignmentFormType>}
+                  errors={errors}
+                />
+              )}
+              {type === "presentation" && (
+                <PresentationForm
+                  register={register as UseFormRegister<PresentationFormType>}
+                  errors={errors}
+                />
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="mt-6 mb-3 px-3 py-1.5 border rounded bg-primary/20 hover:bg-primary/30"
+              onClick={async () => {
+                const valid = await trigger();
+                if (valid) handleSubmit(onSubmit)();
+              }}
             >
-              {courseId ? t("Back to the course") : t("Back to courses")}
-            </Link>
-          </div>
+              {t("Submit")}
+            </button>
 
-          <CourseAndTopicSelector
-            errors={errors}
-            selectedCourseId={Number(selectedCourseId)}
-            setValue={setValue}
-            selectedTopicId={selectedTopicId}
-            setSelectedCourse={setSelectedCourse}
-            setSelectedTopic={setSelectedTopic}
-          />
-
-          <div className="mt-6">
-            {type === "lecture" && (
-              <LectureForm
-                register={register as UseFormRegister<LectureFormType>}
-                errors={errors}
-              />
-            )}
-            {type === "assignment" && (
-              <AssignmentForm
-                register={register as UseFormRegister<AssignmentFormType>}
-                errors={errors}
-              />
-            )}
-            {type === "presentation" && (
-              <PresentationForm
-                register={register as UseFormRegister<PresentationFormType>}
-                errors={errors}
-              />
-            )}
-          </div>
-
-          <button
-            type="submit"
-            className="mt-6 mb-3 px-3 py-1.5 border rounded bg-primary/20 hover:bg-primary/30"
-            onClick={async () => {
-              const valid = await trigger();
-              if (valid) handleSubmit(onSubmit)();
-            }}
-          >
-            {t("Submit")}
-          </button>
-
-          <ConfirmDialog
-            open={dialogOpen}
-            onClose={() => setDialogOpen(false)}
-            onConfirm={() => dialogData && sendToServer(dialogData)}
-            data={dialogData}
-            selectedCourse={selectedCourse}
-            selectedTopic={selectedTopic}
-          />
-        </>
-      )}
-    </div>
-  );
+            <ConfirmDialog
+              open={dialogOpen}
+              onClose={() => setDialogOpen(false)}
+              onConfirm={() => dialogData && sendToServer(dialogData)}
+              data={dialogData}
+              selectedCourse={selectedCourse}
+              selectedTopic={selectedTopic}
+            />
+          </>
+        )}
+      </div>
+    );
+  }
 }

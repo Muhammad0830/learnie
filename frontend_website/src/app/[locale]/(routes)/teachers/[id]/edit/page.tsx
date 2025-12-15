@@ -2,6 +2,8 @@
 import AddingCourseToTeacher from "@/components/teachers/AddingCourseToTeacher";
 import FormCheckDialog from "@/components/teachers/FormCheckDialog";
 import TeacherEditForm from "@/components/teachers/TeacherForm";
+import CustomButton from "@/components/ui/customButton";
+import { useAuth } from "@/context/AuthContext";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import useApiQuery from "@/hooks/useApiQuery";
@@ -46,6 +48,8 @@ const Page = () => {
       role: "teacher",
     },
   });
+
+  const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -88,7 +92,31 @@ const Page = () => {
     selectedCoursesIds?.includes(String(course.id))
   );
 
-  if (isLoading) return <div>Loading...</div>;
+  if (!user || isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        {t("Loading")}
+      </div>
+    );
+  }
+
+  if (user?.role === "student" || user?.role === "teacher") {
+    return (
+      <div className="flex flex-col gap-4 items-center justify-center h-screen">
+        <div className="sm:text-2xl text-xl font-bold">
+          {t("You are not authorized to view this page")}
+        </div>
+        <CustomButton
+          onClick={() => {
+            router.back();
+          }}
+          variants="outline"
+        >
+          {t("Go back")}
+        </CustomButton>
+      </div>
+    );
+  }
 
   return (
     <div>
