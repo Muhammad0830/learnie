@@ -133,7 +133,7 @@ const Page = () => {
       </div>
 
       {isLoading ? (
-        <div>Loading...</div>
+        <div>{t("Loading")}</div>
       ) : teacher ? (
         <TeacherEditForm
           onSubmit={handleSubmit(onSubmit)}
@@ -145,7 +145,7 @@ const Page = () => {
           editPage
         />
       ) : (
-        <div>{t("no teacher found")}</div>
+        <div>{t("Teacher not found")}</div>
       )}
 
       {isLoadingCourses ? (

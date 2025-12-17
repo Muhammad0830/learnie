@@ -105,7 +105,8 @@
         "Are you sure to delete this student?": "Are you sure to delete this student?",
         "Close": "Close",
         "You are not authorized to view this page": "You are not authorized to view this page",
-        "Go back": "Go back"
+        "Go back": "Go back",
+        "Student not found": "Student not found"
     },
     "Teachers": {
         "Teachers": "Teachers",
@@ -172,7 +173,8 @@
         "Close": "Close",
         "Are you sure to delete this teacher?": "Are you sure to delete this teacher?",
         "You are not authorized to view this page": "You are not authorized to view this page",
-        "Go back": "Go back"
+        "Go back": "Go back",
+        "Teacher not found": "Teacher not found"
     },
     "Courses": {
         "Courses": "Courses",
@@ -344,7 +346,8 @@
         "No teachers found": "No teachers found",
         "No students found": "No students found",
         "You are not authorized to view this page": "You are not authorized to view this page",
-        "Go back":"Go back"
+        "Go back":"Go back",
+        "Invalid id or topic id": "Invalid id or topic id"
     },
     "Admin": {
         "Name": "Name",

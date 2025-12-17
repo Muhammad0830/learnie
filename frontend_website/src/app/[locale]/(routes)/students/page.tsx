@@ -54,7 +54,6 @@ const Page = () => {
   if (!user) {
     return <div>{t("Loading")}</div>;
   }
-  console.log("user", user);
 
   if (user?.role === "student") {
     return (

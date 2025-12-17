@@ -106,6 +106,31 @@ export default function TopicEditPage() {
     );
   }
 
+  if (!topicId) {
+    return (
+      <div className="my-10">
+        <div className="flex justify-between mb-4 items-center">
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
+            {t("Assignments")}
+          </h1>
+          <Link href={`/courses`}>
+            <CustomButton
+              variants="primary"
+              className="px-3 py-1.5 text-sm gap-1 flex items-center flex-nowrap"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>{t(`Back to courses`)}</span>
+            </CustomButton>
+          </Link>
+        </div>
+
+        <div className="w-full h-[100px] border border-primary rounded-sm bg-primary/5 flex justify-center items-center">
+          {t("Invalid topic id")}
+        </div>
+      </div>
+    );
+  }
+
   if (user?.role === "student" || user?.role === "teacher") {
     return (
       <div className="flex flex-col gap-4 items-center justify-center h-screen">

@@ -632,7 +632,6 @@ coursesRouter.put(
         return res.status(400).json({ error: "Missing due_date" });
       }
 
-      console.log("due_date", due_date);
       const updated_due_date = new Date(due_date).toLocaleDateString("en-CA");
 
       const result = await updateCourseTopicAssignment({

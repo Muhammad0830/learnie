@@ -17,7 +17,7 @@ const Pagination = ({
   translateFrom: string;
 }) => {
   const t = useTranslations(translateFrom);
-  if (!totalPages) {
+  if (!totalPages || !totalUsers) {
     return null;
   }
 

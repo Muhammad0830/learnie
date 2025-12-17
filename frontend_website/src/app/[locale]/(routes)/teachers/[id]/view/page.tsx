@@ -42,6 +42,30 @@ const Page = () => {
     );
   }
 
+  if (!teacher || !teacher.user.id) {
+    return (
+      <div className="">
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
+            {t("Teacher View")}
+          </h1>
+          <div className="flex gap-2">
+            <Link
+              href={"/teachers"}
+              className="rounded-sm px-3 py-1.5 cursor-pointer bg-primary/5 hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/15 border border-primary text-black dark:text-white sm:text-[16px] text-xs"
+            >
+              {t("Back to teachers")}
+            </Link>
+          </div>
+        </div>
+
+        <div className="w-full h-[100px] flex justify-center items-center border border-primary rounded-sm bg-primary/5">
+          {t("Teacher not found")}
+        </div>
+      </div>
+    );
+  }
+
   if (user?.role === "student" || user?.role === "teacher") {
     return (
       <div className="flex flex-col gap-4 items-center justify-center h-screen">

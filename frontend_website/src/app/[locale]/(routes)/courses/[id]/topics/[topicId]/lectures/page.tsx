@@ -21,6 +21,31 @@ const TopicLecturesPage = () => {
     }
   );
 
+  if (!id || !topicId) {
+    return (
+      <div className="my-10">
+        <div className="flex justify-between mb-4 items-center">
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
+            {t("Lectures")}
+          </h1>
+          <Link href={`/courses`}>
+            <CustomButton
+              variants="primary"
+              className="px-3 py-1.5 text-sm gap-1 flex items-center flex-nowrap"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>{t(`Back to courses`)}</span>
+            </CustomButton>
+          </Link>
+        </div>
+
+        <div className="w-full h-[100px] border border-primary rounded-sm bg-primary/5 flex justify-center items-center">
+          {t("Invalid id or topic id")}
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return <div className="my-10">{t("Loading")}...</div>;
   }
