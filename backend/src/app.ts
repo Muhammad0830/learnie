@@ -9,6 +9,7 @@ import userRouter from "./routes/user";
 import authRouter from "./routes/auth";
 import cookieParser from "cookie-parser";
 import dashboardRouter from "./routes/dashboard";
+import { requireAuth } from "./middlewares/auth";
 
 const app = express();
 
@@ -23,12 +24,12 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/users", usersRouter);
-app.use("/courses", coursesRouter);
-app.use("/university", universityRouter);
+app.use("/users", requireAuth, usersRouter);
+app.use("/courses", requireAuth, coursesRouter);
+app.use("/university", requireAuth, universityRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
-app.use("/dashboard", dashboardRouter);
+app.use("/dashboard", requireAuth, dashboardRouter);
 
 app.use(unknownEndpoint);
 

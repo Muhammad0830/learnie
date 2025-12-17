@@ -406,6 +406,7 @@
         "Error Fetching Topic": "Error Fetching Topic",
         "Topic updated successfully": "Topic updated successfully",
         "Failed to update topic": "Failed to update topic",
+        "Failed to update course": "Failed to update course",
         "Failed to edit an item": "Failed to edit an item",
         "lecture edited successfully": "Lecture edited successfully",
         "assignment edited successfully": "Assignment edited successfully",
@@ -426,5 +427,6 @@
         "Created At": "Created At",
         "Actions": "Actions",
         "Description": "Description"
-    }
+    },
+    "This page is forbidden": "This page is forbidden"
 }

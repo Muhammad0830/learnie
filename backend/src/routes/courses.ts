@@ -30,6 +30,7 @@ import {
   updateCourseTopicPresentation,
 } from "../models/Course";
 import { validateUniversitySchema } from "../middlewares/validateUniversitySchema";
+import { authorizeRoles } from "../middlewares/roleMiddleware";
 
 const coursesRouter = express.Router();
 
@@ -107,32 +108,37 @@ coursesRouter.get(
   }
 );
 
-coursesRouter.post("/", validateUniversitySchema, async (req, res) => {
-  try {
-    const schemaName = (req as any).universitySchema;
+coursesRouter.post(
+  "/",
+  validateUniversitySchema,
+  authorizeRoles(["admin"]),
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
 
-    const { name, description } = req.body;
+      const { name, description } = req.body;
 
-    if (!name) {
-      return res.status(400).json({ error: "Missing name" });
-    } else if (!description) {
-      return res.status(400).json({ error: "Missing description" });
+      if (!name) {
+        return res.status(400).json({ error: "Missing name" });
+      } else if (!description) {
+        return res.status(400).json({ error: "Missing description" });
+      }
+
+      const result = await createCourse({
+        schemaName,
+        name,
+        description,
+      });
+
+      res.status(201).json({
+        data: result,
+      });
+    } catch (err: any) {
+      console.error("Error inserting course:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-
-    const result = await createCourse({
-      schemaName,
-      name,
-      description,
-    });
-
-    res.status(201).json({
-      data: result,
-    });
-  } catch (err: any) {
-    console.error("Error inserting course:", err);
-    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
-});
+);
 
 coursesRouter.get(
   "/:courseId/users",
@@ -187,54 +193,60 @@ coursesRouter.get(
   }
 );
 
-coursesRouter.post("/topics", validateUniversitySchema, async (req, res) => {
-  try {
-    const schemaName = (req as any).universitySchema;
+coursesRouter.post(
+  "/topics",
+  validateUniversitySchema,
+  authorizeRoles(["admin"]),
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
 
-    const { topics, courseId } = req.body;
+      const { topics, courseId } = req.body;
 
-    if (!topics || topics.length === 0) {
-      return res.status(400).json({ error: "Missing topics" });
-    } else if (!courseId) {
-      return res.status(400).json({ error: "Missing courseId" });
-    } else if (
-      !topics.every(
-        (topic: { title: string; description: string }) =>
-          topic.title && topic.description
-      )
-    ) {
-      return res
-        .status(400)
-        .json({ error: "Missing topic title or description" });
-    }
+      if (!topics || topics.length === 0) {
+        return res.status(400).json({ error: "Missing topics" });
+      } else if (!courseId) {
+        return res.status(400).json({ error: "Missing courseId" });
+      } else if (
+        !topics.every(
+          (topic: { title: string; description: string }) =>
+            topic.title && topic.description
+        )
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Missing topic title or description" });
+      }
 
-    // this checks existance of the course
-    await getEachCourse({ courseId, schemaName });
+      // this checks existance of the course
+      await getEachCourse({ courseId, schemaName });
 
-    const result = [];
+      const result = [];
 
-    for (const topic of topics) {
-      const resultObject = await createCourseTopic({
-        schemaName,
-        courseId,
-        title: topic.title,
-        description: topic.description,
+      for (const topic of topics) {
+        const resultObject = await createCourseTopic({
+          schemaName,
+          courseId,
+          title: topic.title,
+          description: topic.description,
+        });
+        result.push(resultObject);
+      }
+
+      res.status(201).json({
+        data: result,
       });
-      result.push(resultObject);
+    } catch (err: any) {
+      console.error("Error inserting course topic:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-
-    res.status(201).json({
-      data: result,
-    });
-  } catch (err: any) {
-    console.error("Error inserting course topic:", err);
-    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
-});
+);
 
 coursesRouter.post(
   "/coursestopics",
   validateUniversitySchema,
+  authorizeRoles(["admin"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -272,6 +284,7 @@ coursesRouter.post(
 coursesRouter.put(
   "/topics/:topicId",
   validateUniversitySchema,
+  authorizeRoles(["admin"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -451,6 +464,7 @@ coursesRouter.get(
 coursesRouter.post(
   "/create/assignment",
   validateUniversitySchema,
+  authorizeRoles(["admin", "teacher"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -489,6 +503,7 @@ coursesRouter.post(
 coursesRouter.post(
   "/create/lecture",
   validateUniversitySchema,
+  authorizeRoles(["admin", "teacher"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -527,6 +542,7 @@ coursesRouter.post(
 coursesRouter.post(
   "/create/presentation",
   validateUniversitySchema,
+  authorizeRoles(["admin", "teacher"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -559,39 +575,45 @@ coursesRouter.post(
   }
 );
 
-coursesRouter.put("/:courseId", validateUniversitySchema, async (req, res) => {
-  try {
-    const schemaName = (req as any).universitySchema;
+coursesRouter.put(
+  "/:courseId",
+  validateUniversitySchema,
+  authorizeRoles(["admin"]),
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
 
-    const courseId = req.params.courseId;
-    const { name, description } = req.body;
+      const courseId = req.params.courseId;
+      const { name, description } = req.body;
 
-    if (!name) {
-      return res.status(400).json({ error: "Missing name" });
-    } else if (!description) {
-      return res.status(400).json({ error: "Missing description" });
+      if (!name) {
+        return res.status(400).json({ error: "Missing name" });
+      } else if (!description) {
+        return res.status(400).json({ error: "Missing description" });
+      }
+
+      const result = await updateCourse({
+        schemaName,
+        courseId,
+        name,
+        description,
+      });
+
+      res.json({
+        message: "Course updated successfully",
+        data: result,
+      });
+    } catch (err: any) {
+      console.error("Error updating course:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-
-    const result = await updateCourse({
-      schemaName,
-      courseId,
-      name,
-      description,
-    });
-
-    res.json({
-      message: "Course updated successfully",
-      data: result,
-    });
-  } catch (err: any) {
-    console.error("Error updating course:", err);
-    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
-});
+);
 
 coursesRouter.delete(
   "/:courseId",
   validateUniversitySchema,
+  authorizeRoles(["admin"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -617,6 +639,7 @@ coursesRouter.delete(
 coursesRouter.put(
   "/assignments/:assignmentId",
   validateUniversitySchema,
+  authorizeRoles(["admin", "teacher"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -656,6 +679,7 @@ coursesRouter.put(
 coursesRouter.put(
   "/lectures/:lectureId",
   validateUniversitySchema,
+  authorizeRoles(["admin", "teacher"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -693,6 +717,7 @@ coursesRouter.put(
 coursesRouter.put(
   "/presentations/:presentationId",
   validateUniversitySchema,
+  authorizeRoles(["admin", "teacher"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -726,6 +751,7 @@ coursesRouter.put(
 coursesRouter.delete(
   "/:courseId/topics/:topicId",
   validateUniversitySchema,
+  authorizeRoles(["admin"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -757,6 +783,7 @@ coursesRouter.delete(
 coursesRouter.delete(
   "/assignments/:assignmentId",
   validateUniversitySchema,
+  authorizeRoles(["admin", "teacher"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -785,6 +812,7 @@ coursesRouter.delete(
 coursesRouter.delete(
   "/lectures/:lectureId",
   validateUniversitySchema,
+  authorizeRoles(["admin", "teacher"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
@@ -813,6 +841,7 @@ coursesRouter.delete(
 coursesRouter.delete(
   "/presentations/:presentationId",
   validateUniversitySchema,
+  authorizeRoles(["admin", "teacher"]),
   async (req, res) => {
     try {
       const schemaName = (req as any).universitySchema;
