@@ -379,7 +379,8 @@
         "teacher": "Teacher",
         "admin": "Admin",
         "Logout": "Logout",
-        "Loading": "Loading..."
+        "Loading": "Loading...",
+        "Are you sure to logout?": "Are you sure to logout?"
     },
     "Dashboard": {
         "Dashboard": "Dashboard",

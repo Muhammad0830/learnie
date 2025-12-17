@@ -48,10 +48,15 @@ const ProfileButton = ({ collapsed }: { collapsed: boolean }) => {
               transition={{ duration: 0.2 }}
               className="whitespace-nowrap text-base/4 flex flex-col gap-0.5 w-full"
             >
-              <span className="text-base/4 font-bold w-full truncate">
+              <span className="text-base/[15px] font-bold w-full truncate">
                 {user.name}
               </span>
-              <span className="text-xs/3 text-foreground/70 w-full group-hover:text-white/70 truncate transition-colors duration-100">
+              <span
+                className={cn(
+                  "text-xs/[13px] text-foreground/70 w-full group-hover:text-white/70 truncate transition-colors duration-100",
+                  pathName.includes("/profile") && "text-white/70"
+                )}
+              >
                 {user.email}
               </span>
             </motion.div>
