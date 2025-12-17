@@ -12,6 +12,15 @@ import ProfileEditDialog from "@/components/profile/ProfileEditDialog";
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import { useCustomToast } from "@/context/CustomToastContext";
 import { usePathname, useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { DoorOpen, X } from "lucide-react";
 
 interface profileEditFormType {
   name: string;
@@ -113,13 +122,41 @@ const AdminProfilePage = () => {
       <ProfileInfo user={user} />
 
       {/* LOGOUT */}
-      <CustomButton
-        variants="destructive"
-        className="bg-red-600/30 dark:bg-red-600/20 dark:border-red-600/60 border-red-600/60"
-        onClick={() => handleLogout()}
-      >
-        {t("Logout")}
-      </CustomButton>
+      <Dialog>
+        <DialogTrigger asChild>
+          <CustomButton
+            variants="destructive"
+            className="bg-red-600/30 dark:bg-red-600/20 dark:border-red-600/60 border-red-600/60"
+          >
+            {t("Logout")}
+          </CustomButton>
+        </DialogTrigger>
+        <DialogContent className="w-auto p-4">
+          <DialogTitle className="lg:text-3xl sm:text-2xl text-xl">
+            {t("Are you sure to logout?")}
+          </DialogTitle>
+          <DialogFooter className="w-full flex flex-row! items-center justify-between!">
+            <DialogClose asChild>
+              <CustomButton
+                className="px-6 py-2 flex items-center gap-2"
+                variants="outline"
+              >
+                <X className="w-4 h-4" />
+                <span>{t("Cancel")}</span>
+              </CustomButton>
+            </DialogClose>
+
+            <CustomButton
+              className="px-6 py-2 flex items-center gap-2"
+              variants="destructive"
+              onClick={() => handleLogout()}
+            >
+              <DoorOpen className="w-4 h-4" />
+              <span>{t("Logout")}</span>
+            </CustomButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* EDIT DIALOG */}
       <ProfileEditDialog
