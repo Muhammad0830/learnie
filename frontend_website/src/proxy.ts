@@ -7,13 +7,25 @@ import { User } from "./types/types";
 const nextIntlMiddleware = createMiddleware(routing);
 const defaultLocale = routing.defaultLocale;
 
+const PUBLIC_ROUTES = ["/auth", "/login", "/403"];
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  const pathWithoutLocale = pathname.replace(/^\/(en|ru|uz)/, "");
+
+  if (PUBLIC_ROUTES.some((route) => pathWithoutLocale.startsWith(route))) {
+    return NextResponse.next();
+  }
+
   const token = request.cookies.get("refreshToken");
 
   if (!token || !token.value) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(
+      new URL(`/${defaultLocale}/auth`, request.url)
+    );
   }
+  console.log("something");
 
   const user = jwt.verify(token.value, process.env.JWT_SECRET!) as User;
 

@@ -30,7 +30,7 @@ const ProfileEditDialog = ({
   setForm: React.Dispatch<React.SetStateAction<profileEditFormType>>;
   handleSubmit: () => void;
 }) => {
-  const t = useTranslations("Admin");
+  const t = useTranslations("Profile");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

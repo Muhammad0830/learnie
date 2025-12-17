@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { useApiMutation } from "@/hooks/useApiMutation";
@@ -11,6 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import ProfileEditDialog from "@/components/profile/ProfileEditDialog";
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import { useCustomToast } from "@/context/CustomToastContext";
+import { usePathname, useRouter } from "next/navigation";
 
 interface profileEditFormType {
   name: string;
@@ -19,12 +20,24 @@ interface profileEditFormType {
 }
 
 const AdminProfilePage = () => {
-  const t = useTranslations("Admin");
-
-  const { user, refetchProfile } = useAuth();
-  const updateMutation = useApiMutation(`/users/${user?.id}`, "put");
-  const { showToast } = useCustomToast();
+  const t = useTranslations("Profile");
   const toastT = useTranslations("Toast");
+
+  const {
+    user,
+    refetchProfile,
+    logout,
+    success,
+    error,
+    loading,
+    setSuccess,
+    setError,
+  } = useAuth();
+  const router = useRouter();
+  const { showToast, showLoadingToast, hideLoadingToast } = useCustomToast();
+  const updateMutation = useApiMutation(`/users/${user?.id}`, "put");
+  const pathName = usePathname();
+  const locale = pathName.split("/")[1];
 
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<profileEditFormType>({
@@ -32,6 +45,23 @@ const AdminProfilePage = () => {
     age: "",
     phoneNumber: "",
   });
+
+  useEffect(() => {
+    if (success === "logout") {
+      showToast("success", toastT("Logout successfully"));
+      setSuccess(null);
+      router.push(`/${locale}/auth`);
+    } else if (error === "logout") {
+      showToast("error", toastT("Logout failed"));
+      setError(null);
+    }
+
+    if (loading) {
+      showLoadingToast(`${t("Loading")}`);
+    } else {
+      hideLoadingToast();
+    }
+  }, [success, error, loading]); // eslint-disable-line
 
   const handleOpenEdit = () => {
     if (!user) return;
@@ -58,6 +88,10 @@ const AdminProfilePage = () => {
     return <div className="my-10 text-center">{t("Loading")}...</div>;
   }
 
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <div className="space-y-6">
       {/* HEADER */}
@@ -77,6 +111,15 @@ const AdminProfilePage = () => {
 
       {/* PROFILE DETAILS */}
       <ProfileInfo user={user} />
+
+      {/* LOGOUT */}
+      <CustomButton
+        variants="destructive"
+        className="bg-red-600/30 dark:bg-red-600/20 dark:border-red-600/60 border-red-600/60"
+        onClick={() => handleLogout()}
+      >
+        {t("Logout")}
+      </CustomButton>
 
       {/* EDIT DIALOG */}
       <ProfileEditDialog

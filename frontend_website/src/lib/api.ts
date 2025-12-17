@@ -2,7 +2,6 @@ import axios from "axios";
 
 let accessToken: string | null = null;
 let universitySchema: string | null = null;
-let isLoggingOut = false;
 
 export const setAccessToken = (at: string) => {
   accessToken = at;
@@ -59,11 +58,6 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         console.error("refresh token error", err);
-        if (!isLoggingOut) {
-          isLoggingOut = true;
-          if (window.location.pathname.includes("auth")) return;
-          window.location.href = "/auth?mode=signin";
-        }
       }
     }
 

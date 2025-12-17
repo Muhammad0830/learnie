@@ -364,6 +364,23 @@
         "teacher": "Teacher",
         "admin": "Admin"
     },
+    "Profile": {
+        "Name": "Name",
+        "Email": "Email",
+        "Phone Number": "Phone Number",
+        "Age": "Age",
+        "Role": "Role",
+        "Created At": "Created At",
+        "Edit Profile": "Edit Profile",
+        "Cancel": "Cancel",
+        "Save": "Save",
+        "Admin Profile": "Admin Profile",
+        "student": "Student",
+        "teacher": "Teacher",
+        "admin": "Admin",
+        "Logout": "Logout",
+        "Loading": "Loading..."
+    },
     "Dashboard": {
         "Dashboard": "Dashboard",
         "Something went wrong": "Something went wrong",
@@ -411,7 +428,11 @@
         "lecture edited successfully": "Lecture edited successfully",
         "assignment edited successfully": "Assignment edited successfully",
         "presentation edited successfully": "Presentation edited successfully",
-        "Profile updated successfully": "Profile updated successfully"
+        "Profile updated successfully": "Profile updated successfully",
+        "Logout failed": "Logout failed",
+        "Logout successfully": "Logout successfully",
+        "Login successful": "Login successful",
+        "Login failed": "Login failed"
     },
     "skeleton": {
         "No results": "No results",
