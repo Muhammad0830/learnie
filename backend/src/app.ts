@@ -26,7 +26,7 @@ app.use(cookieParser());
 
 app.use("/users", requireAuth, usersRouter);
 app.use("/courses", requireAuth, coursesRouter);
-app.use("/university", requireAuth, universityRouter);
+app.use("/university", universityRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
 app.use("/dashboard", requireAuth, dashboardRouter);

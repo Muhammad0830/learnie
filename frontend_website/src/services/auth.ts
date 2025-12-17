@@ -23,8 +23,8 @@ export async function loginUser(data: { email: string; password: string }) {
 }
 
 export async function logoutUser() {
-  clearAccessToken();
   await api.post("/auth/logout");
+  clearAccessToken();
 }
 
 export async function getProfile() {

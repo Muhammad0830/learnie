@@ -2,7 +2,7 @@ import { User } from "@/types/types";
 import { useTranslations } from "next-intl";
 
 const ProfileInfo = ({ user }: { user: User }) => {
-  const t = useTranslations("Admin");
+  const t = useTranslations("Profile");
 
   const dateString = new Date(user.created_at).toLocaleDateString();
   const timeString = new Date(user.created_at).toLocaleTimeString();

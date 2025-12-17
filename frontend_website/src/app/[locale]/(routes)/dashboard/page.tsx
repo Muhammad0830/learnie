@@ -103,7 +103,7 @@ const DashboardPage = () => {
           title={t("Recent Admins")}
           items={recents.admins}
           emptyText={t("No admins found")}
-          linkPrefix="/users/"
+          linkPrefix="/admins"
           count={counts.admins}
         />
       </div>

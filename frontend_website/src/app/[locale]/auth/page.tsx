@@ -12,6 +12,7 @@ import ThemeToggle from "@/components/header_sidebar/ThemeToggle";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import LangDropDown from "@/components/header_sidebar/LangDropDown";
+import { useCustomToast } from "@/context/CustomToastContext";
 
 const Page = () => {
   const [mounted, setMounted] = useState(false);
@@ -33,6 +34,8 @@ const Page = () => {
     },
   });
   const { theme: currentTheme, setTheme } = useTheme();
+  const { showToast } = useCustomToast();
+  const toastT = useTranslations("Toast");
 
   useEffect(() => {
     queueMicrotask(() => setMounted(true));
@@ -57,11 +60,13 @@ const Page = () => {
   const onSubmit = (data: LoginFormData) => {
     mutate(data, {
       onSuccess: () => {
+        showToast("success", toastT("Login successful"));
         reset();
         setUniversitySchema(data.universitySchema);
         window.location.href = "/dashboard";
       },
       onError: (error) => {
+        showToast("error", toastT("Login failed"));
         console.error("Login failed", error);
       },
     });
