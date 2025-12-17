@@ -51,7 +51,6 @@ const Page = () => {
     totalPages = 0,
   } = teacherData || {};
 
-  console.log("user", user);
   if (!user) {
     return (
       <div className="flex items-center justify-center h-full">

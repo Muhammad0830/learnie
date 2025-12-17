@@ -9,7 +9,6 @@ dashboardRouter.get("/summary", validateUniversitySchema, async (req, res) => {
     const schemaName = (req as any).universitySchema;
 
     const result = await Dashboard.getDashboardData({ schemaName });
-    console.log("Dashboard data fetched:", result);
 
     res.json(result);
   } catch (error: any) {

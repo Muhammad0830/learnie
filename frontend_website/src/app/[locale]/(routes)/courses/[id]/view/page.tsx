@@ -30,7 +30,29 @@ const CourseViewPage = () => {
   }
 
   if (!course) {
-    return <div>{t("no course found")}</div>;
+    return (
+      <div className="">
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-bold">
+            <span className="sm:hidden">{t("Course")}</span>
+            <span className="max-sm:hidden">{t("Course View")}</span>
+          </h1>
+
+          <div className="flex gap-2">
+            <Link
+              href="/courses"
+              className="rounded-sm px-3 py-1.5 bg-primary/5 hover:bg-primary/10 border border-primary text-black dark:text-white text-xs sm:text-[16px]"
+            >
+              {t("Back to courses")}
+            </Link>
+          </div>
+        </div>
+
+        <div className="w-full h-[100px] border border-primary rounded-sm bg-primary/5 flex justify-center items-center">
+          {t("no course found")}
+        </div>
+      </div>
+    );
   }
 
   return (

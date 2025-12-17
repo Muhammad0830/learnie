@@ -29,6 +29,5 @@ export async function logoutUser() {
 
 export async function getProfile() {
   const res = await api.get("/user/me");
-  console.log("res.data", res.data);
   return res.data;
 }

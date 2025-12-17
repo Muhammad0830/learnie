@@ -104,7 +104,6 @@ const CourseTopicViewPage = () => {
   }
 
   const { course_topic, lectures, assignments, presentations } = topicData;
-  console.log("course_topic", course_topic);
 
   const renderContentSection = (
     title: string,

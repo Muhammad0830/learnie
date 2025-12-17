@@ -93,6 +93,13 @@ const Page = () => {
     selectedCoursesIds?.includes(String(course.id))
   );
 
+  if (!user || isLoading)
+    return (
+      <div className="flex justify-center items-center h-full">
+        {t("Loading")}
+      </div>
+    );
+
   if (user?.role === "student" || user?.role === "teacher") {
     return (
       <div className="flex flex-col gap-4 items-center justify-center h-screen">
@@ -110,13 +117,6 @@ const Page = () => {
       </div>
     );
   } else {
-    if (isLoading)
-      return (
-        <div className="flex justify-center items-center h-full">
-          {t("Loading")}
-        </div>
-      );
-
     return (
       <div>
         <div className="flex items-center justify-between gap-4 mb-4">
@@ -132,7 +132,7 @@ const Page = () => {
         </div>
 
         {isLoading ? (
-          <div>Loading...</div>
+          <div>{t("Loading")}</div>
         ) : student ? (
           <StudentEditForm
             onSubmit={handleSubmit(onSubmit)}
@@ -144,7 +144,7 @@ const Page = () => {
             editPage
           />
         ) : (
-          <div>{t("no student found")}</div>
+          <div>{t("Student not found")}</div>
         )}
 
         {isLoadingCourses ? (
