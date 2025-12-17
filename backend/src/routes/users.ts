@@ -12,6 +12,7 @@ import { body, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { createAccessToken, createRefreshToken } from "../utils/jwt";
 import { saveRefreshToken } from "../models/refreshToken";
+import { authorizeRoles } from "../middlewares/roleMiddleware";
 
 const usersRouter = express.Router();
 
@@ -22,6 +23,7 @@ usersRouter.post(
   "/",
   body("email").isEmail(),
   body("password").isLength({ min: 6 }),
+  authorizeRoles(["admin"]),
   validateUniversitySchema,
   async (req: any, res: any) => {
     const schemaName = (req as any).universitySchema;
@@ -162,61 +164,71 @@ usersRouter.get("/:userId", validateUniversitySchema, async (req, res) => {
   }
 });
 
-usersRouter.put("/:userId", validateUniversitySchema, async (req, res) => {
-  try {
-    const schemaName = (req as any).universitySchema;
+usersRouter.put(
+  "/:userId",
+  validateUniversitySchema,
+  authorizeRoles(["admin"]),
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
 
-    const userId = req.params.userId;
-    const { name, age, phoneNumber, courseIds } = req.body;
+      const userId = req.params.userId;
+      const { name, age, phoneNumber, courseIds } = req.body;
 
-    if (!name) {
-      return res.status(400).json({ error: "Missing name" });
-    } else if (!phoneNumber) {
-      return res.status(400).json({ error: "Missing phone number" });
-    } else if (!userId) {
-      return res.status(400).json({ error: "Missing ID param" });
+      if (!name) {
+        return res.status(400).json({ error: "Missing name" });
+      } else if (!phoneNumber) {
+        return res.status(400).json({ error: "Missing phone number" });
+      } else if (!userId) {
+        return res.status(400).json({ error: "Missing ID param" });
+      }
+
+      const updated = await updateUser({
+        schemaName,
+        userId,
+        name,
+        age,
+        phoneNumber,
+        courseIds,
+      });
+
+      res.json({
+        message: "Student updated successfully",
+        data: updated,
+      });
+    } catch (err: any) {
+      console.error("Error updating student:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-
-    const updated = await updateUser({
-      schemaName,
-      userId,
-      name,
-      age,
-      phoneNumber,
-      courseIds,
-    });
-
-    res.json({
-      message: "Student updated successfully",
-      data: updated,
-    });
-  } catch (err: any) {
-    console.error("Error updating student:", err);
-    res.status(500).json({ error: err.message || "Internal Server Error" });
   }
-});
+);
 
-usersRouter.delete("/:userId", validateUniversitySchema, async (req, res) => {
-  try {
-    const schemaName = (req as any).universitySchema;
+usersRouter.delete(
+  "/:userId",
+  validateUniversitySchema,
+  authorizeRoles(["admin"]),
+  async (req, res) => {
+    try {
+      const schemaName = (req as any).universitySchema;
 
-    const userId = req.params.userId;
+      const userId = req.params.userId;
 
-    if (!userId) return res.status(400).json({ error: "Missing userId" });
+      if (!userId) return res.status(400).json({ error: "Missing userId" });
 
-    const updated = await deleteUser({
-      schemaName,
-      userId,
-    });
+      const updated = await deleteUser({
+        schemaName,
+        userId,
+      });
 
-    res.json({
-      message: "User deleted successfully",
-      id: updated.id,
-    });
-  } catch (err: any) {
-    console.error("Error updating user:", err);
-    res.status(500).json({ error: err.message || "Internal Server Error" });
+      res.json({
+        message: "User deleted successfully",
+        id: updated.id,
+      });
+    } catch (err: any) {
+      console.error("Error updating user:", err);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
+    }
   }
-});
+);
 
 export default usersRouter;
