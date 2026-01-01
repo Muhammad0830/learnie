@@ -30,10 +30,7 @@ authRouter.post(
     const { email, password } = req.body as {
       email: string;
       password: string;
-      role: "admin" | "user";
     };
-
-    const role: "admin" | "student" | "teacher" = req.body.role || "student";
 
     try {
       const user = await UserModel.findUserByEmail(email, schemaName);
@@ -43,8 +40,16 @@ authRouter.post(
       const ok = await bcrypt.compare(password, user.password_hash);
       if (!ok) return res.status(401).json({ message: "Invalid credentials" });
 
-      const accessToken = createAccessToken({ userId: user.id, email, role });
-      const refreshToken = createRefreshToken({ userId: user.id, email, role });
+      const accessToken = createAccessToken({
+        userId: user.id,
+        email,
+        role: user.role,
+      });
+      const refreshToken = createRefreshToken({
+        userId: user.id,
+        email,
+        role: user.role,
+      });
 
       const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS)
         .toISOString()

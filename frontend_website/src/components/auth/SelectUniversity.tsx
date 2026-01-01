@@ -3,13 +3,17 @@ import { University } from "@/types/types";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { FieldErrors, UseFormSetValue } from "react-hook-form";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 interface FormProps {
   email: string;
   password: string;
-  role: "student" | "teacher" | "admin";
   universitySchema: string;
 }
 
@@ -31,51 +35,45 @@ const SelectUniversity = ({
         {t("SelectUniversity")}
       </label>
 
-      <div className="relative flex items-center w-full">
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          className={cn(
-            "relative h-10 overflow-hidden z-10 p-2 group border border-foreground/60 rounded w-full bg-background h text-start cursor-pointer",
-            errors.universitySchema && "border-red-600"
-          )}
-        >
-          <div className="absolute inset-0 z-0 group-hover:bg-primary/5 bg-primary/0 transition-colors duration-150"></div>
-          {selectedSchema ? (
-            <span className="z-1 relative">{selectedSchema}</span>
-          ) : (
-            <span className="z-1 relative">{t("SelectUniversity")}</span>
-          )}
-        </button>
-        <motion.div
-          initial={{ opacity: 0, top: "75%", scaleY: 0 }}
-          animate={
-            open
-              ? { opacity: 1, top: "115%", scaleY: 1 }
-              : { opacity: 0, top: "75%", scaleY: 0 }
-          }
-          transition={{ duration: 0.2, type: "tween" }}
-          className="p-1 origin-top flex flex-col gap-1 rounded-sm border border-foreground/60 bg-background absolute inset-x-0 z-1"
-        >
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            className={cn(
+              "relative h-10 overflow-hidden z-10 p-2 group border border-foreground/60 rounded w-full bg-background h text-start cursor-pointer",
+              errors.universitySchema && "border-red-600"
+            )}
+          >
+            <div className="absolute inset-0 z-0 group-hover:bg-primary/5 bg-primary/0 transition-colors duration-150"></div>
+            {selectedSchema ? (
+              <span className="z-1 relative">{selectedSchema}</span>
+            ) : (
+              <span className="z-1 relative">{t("SelectUniversity")}</span>
+            )}
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-(--radix-dropdown-menu-trigger-width) p-1 flex flex-col gap-1">
           {universities.map((schema) => (
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedSchema(schema.name);
-                setValue("universitySchema", schema.schema_name);
-                setOpen(false);
-              }}
-              key={schema.id}
-              className={cn(
-                "p-2 rounded-sm border border-foreground/30 hover:bg-primary/10 transition-colors duration-150 cursor-pointer",
-                selectedSchema === schema.name && "bg-primary/5"
-              )}
-            >
-              {schema.name}
-            </button>
+            <DropdownMenuItem key={schema.id} className="p-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedSchema(schema.name);
+                  setValue("universitySchema", schema.schema_name);
+                  setOpen(false);
+                }}
+                className={cn(
+                  "p-2 w-full rounded-sm border border-foreground/30 hover:bg-primary/10 transition-colors duration-150 cursor-pointer",
+                  selectedSchema === schema.name && "bg-primary/5"
+                )}
+              >
+                {schema.name}
+              </button>
+            </DropdownMenuItem>
           ))}
-        </motion.div>
-      </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       {errors.universitySchema && (
         <p className="text-red-500 sm:text-sm absolute text-xs">

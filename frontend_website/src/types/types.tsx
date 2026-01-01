@@ -13,7 +13,6 @@ export interface User {
 export interface LoginFormData {
   email: string;
   password: string;
-  role: string;
   universitySchema: string;
 }
 

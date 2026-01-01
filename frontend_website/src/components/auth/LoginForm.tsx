@@ -1,5 +1,4 @@
 "use client";
-import { UserRole } from "@/schemas/userLoginSchema";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { University } from "@/types/types";
 import { useTranslations } from "next-intl";
@@ -9,7 +8,6 @@ import SelectUniversity from "@/components/auth/SelectUniversity";
 interface FormProps {
   email: string;
   password: string;
-  role: "student" | "teacher" | "admin";
   universitySchema: string;
 }
 
@@ -19,7 +17,6 @@ const LoginForm = ({
   isSubmitting,
   register,
   universities,
-  selectedRole,
   setValue,
 }: {
   onSubmit: () => void;
@@ -27,11 +24,9 @@ const LoginForm = ({
   isSubmitting: boolean;
   register: UseFormRegister<FormProps>;
   universities: University[];
-  selectedRole: string;
   setValue: UseFormSetValue<FormProps>;
 }) => {
   const t = useTranslations("AuthPage");
-  const ROLES = UserRole.options;
 
   return (
     <form
@@ -80,36 +75,6 @@ const LoginForm = ({
         errors={errors}
         universities={universities}
       />
-
-      <div>
-        <label className="block mb-0.5 font-semibold">{t("LoginAs")}</label>
-        <div className="grid grid-cols-3 gap-4">
-          {ROLES.map((role) => (
-            <label
-              key={role}
-              htmlFor={role}
-              className={cn(
-                "cursor-pointer hover:border-primary border border-foreground/60 rounded p-1 h-10 flex items-center justify-center transition-colors duration-150",
-                selectedRole === role && "bg-primary/5 border-primary"
-              )}
-            >
-              <input
-                type="radio"
-                id={role}
-                value={role}
-                {...register("role")}
-                className="hidden"
-              />
-              <div className="capitalize">{t(role)}</div>
-            </label>
-          ))}
-        </div>
-        {errors.role && (
-          <p className="text-red-500 sm:text-sm mt-1 text-xs">
-            {t(`${errors.role.message}`)}
-          </p>
-        )}
-      </div>
 
       <button
         type="submit"

@@ -56,7 +56,7 @@ const LangDropDown = ({
           onClick={() => setLangDropdownOpen(false)}
           locale="uz"
           className={cn(
-            "z-1 px-2 py-0.5 hover:bg-primary rounded-sm transition-colors duration-150 text-black dark:text-white",
+            "z-1 px-2 py-0.5 hover:bg-primary rounded transition-colors duration-150 text-black dark:text-white",
             nextPathName.includes("/uz") && "bg-primary/50"
           )}
         >
@@ -67,7 +67,7 @@ const LangDropDown = ({
           onClick={() => setLangDropdownOpen(false)}
           locale="ru"
           className={cn(
-            "z-1 px-2 py-0.5 hover:bg-primary rounded-sm transition-colors duration-150 text-black dark:text-white",
+            "z-1 px-2 py-0.5 hover:bg-primary rounded transition-colors duration-150 text-black dark:text-white",
             nextPathName.includes("/ru") && "bg-primary/50"
           )}
         >
@@ -78,8 +78,8 @@ const LangDropDown = ({
           onClick={() => setLangDropdownOpen(false)}
           locale="en"
           className={cn(
-            "z-1 px-2 py-0.5 hover:bg-primary rounded-sm transition-colors duration-150 text-black dark:text-white",
-            nextPathName.includes("/ru") && "bg-primary/50"
+            "z-1 px-2 py-0.5 hover:bg-primary rounded transition-colors duration-150 text-black dark:text-white",
+            nextPathName.includes("/en") && "bg-primary/50"
           )}
         >
           English
