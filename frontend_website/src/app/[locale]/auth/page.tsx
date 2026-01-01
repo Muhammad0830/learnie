@@ -1,6 +1,6 @@
 "use client";
 import { useTranslations } from "next-intl";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userLoginSchema, UserFormData } from "@/schemas/userLoginSchema";
 import { useApiMutation } from "@/hooks/useApiMutation";
@@ -24,12 +24,10 @@ const Page = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    control,
     setValue,
   } = useForm<UserFormData>({
     resolver: zodResolver(userLoginSchema),
     defaultValues: {
-      role: "student",
       universitySchema: "",
     },
   });
@@ -72,15 +70,10 @@ const Page = () => {
     });
   };
 
-  const selectedRole = useWatch({
-    control,
-    name: "role",
-  });
-
   if (universitiesLoading) {
     return (
       <div className="min-h-screen p-4 flex justify-center items-center">
-        Loading...
+        {toastT("Loading")}
       </div>
     );
   }
@@ -110,7 +103,6 @@ const Page = () => {
           register={register}
           setValue={setValue}
           universities={universities || []}
-          selectedRole={selectedRole}
         />
       </div>
     </div>

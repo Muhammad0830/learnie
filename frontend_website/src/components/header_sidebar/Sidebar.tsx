@@ -6,7 +6,7 @@ import {
   Presentation,
   ShieldUser,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import NavBarItem from "./NavBarItem";
@@ -21,45 +21,60 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ThemeToggle from "./ThemeToggle";
 import MenuSheet from "./MenuSheet";
+import { useAuth } from "@/context/AuthContext";
 
-const navLinksData = [
-  {
-    icon: <LayoutDashboard className="w-5 h-6" />,
-    label: "dashboard",
-    url: "/dashboard",
-  },
-  {
-    icon: <FontAwesomeIcon icon={faGraduationCap} className="w-5 h-5" />,
-    label: "Students",
-    url: "/students",
-  },
-  {
-    icon: <FontAwesomeIcon icon={faPersonChalkboard} className="w-5 h-5" />,
-    label: `Teachers`,
-    url: "/teachers",
-  },
-  {
-    icon: <Presentation className="w-5 h-6" />,
-    label: "Courses",
-    url: "/courses",
-  },
-  {
-    icon: <ShieldUser className="w-5 h-6" />,
-    label: "Admins",
-    url: "/admins",
-  },
-  {
-    icon: <Settings className="w-5 h-6" />,
-    label: "Settings",
-    url: "/settings",
-  },
-];
+const DashboardObj = {
+  icon: <LayoutDashboard className="w-5 h-6" />,
+  label: "dashboard",
+  url: "/dashboard",
+};
+const StudentsObj = {
+  icon: <FontAwesomeIcon icon={faGraduationCap} className="w-5 h-5" />,
+  label: "Students",
+  url: "/students",
+};
+const TeachersObj = {
+  icon: <FontAwesomeIcon icon={faPersonChalkboard} className="w-5 h-5" />,
+  label: `Teachers`,
+  url: "/teachers",
+};
+const CoursesObj = {
+  icon: <Presentation className="w-5 h-6" />,
+  label: "Courses",
+  url: "/courses",
+};
+const AdminsObj = {
+  icon: <ShieldUser className="w-5 h-6" />,
+  label: "Admins",
+  url: "/admins",
+};
+const SettingsObj = {
+  icon: <Settings className="w-5 h-6" />,
+  label: "Settings",
+  url: "/settings",
+};
 
 const SideBar = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useAuth();
+
+  const navLinksData = useMemo(() => {
+    if (user?.role === "admin") {
+      return [
+        DashboardObj,
+        StudentsObj,
+        TeachersObj,
+        CoursesObj,
+        AdminsObj,
+        SettingsObj,
+      ];
+    } else if (user?.role === "teacher") {
+      return [DashboardObj, StudentsObj, CoursesObj, SettingsObj];
+    } else return [DashboardObj, CoursesObj, SettingsObj];
+  }, [user]);
 
   const { theme: currentTheme, setTheme } = useTheme();
 
