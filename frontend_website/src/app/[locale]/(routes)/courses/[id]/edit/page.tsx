@@ -234,7 +234,7 @@ export default function CourseEditPage() {
                   </div>
 
                   <div className="flex gap-2">
-                    <Link href={`/courses/topics/edit/${topic.id}`}>
+                    <Link href={`/courses/${courseId}/topics/${topic.id}/edit`}>
                       <CustomButton
                         variants="outline"
                         className="max-sm:px-2 py-2 flex gap-2 items-center"
@@ -244,7 +244,7 @@ export default function CourseEditPage() {
                       </CustomButton>
                     </Link>
 
-                    <Link href={`/courses/topics/${topic.id}`}>
+                    <Link href={`/courses/${courseId}/topics/${topic.id}`}>
                       <CustomButton
                         variants="outline"
                         className="max-sm:px-2 py-2 flex gap-2 items-center"
