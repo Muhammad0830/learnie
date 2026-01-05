@@ -19,13 +19,13 @@ export function proxy(request: NextRequest) {
   }
 
   const token = request.cookies.get("refreshToken");
+  const schema = request.cookies.get("universitySchema");
 
-  if (!token || !token.value) {
+  if (!token || !token.value || !schema || !schema.value) {
     return NextResponse.redirect(
       new URL(`/${defaultLocale}/auth`, request.url)
     );
   }
-  console.log("something");
 
   const user = jwt.verify(token.value, process.env.JWT_SECRET!) as User;
 

@@ -141,6 +141,14 @@ authRouter.post("/refresh", async (req: any, res: any) => {
       maxAge: REFRESH_EXPIRES_MS,
     });
 
+    res.cookie(COOKIE_NAME, schemaName, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      maxAge: REFRESH_EXPIRES_MS,
+    });
+
     return res.json({
       accessToken: newAccessToken,
       universitySchema: schemaName,

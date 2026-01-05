@@ -8,6 +8,7 @@ import { DataTable } from "@/components/TableComponents/DataTable";
 import { columns } from "@/components/courses/TableColumns";
 import Pagination from "@/components/TableComponents/Pagination";
 import CreateCourseDropdown from "@/components/courses/CreateCourseDropdown";
+import { useAuth } from "@/context/AuthContext";
 
 const Page = () => {
   const t = useTranslations("Courses");
@@ -15,6 +16,8 @@ const Page = () => {
   const [debouncedSearch, setDebouncedSearch] = useState(search);
   const [page, setPage] = useState(1);
   const limit = 10;
+
+  const { user } = useAuth();
 
   const {
     data: coursesData,
@@ -54,7 +57,7 @@ const Page = () => {
           {t("Courses")}
         </h1>
 
-        <CreateCourseDropdown />
+        {user?.role !== "student" && <CreateCourseDropdown />}
       </div>
 
       {/* Search */}
