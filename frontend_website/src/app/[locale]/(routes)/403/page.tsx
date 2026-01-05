@@ -6,7 +6,7 @@ const Page = () => {
   const t = useTranslations();
 
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-full items-center justify-center flex-col">
       <h1 className="lg:text-3xl sm:text-2xl text-xl font-bold">403</h1>
       <h2 className="lg:text-2xl sm:text-xl text-lg font-semibold">{t("This page is forbidden")}</h2>
     </div>
