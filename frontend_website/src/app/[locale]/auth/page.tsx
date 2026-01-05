@@ -13,10 +13,12 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import LangDropDown from "@/components/header_sidebar/LangDropDown";
 import { useCustomToast } from "@/context/CustomToastContext";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [mounted, setMounted] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const router = useRouter();
 
   const t = useTranslations("AuthPage");
   const {
@@ -61,7 +63,7 @@ const Page = () => {
         showToast("success", toastT("Login successful"));
         reset();
         setUniversitySchema(data.universitySchema);
-        window.location.href = "/dashboard";
+        router.replace("/dashboard");
       },
       onError: (error) => {
         showToast("error", toastT("Login failed"));
