@@ -97,7 +97,7 @@ export default function CreateItemPage() {
 
   const { mutate } = useApiMutation(
     type ? `/courses/create/${type}` : "/courses/create/invalid",
-    "post"
+    "post",
   );
 
   const onSubmit = async (data: FormType) => {
@@ -110,7 +110,7 @@ export default function CreateItemPage() {
       onSuccess: () => {
         showToast("success", t(`${type} created successfully`));
         reset();
-        router.push("/courses");
+        router.back();
       },
       onError: () => {
         showToast("error", "Failed to create item");

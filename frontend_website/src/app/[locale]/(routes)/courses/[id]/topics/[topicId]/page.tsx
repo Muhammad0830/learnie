@@ -49,7 +49,7 @@ const CourseTopicViewPage = () => {
     `/courses/${courseId}/topics/${topicId}`,
     {
       key: ["courseTopic", courseId, topicId],
-    }
+    },
   );
 
   const {
@@ -59,7 +59,7 @@ const CourseTopicViewPage = () => {
   } = useApiMutation(
     ({ courseId, topicId }: { courseId: string; topicId: string }) =>
       `/courses/${courseId}/topics/${topicId}`,
-    "delete"
+    "delete",
   );
 
   const handleDelete = (data: { courseId: string; topicId: string }) => {
@@ -109,7 +109,7 @@ const CourseTopicViewPage = () => {
     title: string,
     icon: React.ReactNode,
     contentList: ContentItem[],
-    type: "lecture" | "assignment" | "presentation"
+    type: "lecture" | "assignment" | "presentation",
   ) => {
     const addHref = `/courses/create/items?pageType=${type}&courseId=${courseId}&topicId=${topicId}`;
     const viewHref = `/courses/${courseId}/topics/${topicId}/${type}s`;
@@ -121,18 +121,20 @@ const CourseTopicViewPage = () => {
             {icon} {t(title)}
           </h2>
           <div className="flex gap-2 items-center">
-            <Link href={viewHref}>
-              <CustomButton
-                variants="primary"
-                className="px-3 py-1.5 max-[400px]:px-2 max-[400px]:py-2 text-sm gap-1 flex items-center flex-nowrap"
-              >
-                <Eye className="w-4 h-4" />
-                <span className="sm:flex hidden">{t(`View all`)}</span>
-                <span className="sm:hidden sm-[400px]:flex max-[400px]:hidden">
-                  {t(`All`)}
-                </span>
-              </CustomButton>
-            </Link>
+            {contentList.length > 0 && (
+              <Link href={viewHref}>
+                <CustomButton
+                  variants="primary"
+                  className="px-3 py-1.5 max-[400px]:px-2 max-[400px]:py-2 text-sm gap-1 flex items-center flex-nowrap"
+                >
+                  <Eye className="w-4 h-4" />
+                  <span className="sm:flex hidden">{t(`View all`)}</span>
+                  <span className="sm:hidden sm-[400px]:flex max-[400px]:hidden">
+                    {t(`All`)}
+                  </span>
+                </CustomButton>
+              </Link>
+            )}
             <Link href={addHref}>
               <CustomButton
                 variants="primary"
@@ -226,9 +228,9 @@ const CourseTopicViewPage = () => {
             {t("Created At")}:{" "}
             <span className="font-semibold">
               {`${new Date(
-                course_topic.created_at
+                course_topic.created_at,
               ).toLocaleDateString()} ${new Date(
-                course_topic.created_at
+                course_topic.created_at,
               ).toLocaleTimeString()}`}
             </span>
           </p>
@@ -237,9 +239,9 @@ const CourseTopicViewPage = () => {
             <span className="font-semibold">
               {course_topic.updated_at
                 ? `${new Date(
-                    course_topic.updated_at
+                    course_topic.updated_at,
                   ).toLocaleDateString()} ${new Date(
-                    course_topic.updated_at
+                    course_topic.updated_at,
                   ).toLocaleTimeString()}`
                 : t("not updated yet")}
             </span>
@@ -253,7 +255,7 @@ const CourseTopicViewPage = () => {
           "Lectures",
           <Eye className="w-5 h-5" />,
           lectures,
-          "lecture"
+          "lecture",
         )}
 
         {/* Assignments */}
@@ -261,7 +263,7 @@ const CourseTopicViewPage = () => {
           "Assignments",
           <FilePen className="w-5 h-5" />,
           assignments,
-          "assignment"
+          "assignment",
         )}
 
         {/* Presentations */}
@@ -269,7 +271,7 @@ const CourseTopicViewPage = () => {
           "Presentations",
           <PresentationIcon className="w-5 h-5" />,
           presentations,
-          "presentation"
+          "presentation",
         )}
       </div>
 
@@ -286,7 +288,7 @@ const CourseTopicViewPage = () => {
             </p>
             <p className="text-sm text-red-500 font-bold mt-2">
               {t(
-                "All associated content (lectures, assignments, presentations) will be lost"
+                "All associated content (lectures, assignments, presentations) will be lost",
               )}
             </p>
           </div>
