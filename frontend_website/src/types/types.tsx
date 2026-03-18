@@ -180,3 +180,9 @@ export interface DashboardDataType {
     admins: User[];
   };
 }
+
+export interface NavItem {
+  label: string;
+  icon: React.ReactNode;
+  url: string;
+}

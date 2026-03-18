@@ -39,8 +39,8 @@ const CourseSelectDropdown = ({
 
   const filteredCourses = useMemo(() => {
     if (!coursesData) return [];
-    return coursesData.courses.filter((course: Course) =>
-      course.name.toLowerCase().includes(search.toLowerCase())
+    return coursesData?.courses?.filter((course: Course) =>
+      course.name.toLowerCase().includes(search.toLowerCase()),
     );
   }, [search, coursesData]);
 
@@ -50,7 +50,7 @@ const CourseSelectDropdown = ({
   };
 
   const selectedCourse = coursesData?.courses?.find(
-    (course) => Number(course.id) === selectedCourseId
+    (course) => Number(course.id) === selectedCourseId,
   )?.name;
 
   return (
@@ -65,7 +65,7 @@ const CourseSelectDropdown = ({
               type="button"
               className={cn(
                 "relative z-10 bg-[#ffffff] dark:bg-[#000000] group",
-                className
+                className,
               )}
             >
               <span className="relative z-10">
@@ -111,14 +111,14 @@ const CourseSelectDropdown = ({
                     className={cn(
                       "flex items-center rounded border border-primary/50 bg-primary/5 justify-start group hover:bg-primary/10 gap-2 px-2 py-1.5 text-sm cursor-pointer",
                       selectedCourseId === Number(course.id) &&
-                        "bg-primary/20 hover:bg-primary/20"
+                        "bg-primary/20 hover:bg-primary/20",
                     )}
                   >
                     {course.name}
                     <span
                       className={cn(
                         "text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-100",
-                        selectedCourseId === Number(course.id) && "opacity-100"
+                        selectedCourseId === Number(course.id) && "opacity-100",
                       )}
                     >
                       ✓

@@ -29,7 +29,7 @@ const CourseViewPage = () => {
     return <div className="my-10">{t("Loading")}...</div>;
   }
 
-  if (!course) {
+  if (!course || !course.course || !course.course.id) {
     return (
       <div className="">
         <div className="flex items-center justify-between gap-4 mb-4">
@@ -73,7 +73,7 @@ const CourseViewPage = () => {
           </Link>
 
           <Link
-            href={`/courses/${course.course.id}/edit`}
+            href={`/courses/${course?.course?.id}/edit`}
             className="rounded-sm px-3 py-1.5 bg-primary/30 hover:bg-primary/60 dark:bg-primary/50 dark:hover:bg-primary/30 border border-primary text-black dark:text-white text-xs sm:text-[16px]"
           >
             {t("Edit")}
