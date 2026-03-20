@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogClose, DialogContent, DialogTitle } from "../ui/dialog";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Eye } from "lucide-react";
+import { Eye, Plus } from "lucide-react";
 import CustomButton from "../ui/customButton";
 
 const CourseConnectedUsersDialog = ({
@@ -34,7 +34,7 @@ const CourseConnectedUsersDialog = ({
     const filtered = users.filter(
       (user: Student | Teacher) =>
         user.name.toLowerCase().includes(search.toLowerCase()) ||
-        ("studentId" in user && user.studentId.includes(search.toLowerCase()))
+        ("studentId" in user && user.studentId.includes(search.toLowerCase())),
     );
     setFitleredUsers(filtered); //eslint-disable-line
   }, [search, setFitleredUsers, users]);
@@ -49,12 +49,17 @@ const CourseConnectedUsersDialog = ({
         <h3 className="font-semibold text-lg flex items-center gap-2">
           {icon} {title}
         </h3>
-        <CustomButton
-          onClick={() => setIsOpen(true)}
-          className="sm:px-3 sm:py-1 px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
-        >
-          <span className=" flex">{t(`View all`)}</span>
-        </CustomButton>
+        <div className="flex gap-2">
+          <CustomButton className="sm:px-3 sm:py-1 px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer">
+            <span className=" flex">{t(`View all`)}</span>
+          </CustomButton>
+          <Link href={`/courses/${courseId}/edit`}>
+            <CustomButton className="sm:px-3 sm:py-1 px-2 py-1.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer">
+              <span className="max-sm:hidden">{t(`Attach new`)}</span>
+              <Plus className="w-4 h-4 sm:hidden flex" />
+            </CustomButton>
+          </Link>
+        </div>
       </div>
 
       {users.length ? (
@@ -115,7 +120,7 @@ const CourseConnectedUsersDialog = ({
                     className={cn(
                       "font-medium flex justify-between items-center",
                       fitleredUsers.length - 1 !== index &&
-                        "border-b border-b-primary/40 pb-2"
+                        "border-b border-b-primary/40 pb-2",
                     )}
                   >
                     <div>
