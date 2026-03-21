@@ -11,7 +11,7 @@ import useApiQuery from "@/hooks/useApiQuery";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { cn } from "@/lib/utils";
 import CustomButton from "@/components/ui/customButton";
-import { Check } from "lucide-react";
+import { Check, Eye, Pencil } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 
@@ -32,6 +32,13 @@ export default function CourseEditPage() {
     students: User[];
     teachers: User[];
   }>(courseId ? `/courses/${courseId}` : null, { key: ["course", courseId] });
+
+  // Fetch topics
+  const { data: topics, isLoading: isTopicsLoading } = useApiQuery<
+    { id: number; title: string; description: string }[] | { message: string }
+  >(`/courses/${courseId}/topics`, {
+    key: ["topics", courseId],
+  });
 
   /** ---------------- FORM ---------------- */
   const form = useForm<CourseFormData>({
@@ -189,8 +196,72 @@ export default function CourseEditPage() {
             teachers={course.teachers}
             pendingChanges={pendingChanges}
             setPendingChanges={setPendingChanges}
+            isCourseLoading={isCourseLoading}
           />
         )}
+
+        <div className="mb-4">
+          <h2 className="text-xl font-bold mb-3">
+            {t("Topics in this course")}
+          </h2>
+
+          <Link href={"/courses/create/topics"}>
+            <CustomButton variants="primary" className="px-3 py-1.5 mb-3">
+              + {t("Add New Topic")}
+            </CustomButton>
+          </Link>
+
+          {isTopicsLoading && <div>{t("Loading")}</div>}
+
+          {!isTopicsLoading &&
+            ((Array.isArray(topics) && topics.length === 0) ||
+              (topics &&
+                "message" in topics &&
+                topics.message === "Course topics not found" && (
+                  <div className="text-muted-foreground">
+                    {t("No topics found")}
+                  </div>
+                )))}
+
+          <div className="space-y-3">
+            {Array.isArray(topics) &&
+              topics?.map((topic) => (
+                <div
+                  key={topic.id}
+                  className="p-3 rounded-md border border-primary flex justify-between gap-2 items-center bg-background-secondary"
+                >
+                  <div className="flex flex-col flex-1 min-w-[100px]">
+                    <div className="font-semibold">{topic.title}</div>
+                    <p className="text-sm text-muted-foreground truncate w-full">
+                      {topic.description}
+                    </p>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Link href={`/courses/${courseId}/topics/${topic.id}/edit`}>
+                      <CustomButton
+                        variants="outline"
+                        className="max-sm:px-2 py-2 flex gap-2 items-center"
+                      >
+                        <span className="hidden sm:block">{t("Edit")}</span>
+                        <Pencil className="w-4 h-4" />
+                      </CustomButton>
+                    </Link>
+
+                    <Link href={`/courses/${courseId}/topics/${topic.id}`}>
+                      <CustomButton
+                        variants="outline"
+                        className="max-sm:px-2 py-2 flex gap-2 items-center"
+                      >
+                        <span className="hidden sm:block">{t("View")}</span>
+                        <Eye className="w-4 h-4" />
+                      </CustomButton>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
 
         {/* ---------------- SAVE BUTTON ---------------- */}
         <div className="flex gap-2 mt-4">
@@ -207,7 +278,7 @@ export default function CourseEditPage() {
             disabled={isSubmitting || isUpdating || isUpdatingUsers}
           >
             {isSubmitting || isUpdating || isUpdatingUsers ? (
-              t("Saving...")
+              t("Saving")
             ) : isSuccess ? (
               <div className="flex gap-2 items-center">
                 <span>{t("Saved")}</span>

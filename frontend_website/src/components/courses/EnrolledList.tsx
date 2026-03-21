@@ -1,8 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { User } from "@/types/types";
-import CustomButton from "@/components/ui/customButton";
+import { useTranslations } from "next-intl";
+import { DataTable } from "../TableComponents/DataTable";
+import Pagination from "../TableComponents/Pagination";
+import { columns } from "./AttachedUsersTableColumns";
+
+interface UserProps extends User {
+  isPendingAdd?: boolean;
+  isPendingRemove?: boolean;
+}
 
 type Props = {
   courseId: string;
@@ -18,6 +26,7 @@ type Props = {
       removed: { userId: string }[];
     }>
   >;
+  isCourseLoading: boolean;
 };
 
 const EnrolledList: React.FC<Props> = ({
@@ -25,7 +34,43 @@ const EnrolledList: React.FC<Props> = ({
   role,
   pendingChanges,
   setPendingChanges,
+  isCourseLoading,
 }) => {
+  const t = useTranslations("Courses");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const limit = 10;
+
+  const updatedUsers = useMemo(() => {
+    return users.filter((user) => {
+      const isPendingRemove = pendingChanges.removed.some(
+        (u) => u.userId === user.id,
+      );
+      const isPendingAdd = pendingChanges.added.some(
+        (u) => u.userId === user.id && u.role === role,
+      );
+
+      if (isPendingRemove) return null;
+
+      if (user.name.toLowerCase().includes(debouncedSearch.toLowerCase()))
+        return { ...user, isPendingAdd, isPendingRemove };
+      else if (user.email.toLowerCase().includes(debouncedSearch.toLowerCase()))
+        return { ...user, isPendingAdd, isPendingRemove };
+      else if (
+        user.studentId?.toLowerCase().includes(debouncedSearch.toLowerCase())
+      )
+        return { ...user, isPendingAdd, isPendingRemove };
+
+      return null;
+    });
+  }, [users, pendingChanges, role, debouncedSearch]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(handler);
+  }, [search]);
+
   const handleRemove = (userId: string) => {
     setPendingChanges((prev) => ({
       ...prev,
@@ -34,44 +79,40 @@ const EnrolledList: React.FC<Props> = ({
     }));
   };
 
+  const totalUsers = users.length;
+  const totalPages = Math.ceil(totalUsers / limit);
+
   return (
-    <div className="space-y-2 max-h-[300px] overflow-y-auto">
+    <div>
       {users?.length === 0 && (
         <p className="text-sm text-muted-foreground">No {role}s yet</p>
       )}
 
-      {users?.map((user) => {
-        const isPendingRemove = pendingChanges.removed.some(
-          (u) => u.userId === user.id,
-        );
-        const isPendingAdd = pendingChanges.added.some(
-          (u) => u.userId === user.id && u.role === role,
-        );
+      <input
+        type="text"
+        className="flex w-full mb-2 h-full p-2 pl-3 rounded bg-primary/20 dark:bg-primary/30 border border-foreground"
+        placeholder={`Search ${role}s...`}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
 
-        if (isPendingRemove) return null;
+      <div className="relative z-0 mb-2">
+        <DataTable
+          isLoading={isCourseLoading}
+          columns={columns(handleRemove, t, role)}
+          data={updatedUsers as UserProps[]}
+          translateFrom={"Courses"}
+        />
+      </div>
 
-        return (
-          <div
-            key={user.id}
-            className={`flex justify-between items-center p-2 border rounded-sm ${
-              isPendingAdd ? "bg-green-100" : ""
-            }`}
-          >
-            <div>
-              <span className="font-medium">{user.name}</span>{" "}
-              <span className="text-xs text-muted-foreground">
-                {user.email}
-              </span>
-            </div>
-            <CustomButton
-              onClick={() => handleRemove(user.id)}
-              variants="outline"
-            >
-              Remove
-            </CustomButton>
-          </div>
-        );
-      })}
+      {/* Pagination */}
+      <Pagination
+        totalUsers={totalUsers}
+        setPage={setPage}
+        page={page}
+        totalPages={totalPages}
+        translateFrom={"Courses"}
+      />
     </div>
   );
 };

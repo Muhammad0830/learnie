@@ -241,6 +241,7 @@
         "PhoneNumber": "Phone Number",
         "Email": "Email",
         "Student ID": "Student ID",
+        "Student Id": "Student Id",
         "ID": "ID",
         "Phone": "Phone",
         "New Course": "New Course",
@@ -305,11 +306,11 @@
         "CourseName": "Course Name",
         "CourseDescription": "Course Description",
         "Save Changes": "Save Changes",
+        "Saving": "Saving...",
         "Topics in this course": "Topics in this course",
         "Add New Topic": "Add New Topic",
         "No topics found": "No topics found",
         "Failed to fetch course": "Failed to fetch course",
-        "Saving": "Saving...",
         "Saved": "Saved",
         "Are you sure to delete this topic?": "Are you sure to delete this topic?",
         "Failed to load topic or topic not found": "Failed to load topic or topic not found",
@@ -348,7 +349,10 @@
         "No students found": "No students found",
         "You are not authorized to view this page": "You are not authorized to view this page",
         "Go back":"Go back",
-        "Invalid id or topic id": "Invalid id or topic id"
+        "Invalid id or topic id": "Invalid id or topic id",
+        "Enrolled": "Enrolled",
+        "Users Attachment": "Users Attachment",
+        "Undo": "Undo"
     },
     "Admin": {
         "Name": "Name",

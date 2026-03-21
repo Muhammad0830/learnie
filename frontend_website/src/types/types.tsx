@@ -12,6 +12,13 @@ export interface User {
   studentId?: string | null;
 }
 
+export interface AttachedUsers {
+  id: string;
+  name: string;
+  email: string;
+  studentId: string;
+}
+
 export interface LoginFormData {
   email: string;
   password: string;
@@ -43,7 +50,7 @@ export interface Student {
 }
 
 export interface StudentListResponse {
-  users: Student[];
+  users: User[];
   page: number;
   limit: number;
   totalUsers: number;

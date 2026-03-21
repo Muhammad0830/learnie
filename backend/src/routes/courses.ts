@@ -23,6 +23,7 @@ import {
   getEachCourse,
   getEachLecture,
   getEachPresentation,
+  getNotEnrolledUsersList,
   updateCourse,
   updateCourseTopic,
   updateCourseTopicAssignment,
@@ -105,7 +106,55 @@ coursesRouter.get(
       console.error("Error fetching course topics:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
+);
+
+coursesRouter.get(
+  "/:id/not_enrolled_users",
+  validateUniversitySchema,
+  async (req, res) => {
+    try {
+      const courseId = req.params.id;
+      const schemaName = (req as any).universitySchema;
+      const {
+        role,
+        page = "1",
+        limit = "10",
+        search = "",
+      } = req.query as {
+        courseId: string;
+        role: string;
+        page: string;
+        limit: string;
+        search: string;
+      };
+
+      if (!schemaName) return res.status(400).json({ error: "Missing schema" });
+      if (!courseId) return res.status(400).json({ error: "Missing courseId" });
+      if (!role) return res.status(400).json({ error: "Missing role" });
+
+      const parsedPage = parseInt(page);
+      const parsedLimit = parseInt(limit);
+
+      if (isNaN(parsedPage) || isNaN(parsedLimit)) {
+        return res.status(400).json({ error: "Invalid page or limit" });
+      }
+
+      const result = await getNotEnrolledUsersList({
+        schemaName,
+        role,
+        courseId,
+        page: parsedPage,
+        limit: parsedLimit,
+        search,
+      });
+
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error fetching not-enrolled students:", error);
+      res.status(500).json({ error: error.message || "Internal Server Error" });
+    }
+  },
 );
 
 coursesRouter.post(
@@ -137,7 +186,7 @@ coursesRouter.post(
       console.error("Error inserting course:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.get(
@@ -164,7 +213,7 @@ coursesRouter.get(
       console.error("Error fetching course students:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.get(
@@ -190,7 +239,7 @@ coursesRouter.get(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.post(
@@ -210,7 +259,7 @@ coursesRouter.post(
       } else if (
         !topics.every(
           (topic: { title: string; description: string }) =>
-            topic.title && topic.description
+            topic.title && topic.description,
         )
       ) {
         return res
@@ -240,7 +289,7 @@ coursesRouter.post(
       console.error("Error inserting course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.post(
@@ -278,7 +327,7 @@ coursesRouter.post(
       console.error("Error inserting course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.put(
@@ -323,7 +372,7 @@ coursesRouter.put(
       console.error("Error updating course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.get(
@@ -346,7 +395,7 @@ coursesRouter.get(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.get(
@@ -369,7 +418,7 @@ coursesRouter.get(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.get(
@@ -392,7 +441,7 @@ coursesRouter.get(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.get(
@@ -414,7 +463,7 @@ coursesRouter.get(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.get(
@@ -436,7 +485,7 @@ coursesRouter.get(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.get(
@@ -458,7 +507,7 @@ coursesRouter.get(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.post(
@@ -497,7 +546,7 @@ coursesRouter.post(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.post(
@@ -536,7 +585,7 @@ coursesRouter.post(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.post(
@@ -572,7 +621,7 @@ coursesRouter.post(
       console.error("Error fetching course topic:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.put(
@@ -607,7 +656,7 @@ coursesRouter.put(
       console.error("Error updating course:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.delete(
@@ -633,7 +682,7 @@ coursesRouter.delete(
       console.error("Error deleting course:", error);
       res.status(500).json({ error: error.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.put(
@@ -673,7 +722,7 @@ coursesRouter.put(
     } catch (err: any) {
       throw new Error(err.message || "Error updating assignment");
     }
-  }
+  },
 );
 
 coursesRouter.put(
@@ -711,7 +760,7 @@ coursesRouter.put(
     } catch (err: any) {
       console.error("Error upadating assignment", err.message);
     }
-  }
+  },
 );
 
 coursesRouter.put(
@@ -745,7 +794,7 @@ coursesRouter.put(
     } catch (err: any) {
       console.error("Error upadating presentation", err.message);
     }
-  }
+  },
 );
 
 coursesRouter.delete(
@@ -777,7 +826,7 @@ coursesRouter.delete(
       console.error("Error deleting course topic:", error);
       res.status(500).json({ error: error.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.delete(
@@ -806,7 +855,7 @@ coursesRouter.delete(
       console.error("Error deleting course topic:", error);
       res.status(500).json({ error: error.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.delete(
@@ -835,7 +884,7 @@ coursesRouter.delete(
       console.error("Error deleting course topic:", error);
       res.status(500).json({ error: error.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 coursesRouter.delete(
@@ -864,7 +913,7 @@ coursesRouter.delete(
       console.error("Error deleting course topic:", error);
       res.status(500).json({ error: error.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 export default coursesRouter;

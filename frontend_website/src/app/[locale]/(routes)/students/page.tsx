@@ -4,7 +4,7 @@ import { DataTable } from "@/components/TableComponents/DataTable";
 import Pagination from "@/components/TableComponents/Pagination";
 import { columns } from "@/components/students/TableColumns";
 import useApiQuery from "@/hooks/useApiQuery";
-import { StudentListResponse } from "@/types/types";
+import { Student, StudentListResponse } from "@/types/types";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -29,7 +29,7 @@ const Page = () => {
     refetch,
   } = useApiQuery<StudentListResponse>(
     `/users?role=student&page=${page}&limit=${limit}&search=${debouncedSearch}`,
-    { key: ["students", page, limit, debouncedSearch], enabled: true }
+    { key: ["students", page, limit, debouncedSearch], enabled: true },
   );
 
   const handleSearch = useMemo(
@@ -37,7 +37,7 @@ const Page = () => {
       debounce((value: string) => {
         setDebouncedSearch(value);
       }, 500),
-    []
+    [],
   );
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -112,7 +112,7 @@ const Page = () => {
           <DataTable
             isLoading={isLoading}
             columns={columns(refetch)}
-            data={data}
+            data={data as Student[]}
             translateFrom={"Students"}
           />
         </div>

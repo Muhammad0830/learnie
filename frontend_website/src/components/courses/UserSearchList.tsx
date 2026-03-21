@@ -1,10 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { User } from "@/types/types";
-import CustomButton from "@/components/ui/customButton";
+import React, { useState, useEffect, useMemo } from "react";
+import { StudentListResponse, User } from "@/types/types";
 import useApiQuery from "@/hooks/useApiQuery";
-import { debounce } from "lodash";
+import Pagination from "../TableComponents/Pagination";
+import { DataTable } from "../TableComponents/DataTable";
+import { useTranslations } from "next-intl";
+import { columns } from "./NotEnrolledUsersTableColumns";
+
+interface UserProps extends User {
+  isPendingAdd?: boolean;
+  isPendingRemove?: boolean;
+}
 
 type Props = {
   courseId: string;
@@ -29,12 +36,18 @@ const UserSearchList: React.FC<Props> = ({
   pendingChanges,
   setPendingChanges,
 }) => {
+  const t = useTranslations("Courses");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  const { data: users, isLoading } = useApiQuery<User[]>(
-    `/users?search=${debouncedSearch}&excludeCourseId=${courseId}&role=${role}`,
-    { key: [`users-search-${role}-${debouncedSearch}`] },
+  const { data: users, isLoading } = useApiQuery<StudentListResponse>(
+    `/courses/${courseId}/not_enrolled_users?courseId=${courseId}&role=${role}&page=${page}&limit=${limit}&search=${debouncedSearch}`,
+    {
+      key: ["enrolled_users", page, limit, debouncedSearch, role],
+      enabled: true,
+    },
   );
 
   useEffect(() => {
@@ -42,10 +55,36 @@ const UserSearchList: React.FC<Props> = ({
     return () => clearTimeout(handler);
   }, [search]);
 
-  const handleAdd = (user: User) => {
+  const updatedUsers = useMemo(() => {
+    return users?.users.map((user) => {
+      const isPendingRemove = pendingChanges.removed.some(
+        (u) => u.userId === user.id,
+      );
+      const isPendingAdd = pendingChanges.added.some(
+        (u) => u.userId === user.id && u.role === role,
+      );
+
+      if (isPendingRemove) return null;
+
+      return {
+        ...user,
+        isPendingRemove,
+        isPendingAdd,
+      };
+    });
+  }, [users, pendingChanges, role]);
+
+  const handleAdd = (user: UserProps) => {
     setPendingChanges((prev) => ({
       added: [...prev.added, { userId: user.id, role }],
       removed: prev.removed.filter((u) => u.userId !== user.id),
+    }));
+  };
+
+  const handleReturn = (user: UserProps) => {
+    setPendingChanges((prev) => ({
+      added: prev.added.filter((u) => u.userId !== user.id),
+      removed: prev.removed,
     }));
   };
 
@@ -53,47 +92,40 @@ const UserSearchList: React.FC<Props> = ({
     pendingChanges.added.some((u) => u.userId === userId) ||
     currentUsers.some((u) => u.id === userId);
 
+  const totalUsers = users?.users.length ?? 0;
+  const totalPages = Math.ceil(totalUsers / limit);
+
   return (
-    <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
+    <div className="flex flex-col gap-2">
       <input
         type="text"
+        className="flex w-full h-full p-2 pl-3 rounded bg-primary/20 dark:bg-primary/30 border border-foreground"
+        placeholder={`Search ${role}s...`}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder={`Search ${role}s...`}
-        className="mb-2 px-2 py-1 border rounded-sm"
       />
       {isLoading && <p>Loading...</p>}
-      {!isLoading && users?.length === 0 && (
+      {!isLoading && users?.users.length === 0 && (
         <p className="text-sm text-muted-foreground">No users found</p>
       )}
 
-      {users?.map((user) => {
-        const alreadyAdded = isAlreadyAdded(user.id);
-        return (
-          <div
-            key={user.id}
-            className={`flex justify-between items-center p-2 border rounded-sm ${
-              pendingChanges.added.some((u) => u.userId === user.id)
-                ? "bg-green-100"
-                : ""
-            }`}
-          >
-            <div>
-              <span className="font-medium">{user.name}</span>{" "}
-              <span className="text-xs text-muted-foreground">
-                {user.email}
-              </span>
-            </div>
-            <CustomButton
-              onClick={() => handleAdd(user)}
-              variants="outline"
-              disabled={alreadyAdded}
-            >
-              {alreadyAdded ? "Added" : "Add"}
-            </CustomButton>
-          </div>
-        );
-      })}
+      <div className="relative z-0 mb-2">
+        <DataTable
+          isLoading={isLoading}
+          columns={columns(handleAdd, handleReturn, t, role, isAlreadyAdded)}
+          data={updatedUsers as UserProps[]}
+          translateFrom={"Courses"}
+        />
+      </div>
+
+      {/* Pagination */}
+      <Pagination
+        totalUsers={totalUsers}
+        setPage={setPage}
+        page={page}
+        totalPages={totalPages}
+        translateFrom={"Courses"}
+      />
     </div>
   );
 };

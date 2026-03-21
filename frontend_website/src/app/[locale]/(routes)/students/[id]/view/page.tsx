@@ -1,5 +1,5 @@
 "use client";
-import CoursesView from "@/components/CoursesView";
+import CoursesView from "@/components/courses/CoursesView";
 import StudentView from "@/components/students/StudentView";
 import CustomButton from "@/components/ui/customButton";
 import { useAuth } from "@/context/AuthContext";
@@ -27,11 +27,11 @@ const Page = () => {
     useApiQuery<CoursesListResponse>("/courses", { key: "CourseList" });
 
   const selectedCoursesIds = student?.courses.map((course) =>
-    String(course.id)
+    String(course.id),
   );
 
   const selectedCourses = courses?.courses.filter((course) =>
-    selectedCoursesIds?.includes(String(course.id))
+    selectedCoursesIds?.includes(String(course.id)),
   );
 
   if (!user) {

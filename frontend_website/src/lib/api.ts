@@ -46,24 +46,43 @@ api.interceptors.response.use(
         const res = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
           {},
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         const newAccessToken = res.data.accessToken;
         const newUniversitySchema = res.data.universitySchema;
+
         setAccessToken(newAccessToken);
         setUniversitySchema(newUniversitySchema);
+
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         originalRequest.headers["x-university-schema"] = newUniversitySchema;
+
         return api(originalRequest);
       } catch (err) {
         console.error("refresh token error", err);
+
+        if (typeof window !== "undefined") {
+          const path = window.location.pathname;
+
+          if (path.includes("/auth")) {
+            return Promise.reject(error);
+          }
+        }
+
+        clearAccessToken();
+
+        if (typeof window !== "undefined") {
+          const locale = window.location.pathname.split("/")[1] || "en";
+          window.location.href = `/${locale}/auth`;
+        }
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );
+
 export default api;
 export function getUniversitySchema() {
   return universitySchema;

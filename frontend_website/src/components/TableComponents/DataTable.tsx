@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { useTranslations } from "next-intl";
 import LoadingSkeleton from "../LoadingSkeleton";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,12 +41,12 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  if (isLoading) return <LoadingSkeleton table={table} />;
+
   if (!data || !columns) {
     console.error("Data or columns are not defined");
     return null;
   }
-
-  if (isLoading) return <LoadingSkeleton table={table} />;
 
   return (
     <div className="overflow-hidden rounded-md border">
@@ -58,16 +59,23 @@ export function DataTable<TData, TValue>({
             >
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead className="h-10" key={header.id}>
+                  <TableHead
+                    className={cn(
+                      "h-10",
+                      header.column.id === "actions" &&
+                        "flex justify-center items-center",
+                    )}
+                    key={header.id}
+                  >
                     {t(
                       String(
                         header.isPlaceholder
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
-                            )
-                      )
+                              header.getContext(),
+                            ),
+                      ),
                     )}
                   </TableHead>
                 );
@@ -79,7 +87,11 @@ export function DataTable<TData, TValue>({
           {data.length > 0 ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className="max-w-[300px] bg-primary/20 dark:bg-primary/20 hover:bg-primary/30 dark:hover:bg-primary/15"
+                className={cn(
+                  "max-w-[300px] bg-primary/20 dark:bg-primary/20 hover:bg-primary/30 dark:hover:bg-primary/15",
+                  (row.original as any)?.isPendingAdd && // eslint-disable-line
+                    "bg-primary/10 hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/10",
+                )}
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
