@@ -1,6 +1,20 @@
 import { queryGlobal, queryUniversity } from "../utils/helper";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 
+interface UserProps {
+  id: string;
+  name: string;
+  email: string;
+  role: "student" | "teacher" | "admin";
+  phoneNumber: string;
+  created_at: string;
+  updated_at: string;
+  age: string | null;
+  studentId?: string | null;
+  isPendingAdd?: boolean;
+  isPendingRemove?: boolean;
+}
+
 export async function getCoursesList({
   schemaName,
   page,
@@ -1036,4 +1050,53 @@ export async function getNotEnrolledUsersList({
   } catch (error: any) {
     throw new Error(error.message || "Error fetching not-enrolled users");
   }
+}
+
+export async function updateCourseUsers({
+  courseId,
+  schemaName,
+  additions,
+  removals,
+}: {
+  courseId: string;
+  schemaName: string;
+  additions: UserProps[];
+  removals: UserProps[];
+}) {
+  const params: any = { courseId };
+
+  if (additions.length > 0) {
+    const values = additions
+      .map((_, i) => `(:courseId, :addUserId${i})`)
+      .join(", ");
+
+    additions.forEach((user, i) => {
+      params[`addUserId${i}`] = user.id;
+    });
+
+    await queryUniversity(
+      schemaName,
+      `INSERT INTO users_courses (course_id, user_id)
+       VALUES ${values}`,
+      params,
+    );
+  }
+
+  if (removals.length > 0) {
+    const keys = removals.map((_, i) => `:removeUserId${i}`).join(", ");
+
+    removals.forEach((user, i) => {
+      params[`removeUserId${i}`] = user.id;
+    });
+
+    await queryUniversity(
+      schemaName,
+      `DELETE FROM users_courses
+       WHERE course_id = :courseId
+       AND user_id IN (${keys})`,
+      params,
+    );
+  }
+
+  return { message: "Course users updated successfully" };
 }

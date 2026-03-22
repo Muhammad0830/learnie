@@ -43,14 +43,14 @@ const Page = () => {
 
   const { mutate } = useApiMutation<{ success: boolean }, StudentFormData>(
     "/users",
-    "post"
+    "post",
   );
 
   const { data: courses, isLoading } = useApiQuery<CoursesListResponse>(
     "/courses",
     {
       key: "CourseList",
-    }
+    },
   );
 
   const onSubmit = (data: StudentFormData) => {
@@ -59,7 +59,7 @@ const Page = () => {
         reset();
         setIsDialogOpen(false);
         showToast("success", toastT("Student created successfully"));
-        router.push("/students");
+        router.back();
       },
       onError: (error) => {
         console.error("student create failed", error);
@@ -104,7 +104,7 @@ const Page = () => {
   });
 
   const selectedCourses = courses?.courses.filter((course) =>
-    selectedCoursesIds?.includes(String(course.id))
+    selectedCoursesIds?.includes(String(course.id)),
   );
 
   if (user?.role === "student" || user?.role === "teacher") {

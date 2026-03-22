@@ -76,36 +76,22 @@ usersRouter.post(
         age,
         phoneNumber,
         studentId,
-        courseIds
+        courseIds,
       );
 
-      const accessToken = createAccessToken({ userId, email, role });
-      const refreshToken = createRefreshToken({ userId, email, role });
-
-      const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS)
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
-
-      await saveRefreshToken(userId, refreshToken, expiresAt, schemaName);
-
-      res.cookie(COOKIE_NAME, refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: REFRESH_EXPIRES_MS,
-      });
-
-      return res
-        .status(201)
-        .json({ accessToken, user: { id: userId, email, name } });
+      return (
+        res
+          .status(201)
+          // .json({ accessToken, user: { id: userId, email, name } });
+          .json({ user: { id: userId, email, name } })
+      );
     } catch (err: any) {
       console.error(err);
       return res
         .status(500)
         .json({ message: err.message || "Internal server error" });
     }
-  }
+  },
 );
 
 usersRouter.get("/", validateUniversitySchema, async (req, res) => {
@@ -200,7 +186,7 @@ usersRouter.put(
       console.error("Error updating student:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 usersRouter.delete(
@@ -228,7 +214,7 @@ usersRouter.delete(
       console.error("Error updating user:", err);
       res.status(500).json({ error: err.message || "Internal Server Error" });
     }
-  }
+  },
 );
 
 export default usersRouter;

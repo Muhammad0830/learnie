@@ -70,6 +70,11 @@ const UserSearchList: React.FC<Props> = ({
 
   return (
     <div className="flex flex-col gap-2">
+      {isLoading && <p>Loading...</p>}
+      {!isLoading && users?.users.length === 0 && (
+        <p className="text-sm text-muted-foreground">No users found</p>
+      )}
+
       <input
         type="text"
         className="flex w-full h-full p-2 pl-3 rounded bg-primary/20 dark:bg-primary/30 border border-foreground"
@@ -77,10 +82,6 @@ const UserSearchList: React.FC<Props> = ({
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      {isLoading && <p>Loading...</p>}
-      {!isLoading && users?.users.length === 0 && (
-        <p className="text-sm text-muted-foreground">No users found</p>
-      )}
 
       <div className="relative z-0 mb-2">
         <DataTable

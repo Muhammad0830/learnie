@@ -50,7 +50,10 @@ const CourseConnectedUsersDialog = ({
           {icon} {title}
         </h3>
         <div className="flex gap-2">
-          <CustomButton className="sm:px-3 sm:py-1 px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer">
+          <CustomButton
+            onClick={() => setIsOpen(true)}
+            className="sm:px-3 sm:py-1 px-2 py-0.5 rounded-sm border border-primary bg-primary/30 dark:hover:bg-primary/20 hover:bg-primary/40 cursor-pointer"
+          >
             <span className=" flex">{t(`View all`)}</span>
           </CustomButton>
           <Link href={`/courses/${courseId}/edit`}>

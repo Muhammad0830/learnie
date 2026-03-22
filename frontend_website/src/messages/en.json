@@ -360,7 +360,11 @@
         "no_user_changes": "No user changes",
         "no_changes": "No changes",
         "confirm_and_save": "Confirm & Save",
-        "no_changes_go_back": "No changes, go back"
+        "no_changes_go_back": "No changes, go back",
+        "user_changes": "User Changes",
+        "student": "Student",
+        "teacher": "Teacher",
+        "admin": "Admin"
     },
     "Admin": {
         "Name": "Name",

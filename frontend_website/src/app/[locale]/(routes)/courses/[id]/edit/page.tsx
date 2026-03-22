@@ -300,83 +300,86 @@ export default function CourseEditPage() {
       </form>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="space-y-4 py-4 max-h-[80vh] overflow-y-auto">
-          <DialogTitle>{t("confirm_changes")}</DialogTitle>
+        <DialogContent className="flex flex-col gap-4 py-4 max-h-[80vh]">
+          <DialogTitle className="flex-1">{t("confirm_changes")}</DialogTitle>
 
-          {/* COURSE CHANGES */}
-          <div>
-            <h3 className="font-semibold mb-1">{t("course_info")}</h3>
+          <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
+            {/* COURSE CHANGES */}
+            <div>
+              <h3 className="font-semibold mb-1">{t("course_info")}</h3>
 
-            {compareCourseName && compareCourseDescription ? (
-              <p className="text-sm text-muted-foreground">{t("no_changes")}</p>
-            ) : (
-              <div className="text-sm">
-                {!compareCourseName && (
-                  <p>
-                    <span className="font-medium">Name:</span>{" "}
-                    {course?.course.name} → {form.getValues("name")}
-                  </p>
-                )}
-
-                {!compareCourseDescription && (
-                  <p>
-                    <span className="font-medium">Description:</span>{" "}
-                    {course?.course.description} →{" "}
-                    {form.getValues("description")}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* USER CHANGES */}
-          <div>
-            <h3 className="font-semibold mb-1">User Changes</h3>
-
-            {pendingChanges.added.length > 0 && (
-              <div className="mb-2">
-                <div className="flex">
-                  <div className="bg-green-600/10 rounded px-1 text-green-600 font-medium">
-                    {t("added")}:
-                  </div>
-                </div>
-                <ul className="text-sm list-disc ml-5">
-                  {pendingChanges.added.map((u) => (
-                    <li key={u.user.id}>
-                      {u.user.name} ({u.user.role})
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {pendingChanges.removed.length > 0 && (
-              <div>
-                <div className="flex">
-                  <div className="bg-red-600/10 px-1 rounded text-red-600 font-medium">
-                    {t("removed")}:
-                  </div>
-                </div>
-                <ul className="text-sm list-disc ml-5">
-                  {pendingChanges.removed.map((u) => (
-                    <li key={u.user.id}>
-                      {u.user.name} ({u.user.role})
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {pendingChanges.added.length === 0 &&
-              pendingChanges.removed.length === 0 && (
+              {compareCourseName && compareCourseDescription ? (
                 <p className="text-sm text-muted-foreground">
-                  {t("no_user_changes")}
+                  {t("no_changes")}
                 </p>
+              ) : (
+                <div className="text-sm">
+                  {!compareCourseName && (
+                    <p>
+                      <span className="font-medium">{t("Name")}: </span>
+                      {course?.course.name} → {form.getValues("name")}
+                    </p>
+                  )}
+
+                  {!compareCourseDescription && (
+                    <p>
+                      <span className="font-medium">{t("Description")}: </span>
+                      {course?.course.description} →{" "}
+                      {form.getValues("description")}
+                    </p>
+                  )}
+                </div>
               )}
+            </div>
+
+            {/* USER CHANGES */}
+            <div>
+              <h3 className="font-semibold mb-1">{t("user_changes")}</h3>
+
+              {pendingChanges.added.length > 0 && (
+                <div className="mb-2">
+                  <div className="flex">
+                    <div className="bg-green-600/10 rounded px-1 text-green-600 font-medium">
+                      {t("added")}:
+                    </div>
+                  </div>
+                  <ul className="text-sm list-disc ml-5">
+                    {pendingChanges.added.map((u) => (
+                      <li key={u.user.id}>
+                        {u.user.name} ({t(u.user.role)})
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {pendingChanges.removed.length > 0 && (
+                <div>
+                  <div className="flex">
+                    <div className="bg-red-600/10 px-1 rounded text-red-600 font-medium">
+                      {t("removed")}:
+                    </div>
+                  </div>
+                  <ul className="text-sm list-disc ml-5">
+                    {pendingChanges.removed.map((u) => (
+                      <li key={u.user.id}>
+                        {u.user.name} ({t(u.user.role)})
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {pendingChanges.added.length === 0 &&
+                pendingChanges.removed.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    {t("no_user_changes")}
+                  </p>
+                )}
+            </div>
           </div>
 
-          {/* ACTIONS */}
-          <div className="flex justify-end gap-2 my-0">
+          <div className="flex-1 flex justify-end gap-2 my-0">
             <CustomButton variants="outline" onClick={() => setOpen(false)}>
               {t("Cancel")}
             </CustomButton>

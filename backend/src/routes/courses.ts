@@ -29,9 +29,24 @@ import {
   updateCourseTopicAssignment,
   updateCourseTopicLecture,
   updateCourseTopicPresentation,
+  updateCourseUsers,
 } from "../models/Course";
 import { validateUniversitySchema } from "../middlewares/validateUniversitySchema";
 import { authorizeRoles } from "../middlewares/roleMiddleware";
+
+interface UserProps {
+  id: string;
+  name: string;
+  email: string;
+  role: "student" | "teacher" | "admin";
+  phoneNumber: string;
+  created_at: string;
+  updated_at: string;
+  age: string | null;
+  studentId?: string | null;
+  isPendingAdd?: boolean;
+  isPendingRemove?: boolean;
+}
 
 const coursesRouter = express.Router();
 
@@ -793,9 +808,36 @@ coursesRouter.put(
       });
     } catch (err: any) {
       console.error("Error upadating presentation", err.message);
+      res.status(500).json({ error: err.message || "Internal Server Error" });
     }
   },
 );
+
+coursesRouter.put("/:id/users", validateUniversitySchema, async (req, res) => {
+  try {
+    const schemaName = (req as any).universitySchema;
+    const courseId = req.params.id;
+    const { additions, removals } = req.body;
+
+    if (!courseId) {
+      return res.status(400).json({ error: "Missing courseId" });
+    } else if (!additions && !removals) {
+      return res.status(400).json({ error: "Missing additions or removals" });
+    }
+
+    const result = await updateCourseUsers({
+      courseId,
+      schemaName,
+      additions: additions.map((user: { user: UserProps }) => user.user),
+      removals: removals.map((user: { user: UserProps }) => user.user),
+    });
+
+    res.status(200).json(result);
+  } catch (err: any) {
+    console.error("Error updating course:", err);
+    res.status(500).json({ error: err.message || "Internal Server Error" });
+  }
+});
 
 coursesRouter.delete(
   "/:courseId/topics/:topicId",

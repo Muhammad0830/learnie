@@ -67,18 +67,25 @@ const EnrolledList: React.FC<Props> = ({
     });
   }, [users, pendingChanges, debouncedSearch]);
 
+  const paginatedUsers = useMemo(() => {
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    return updatedUsers.slice(start, end);
+  }, [updatedUsers, page]);
+
   const totalUsers = users.length;
   const totalPages = Math.ceil(totalUsers / limit);
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       {users?.length === 0 && (
         <p className="text-sm text-muted-foreground">No {role}s yet</p>
       )}
 
       <input
         type="text"
-        className="flex w-full mb-2 h-full p-2 pl-3 rounded bg-primary/20 dark:bg-primary/30 border border-foreground"
+        className="flex w-full h-full p-2 pl-3 rounded bg-primary/20 dark:bg-primary/30 border border-foreground"
         placeholder={`Search ${role}s...`}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
@@ -88,7 +95,7 @@ const EnrolledList: React.FC<Props> = ({
         <DataTable
           isLoading={isCourseLoading}
           columns={columns(handleRemove, handleUndoRemove, t, role)}
-          data={updatedUsers as UserProps[]}
+          data={paginatedUsers as UserProps[]}
           translateFrom={"Courses"}
         />
       </div>

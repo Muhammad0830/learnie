@@ -8,7 +8,7 @@ export async function findUserByEmail(email: string, schemaName: string) {
   const rows = await queryUniversity(
     schemaName,
     "SELECT * FROM users WHERE email = ?",
-    [email]
+    [email],
   );
   const arr = rows as any[];
   return arr[0] ?? null;
@@ -18,7 +18,7 @@ export async function findUserById(id: number, schemaName: string) {
   const rows = await queryUniversity(
     schemaName,
     "SELECT * FROM users WHERE id = ?",
-    [id]
+    [id],
   );
   const arr = rows as any[];
   return arr[0] ?? null;
@@ -33,13 +33,13 @@ export async function createUser(
   age: string | null,
   phoneNumber: string,
   studentId?: string,
-  courseIds?: string[]
+  courseIds?: string[],
 ) {
   try {
     if (Array.isArray(courseIds) && courseIds.length > 0) {
       const allCoursesExists = await checkCoursesExistance(
         courseIds,
-        schemaName
+        schemaName,
       );
       if (!allCoursesExists)
         throw new Error("One or more courses do not exist");
@@ -71,7 +71,7 @@ export async function createUser(
           schemaName,
           `INSERT INTO users_courses (user_id, course_id)
            VALUES (:user_id, :course_id)`,
-          { user_id: res.insertId, course_id: courseId }
+          { user_id: res.insertId, course_id: courseId },
         );
       }
     }
@@ -104,12 +104,12 @@ export async function getUsersList({
       schemaName,
       `SELECT * FROM users WHERE role = :role 
         ${searchCondition} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${
-        (page - 1) * limit
-      }`,
+          (page - 1) * limit
+        }`,
       {
         role,
         search: `%${search}%`,
-      }
+      },
     );
 
     if (rows.length === 0) {
@@ -119,7 +119,7 @@ export async function getUsersList({
     const totalResult = await queryUniversity<any>(
       schemaName,
       `SELECT COUNT(*) as count FROM users where role = :role ${searchCondition}`,
-      { role, search: `%${search}%` }
+      { role, search: `%${search}%` },
     );
     const totalUsers = totalResult[0].count;
     const totalPages = Math.ceil(totalUsers / limit);
@@ -141,7 +141,7 @@ export async function getEachUser({
     const rows = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT * FROM users WHERE id = :id`,
-      { id }
+      { id },
     );
 
     if (rows.length === 0) {
@@ -152,7 +152,7 @@ export async function getEachUser({
       schemaName,
       `SELECT c.id, c.name FROM courses as c
         WHERE c.id IN (SELECT course_id FROM users_courses WHERE user_id = :id)`,
-      { id }
+      { id },
     );
 
     return { user: rows[0], courses: courses };
@@ -179,7 +179,7 @@ export async function updateUser({
     if (Array.isArray(courseIds) && courseIds.length > 0) {
       const allCoursesExists = await checkCoursesExistance(
         courseIds,
-        schemaName
+        schemaName,
       );
       if (!allCoursesExists)
         throw new Error("One or more courses do not exist");
@@ -188,7 +188,7 @@ export async function updateUser({
     const userRows = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT id FROM users WHERE id = :id`,
-      { id: userId }
+      { id: userId },
     );
 
     if (userRows.length === 0) {
@@ -205,14 +205,14 @@ export async function updateUser({
         age: age ?? null,
         phoneNumber,
         id: userId,
-      }
+      },
     );
 
     if (Array.isArray(courseIds)) {
       const existingCourses = await queryUniversity<RowDataPacket[]>(
         schemaName,
         `SELECT course_id FROM users_courses WHERE user_id = :user_id`,
-        { user_id: userId }
+        { user_id: userId },
       );
 
       const currentIds = existingCourses.map((c) => String(c.course_id));
@@ -227,7 +227,7 @@ export async function updateUser({
           `DELETE FROM users_courses 
            WHERE user_id = ? 
            AND course_id IN (${needToDelete.map(() => "?").join(",")})`,
-          [userId, ...needToDelete]
+          [userId, ...needToDelete],
         );
       }
 
@@ -236,7 +236,7 @@ export async function updateUser({
           schemaName,
           `INSERT INTO users_courses (user_id, course_id)
            VALUES (:user_id, :course_id)`,
-          { user_id: userId, course_id: courseId }
+          { user_id: userId, course_id: courseId },
         );
       }
 
@@ -244,7 +244,7 @@ export async function updateUser({
         await queryUniversity<RowDataPacket[]>(
           schemaName,
           `UPDATE users SET updated_at = NOW() WHERE id = :id`,
-          { id: userId }
+          { id: userId },
         );
       }
     }
@@ -252,7 +252,7 @@ export async function updateUser({
     const updatedUser = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT * FROM users WHERE id = :id`,
-      { id: userId }
+      { id: userId },
     );
 
     const updatedCourses = await queryUniversity<RowDataPacket[]>(
@@ -260,7 +260,7 @@ export async function updateUser({
       `SELECT c.id, c.name FROM courses AS c
        JOIN users_courses AS uc ON uc.course_id = c.id
        WHERE uc.user_id = :user_id`,
-      { user_id: userId }
+      { user_id: userId },
     );
 
     return { ...updatedUser[0], courses: updatedCourses };
@@ -280,7 +280,7 @@ export async function deleteUser({
     const user = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT * FROM users WHERE id = :id`,
-      { id }
+      { id },
     );
 
     if (user.length === 0) {
@@ -290,7 +290,7 @@ export async function deleteUser({
     const rows = await queryUniversity<ResultSetHeader>(
       schemaName,
       `DELETE FROM users WHERE id = :id`,
-      { id }
+      { id },
     );
 
     return {
