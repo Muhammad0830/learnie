@@ -17,28 +17,25 @@ type Props = {
   courseId: string;
   role: "student" | "teacher";
   pendingChanges: {
-    added: { userId: string; role: "student" | "teacher" }[];
-    removed: { userId: string }[];
+    added: { user: UserProps }[];
+    removed: { user: UserProps }[];
   };
-  setPendingChanges: React.Dispatch<
-    React.SetStateAction<{
-      added: { userId: string; role: "student" | "teacher" }[];
-      removed: { userId: string }[];
-    }>
-  >;
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   debouncedSearch: string;
+  handleAdd: (user: UserProps) => void;
+  handleUndoAdd: (user: UserProps) => void;
 };
 
 const UserSearchList: React.FC<Props> = ({
   courseId,
   role,
   pendingChanges,
-  setPendingChanges,
   search,
   setSearch,
   debouncedSearch,
+  handleAdd,
+  handleUndoAdd,
 }) => {
   const t = useTranslations("Courses");
   const [page, setPage] = useState(1);
@@ -55,10 +52,10 @@ const UserSearchList: React.FC<Props> = ({
   const updatedUsers = useMemo(() => {
     return users?.users.map((user) => {
       const isPendingRemove = pendingChanges.removed.some(
-        (u) => u.userId === user.id,
+        (u) => u.user.id === user.id,
       );
       const isPendingAdd = pendingChanges.added.some(
-        (u) => u.userId === user.id && u.role === role,
+        (u) => u.user.id === user.id,
       );
 
       if (isPendingRemove) return null;
@@ -69,21 +66,7 @@ const UserSearchList: React.FC<Props> = ({
         isPendingAdd,
       };
     });
-  }, [users, pendingChanges, role]);
-
-  const handleAdd = (user: UserProps) => {
-    setPendingChanges((prev) => ({
-      added: [...prev.added, { userId: user.id, role }],
-      removed: prev.removed.filter((u) => u.userId !== user.id),
-    }));
-  };
-
-  const handleReturn = (user: UserProps) => {
-    setPendingChanges((prev) => ({
-      added: prev.added.filter((u) => u.userId !== user.id),
-      removed: prev.removed,
-    }));
-  };
+  }, [users, pendingChanges]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -102,7 +85,7 @@ const UserSearchList: React.FC<Props> = ({
       <div className="relative z-0 mb-2">
         <DataTable
           isLoading={isLoading}
-          columns={columns(handleAdd, handleReturn, t, role)}
+          columns={columns(handleAdd, handleUndoAdd, t, role)}
           data={updatedUsers as UserProps[]}
           translateFrom={"Courses"}
         />

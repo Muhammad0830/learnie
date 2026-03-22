@@ -8,18 +8,22 @@ import { User, Role } from "@/types/types";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
+interface UserProps extends User {
+  isPendingAdd?: boolean;
+  isPendingRemove?: boolean;
+}
 type Props = {
   courseId: string;
   students: User[];
   teachers: User[];
   pendingChanges: {
-    added: { userId: string; role: Role }[];
-    removed: { userId: string }[];
+    added: { user: UserProps }[];
+    removed: { user: UserProps }[];
   };
   setPendingChanges: React.Dispatch<
     React.SetStateAction<{
-      added: { userId: string; role: Role }[];
-      removed: { userId: string }[];
+      added: { user: UserProps }[];
+      removed: { user: UserProps }[];
     }>
   >;
   isCourseLoading: boolean;
@@ -40,8 +44,15 @@ const UsersSection: React.FC<Props> = ({
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
+  const usersWithRole = (role: "student" | "teacher", users: UserProps[]) => {
+    return users.map((user) => ({ ...user, role }));
+  };
+
   const usersByRole = useMemo(
-    () => (selectedRole === "student" ? students : teachers),
+    () =>
+      selectedRole === "student"
+        ? usersWithRole(selectedRole, students)
+        : usersWithRole(selectedRole, teachers),
     [selectedRole, students, teachers],
   );
 
@@ -49,6 +60,34 @@ const UsersSection: React.FC<Props> = ({
     const handler = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(handler);
   }, [search]);
+
+  const handleAdd = (user: UserProps) => {
+    setPendingChanges((prev) => ({
+      added: [...prev.added, { user: user }],
+      removed: prev.removed.filter((u) => u.user.id !== user.id),
+    }));
+  };
+
+  const handleRemove = (user: UserProps) => {
+    setPendingChanges((prev) => ({
+      removed: [...prev.removed, { user }],
+      added: prev.added.filter((u) => u.user.id !== user.id),
+    }));
+  };
+
+  const handleUndoAdd = (user: UserProps) => {
+    setPendingChanges((prev) => ({
+      added: prev.added.filter((u) => u.user.id !== user.id),
+      removed: prev.removed,
+    }));
+  };
+
+  const handleUndoRemove = (user: UserProps) => {
+    setPendingChanges((prev) => ({
+      ...prev,
+      removed: prev.removed.filter((u) => u.user.id !== user.id),
+    }));
+  };
 
   return (
     <div className="mt-6">
@@ -111,21 +150,23 @@ const UsersSection: React.FC<Props> = ({
             users={usersByRole}
             role={selectedRole}
             pendingChanges={pendingChanges}
-            setPendingChanges={setPendingChanges}
             isCourseLoading={isCourseLoading}
             search={search}
             setSearch={setSearch}
             debouncedSearch={debouncedSearch}
+            handleRemove={handleRemove}
+            handleUndoRemove={handleUndoRemove}
           />
         ) : (
           <UserSearchList
             courseId={courseId}
             role={selectedRole}
             pendingChanges={pendingChanges}
-            setPendingChanges={setPendingChanges}
             search={search}
             setSearch={setSearch}
             debouncedSearch={debouncedSearch}
+            handleAdd={handleAdd}
+            handleUndoAdd={handleUndoAdd}
           />
         )}
       </TabGroup>

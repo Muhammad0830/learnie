@@ -17,30 +17,27 @@ type Props = {
   users: User[];
   role: "student" | "teacher";
   pendingChanges: {
-    added: { userId: string; role: "student" | "teacher" }[];
-    removed: { userId: string }[];
+    added: { user: UserProps }[];
+    removed: { user: UserProps }[];
   };
-  setPendingChanges: React.Dispatch<
-    React.SetStateAction<{
-      added: { userId: string; role: "student" | "teacher" }[];
-      removed: { userId: string }[];
-    }>
-  >;
   isCourseLoading: boolean;
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   debouncedSearch: string;
+  handleRemove: (user: UserProps) => void;
+  handleUndoRemove: (user: UserProps) => void;
 };
 
 const EnrolledList: React.FC<Props> = ({
   users,
   role,
   pendingChanges,
-  setPendingChanges,
   isCourseLoading,
   search,
   setSearch,
   debouncedSearch,
+  handleRemove,
+  handleUndoRemove,
 }) => {
   const t = useTranslations("Courses");
   const [page, setPage] = useState(1);
@@ -49,10 +46,10 @@ const EnrolledList: React.FC<Props> = ({
   const updatedUsers = useMemo(() => {
     const newUsers = users.map((user) => {
       const isPendingRemove = pendingChanges.removed.some(
-        (u) => u.userId === user.id,
+        (u) => u.user.id === user.id,
       );
       const isPendingAdd = pendingChanges.added.some(
-        (u) => u.userId === user.id && u.role === role,
+        (u) => u.user.id === user.id,
       );
 
       return { ...user, isPendingAdd, isPendingRemove };
@@ -68,22 +65,7 @@ const EnrolledList: React.FC<Props> = ({
         return user;
       } else return null;
     });
-  }, [users, pendingChanges, role, debouncedSearch]);
-
-  const handleRemove = (userId: string) => {
-    setPendingChanges((prev) => ({
-      ...prev,
-      removed: [...prev.removed, { userId }],
-      added: prev.added.filter((u) => u.userId !== userId),
-    }));
-  };
-
-  const handleUndo = (userId: string) => {
-    setPendingChanges((prev) => ({
-      ...prev,
-      removed: prev.removed.filter((u) => u.userId !== userId),
-    }));
-  };
+  }, [users, pendingChanges, debouncedSearch]);
 
   const totalUsers = users.length;
   const totalPages = Math.ceil(totalUsers / limit);
@@ -105,7 +87,7 @@ const EnrolledList: React.FC<Props> = ({
       <div className="relative z-0 mb-2">
         <DataTable
           isLoading={isCourseLoading}
-          columns={columns(handleRemove, handleUndo, t, role)}
+          columns={columns(handleRemove, handleUndoRemove, t, role)}
           data={updatedUsers as UserProps[]}
           translateFrom={"Courses"}
         />

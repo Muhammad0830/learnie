@@ -12,8 +12,8 @@ interface UserProps extends User {
 }
 
 export const columns = (
-  handleRemove: (userId: string) => void,
-  handleUndo: (userId: string) => void,
+  handleRemove: (user: UserProps) => void,
+  handleUndoRemove: (user: UserProps) => void,
   t: ReturnType<typeof useTranslations>,
   role: Role,
 ): ColumnDef<User>[] => {
@@ -63,9 +63,9 @@ export const columns = (
             type="button"
             onClick={() => {
               if (isPendingRemove) {
-                handleUndo(user.id);
+                handleUndoRemove(user);
               } else {
-                handleRemove(user.id);
+                handleRemove(user);
               }
             }}
             className={cn(

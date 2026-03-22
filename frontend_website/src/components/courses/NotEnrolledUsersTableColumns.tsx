@@ -13,7 +13,7 @@ interface UserProps extends User {
 
 export const columns = (
   handleAdd: (user: UserProps) => void,
-  handleReturn: (user: UserProps) => void,
+  handleUndoAdd: (user: UserProps) => void,
   t: ReturnType<typeof useTranslations>,
   role: Role,
   // eslint-disable-next-line
@@ -68,7 +68,7 @@ export const columns = (
           <button
             type="button"
             onClick={() => {
-              if (alreadyAdded) handleReturn(user);
+              if (alreadyAdded) handleUndoAdd(user);
               else handleAdd(user);
             }}
             className="px-2 py-1 cursor-pointer rounded border border-primary/40 bg-primary/10 hover:bg-primary/20 flex items-center justify-center gap-2"

@@ -352,7 +352,15 @@
         "Invalid id or topic id": "Invalid id or topic id",
         "Enrolled": "Enrolled",
         "Users Attachment": "Users Attachment",
-        "Undo": "Undo"
+        "Undo": "Undo",
+        "added": "Added",
+        "removed": "Removed",
+        "confirm_changes": "Confirm Changes",
+        "course_info": "Course Info",
+        "no_user_changes": "No user changes",
+        "no_changes": "No changes",
+        "confirm_and_save": "Confirm & Save",
+        "no_changes_go_back": "No changes, go back"
     },
     "Admin": {
         "Name": "Name",
