@@ -89,7 +89,8 @@ export function DataTable<TData, TValue>({
               <TableRow
                 className={cn(
                   "max-w-[300px] bg-primary/20 dark:bg-primary/20 hover:bg-primary/30 dark:hover:bg-primary/15",
-                  (row.original as any)?.isPendingAdd && // eslint-disable-line
+                  ((row.original as any)?.isPendingAdd || // eslint-disable-line
+                    (row.original as any)?.isPendingRemove) && // eslint-disable-line
                     "bg-primary/10 hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/10",
                 )}
                 key={row.id}

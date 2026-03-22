@@ -77,10 +77,11 @@ export default function CourseEditPage() {
   const { mutate: updateCourseUsers, isPending: isUpdatingUsers } =
     useApiMutation(`/courses/${courseId}/users`, "put");
 
+  console.log("pendingChanges", pendingChanges);
+
   /** ---------------- FORM SUBMIT ---------------- */
   const onSubmit = async (data: CourseFormData) => {
     try {
-      // Save course data
       await new Promise<void>((resolve, reject) => {
         updateCourse(data, {
           onSuccess: () => resolve(),

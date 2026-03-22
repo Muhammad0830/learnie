@@ -16,7 +16,6 @@ export const columns = (
   handleReturn: (user: UserProps) => void,
   t: ReturnType<typeof useTranslations>,
   role: Role,
-  isAlreadyAdded: (userId: string) => boolean,
   // eslint-disable-next-line
 ): ColumnDef<UserProps, any>[] => {
   const nameObject = {
@@ -63,16 +62,16 @@ export const columns = (
     cell: ({ row }: { row: { original: UserProps | null } }) => {
       const user = row.original;
       if (!user?.id) return null;
-      const alreadyAdded = isAlreadyAdded(user.id);
+      const alreadyAdded = user.isPendingAdd;
       return (
-        <div className="h-8 min-w-20 flex justify-center gap-2 items-center relative">
+        <div className="h-8 flex justify-center gap-2 items-center">
           <button
             type="button"
             onClick={() => {
               if (alreadyAdded) handleReturn(user);
               else handleAdd(user);
             }}
-            className="absolute px-2 py-1 cursor-pointer rounded border border-primary/40 bg-primary/10 hover:bg-primary/20 flex items-center justify-center gap-2"
+            className="px-2 py-1 cursor-pointer rounded border border-primary/40 bg-primary/10 hover:bg-primary/20 flex items-center justify-center gap-2"
           >
             {alreadyAdded ? (
               <Undo2 className="w-4.5 h-4.5" />

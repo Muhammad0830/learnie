@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Tab, TabGroup, TabList } from "@headlessui/react";
 import EnrolledList from "./EnrolledList";
 import UserSearchList from "./UserSearchList";
@@ -37,11 +37,18 @@ const UsersSection: React.FC<Props> = ({
   const roles: Role[] = ["student", "teacher"];
   const [selectedRole, setSelectedRole] = useState<Role>("student");
   const [mode, setMode] = useState<"enrolled" | "add">("enrolled");
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const usersByRole = useMemo(
     () => (selectedRole === "student" ? students : teachers),
     [selectedRole, students, teachers],
   );
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(handler);
+  }, [search]);
 
   return (
     <div className="mt-6">
@@ -106,14 +113,19 @@ const UsersSection: React.FC<Props> = ({
             pendingChanges={pendingChanges}
             setPendingChanges={setPendingChanges}
             isCourseLoading={isCourseLoading}
+            search={search}
+            setSearch={setSearch}
+            debouncedSearch={debouncedSearch}
           />
         ) : (
           <UserSearchList
             courseId={courseId}
             role={selectedRole}
-            currentUsers={usersByRole}
             pendingChanges={pendingChanges}
             setPendingChanges={setPendingChanges}
+            search={search}
+            setSearch={setSearch}
+            debouncedSearch={debouncedSearch}
           />
         )}
       </TabGroup>

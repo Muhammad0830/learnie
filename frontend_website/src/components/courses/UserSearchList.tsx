@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { StudentListResponse, User } from "@/types/types";
 import useApiQuery from "@/hooks/useApiQuery";
 import Pagination from "../TableComponents/Pagination";
@@ -16,7 +16,6 @@ interface UserProps extends User {
 type Props = {
   courseId: string;
   role: "student" | "teacher";
-  currentUsers: User[];
   pendingChanges: {
     added: { userId: string; role: "student" | "teacher" }[];
     removed: { userId: string }[];
@@ -27,18 +26,21 @@ type Props = {
       removed: { userId: string }[];
     }>
   >;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  debouncedSearch: string;
 };
 
 const UserSearchList: React.FC<Props> = ({
   courseId,
   role,
-  currentUsers,
   pendingChanges,
   setPendingChanges,
+  search,
+  setSearch,
+  debouncedSearch,
 }) => {
   const t = useTranslations("Courses");
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
   const limit = 10;
 
@@ -49,11 +51,6 @@ const UserSearchList: React.FC<Props> = ({
       enabled: true,
     },
   );
-
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(handler);
-  }, [search]);
 
   const updatedUsers = useMemo(() => {
     return users?.users.map((user) => {
@@ -88,13 +85,6 @@ const UserSearchList: React.FC<Props> = ({
     }));
   };
 
-  const isAlreadyAdded = (userId: string) =>
-    pendingChanges.added.some((u) => u.userId === userId) ||
-    currentUsers.some((u) => u.id === userId);
-
-  const totalUsers = users?.users.length ?? 0;
-  const totalPages = Math.ceil(totalUsers / limit);
-
   return (
     <div className="flex flex-col gap-2">
       <input
@@ -112,20 +102,22 @@ const UserSearchList: React.FC<Props> = ({
       <div className="relative z-0 mb-2">
         <DataTable
           isLoading={isLoading}
-          columns={columns(handleAdd, handleReturn, t, role, isAlreadyAdded)}
+          columns={columns(handleAdd, handleReturn, t, role)}
           data={updatedUsers as UserProps[]}
           translateFrom={"Courses"}
         />
       </div>
 
       {/* Pagination */}
-      <Pagination
-        totalUsers={totalUsers}
-        setPage={setPage}
-        page={page}
-        totalPages={totalPages}
-        translateFrom={"Courses"}
-      />
+      {users ? (
+        <Pagination
+          totalUsers={users.totalUsers}
+          setPage={setPage}
+          page={page}
+          totalPages={users.totalPages}
+          translateFrom={"Courses"}
+        />
+      ) : null}
     </div>
   );
 };

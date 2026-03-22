@@ -34,9 +34,7 @@ const Pagination = ({
           disabled={page === 1}
           className={cn(
             "border border-primary bg-primary/40 hover:bg-primary/30 cursor-pointer px-2 py-0.5 rounded-sm",
-            page === 1
-              ? "opacity-50 cursor-default hover:bg-primary/40 dark:hover:bg-primary/20"
-              : ""
+            page === 1 ? "opacity-50 cursor-default hover:bg-primary/40" : "",
           )}
         >
           {t("Previous")}
@@ -45,7 +43,7 @@ const Pagination = ({
           onClick={() => setPage(1)}
           className={cn(
             "border border-primary bg-primary/40 hover:bg-primary/30 cursor-pointer px-2 py-0.5 rounded-sm",
-            page === 1 ? "hidden" : "flex"
+            page === 1 ? "hidden" : "flex",
           )}
         >
           1
@@ -58,7 +56,7 @@ const Pagination = ({
           disabled={page === totalPages}
           className={cn(
             "border border-primary bg-primary/40 hover:bg-primary/30 cursor-pointer px-2 py-0.5 rounded-sm",
-            page === totalPages ? "hidden" : "flex"
+            page === totalPages ? "hidden" : "flex",
           )}
         >
           {totalPages}
@@ -69,8 +67,8 @@ const Pagination = ({
           className={cn(
             "border border-primary bg-primary/40 hover:bg-primary/30 cursor-pointer px-2 py-0.5 rounded-sm",
             page === totalPages
-              ? "opacity-50 cursor-default hover:bg-primary/40 dark:hover:bg-primary/20"
-              : ""
+              ? "opacity-50 cursor-default hover:bg-primary/40"
+              : "",
           )}
         >
           {t("Next")}

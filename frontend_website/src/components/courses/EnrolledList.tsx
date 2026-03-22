@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { User } from "@/types/types";
 import { useTranslations } from "next-intl";
 import { DataTable } from "../TableComponents/DataTable";
@@ -27,6 +27,9 @@ type Props = {
     }>
   >;
   isCourseLoading: boolean;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  debouncedSearch: string;
 };
 
 const EnrolledList: React.FC<Props> = ({
@@ -35,15 +38,16 @@ const EnrolledList: React.FC<Props> = ({
   pendingChanges,
   setPendingChanges,
   isCourseLoading,
+  search,
+  setSearch,
+  debouncedSearch,
 }) => {
   const t = useTranslations("Courses");
-  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [debouncedSearch, setDebouncedSearch] = useState(search);
   const limit = 10;
 
   const updatedUsers = useMemo(() => {
-    return users.filter((user) => {
+    const newUsers = users.map((user) => {
       const isPendingRemove = pendingChanges.removed.some(
         (u) => u.userId === user.id,
       );
@@ -51,31 +55,33 @@ const EnrolledList: React.FC<Props> = ({
         (u) => u.userId === user.id && u.role === role,
       );
 
-      if (isPendingRemove) return null;
+      return { ...user, isPendingAdd, isPendingRemove };
+    });
 
-      if (user.name.toLowerCase().includes(debouncedSearch.toLowerCase()))
-        return { ...user, isPendingAdd, isPendingRemove };
-      else if (user.email.toLowerCase().includes(debouncedSearch.toLowerCase()))
-        return { ...user, isPendingAdd, isPendingRemove };
-      else if (
-        user.studentId?.toLowerCase().includes(debouncedSearch.toLowerCase())
-      )
-        return { ...user, isPendingAdd, isPendingRemove };
+    const conditions = (user: UserProps) =>
+      user.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      user.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      user.studentId?.toLowerCase().includes(debouncedSearch.toLowerCase());
 
-      return null;
+    return newUsers.filter((user) => {
+      if (debouncedSearch === "" || conditions(user)) {
+        return user;
+      } else return null;
     });
   }, [users, pendingChanges, role, debouncedSearch]);
-
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(handler);
-  }, [search]);
 
   const handleRemove = (userId: string) => {
     setPendingChanges((prev) => ({
       ...prev,
       removed: [...prev.removed, { userId }],
       added: prev.added.filter((u) => u.userId !== userId),
+    }));
+  };
+
+  const handleUndo = (userId: string) => {
+    setPendingChanges((prev) => ({
+      ...prev,
+      removed: prev.removed.filter((u) => u.userId !== userId),
     }));
   };
 
@@ -99,7 +105,7 @@ const EnrolledList: React.FC<Props> = ({
       <div className="relative z-0 mb-2">
         <DataTable
           isLoading={isCourseLoading}
-          columns={columns(handleRemove, t, role)}
+          columns={columns(handleRemove, handleUndo, t, role)}
           data={updatedUsers as UserProps[]}
           translateFrom={"Courses"}
         />
