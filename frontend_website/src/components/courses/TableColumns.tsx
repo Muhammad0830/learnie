@@ -51,7 +51,11 @@ export const columns = (refetch: () => void): ColumnDef<Course>[] => [
     cell: ({ row }) => {
       const payment = row.original;
 
-      return <TableActionButton payment={payment} refetch={refetch} />;
+      return (
+        <div className="flex justify-center">
+          <TableActionButton payment={payment} refetch={refetch} />
+        </div>
+      );
     },
   },
 ];

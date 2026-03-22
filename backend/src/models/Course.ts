@@ -1,6 +1,20 @@
 import { queryGlobal, queryUniversity } from "../utils/helper";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 
+interface UserProps {
+  id: string;
+  name: string;
+  email: string;
+  role: "student" | "teacher" | "admin";
+  phoneNumber: string;
+  created_at: string;
+  updated_at: string;
+  age: string | null;
+  studentId?: string | null;
+  isPendingAdd?: boolean;
+  isPendingRemove?: boolean;
+}
+
 export async function getCoursesList({
   schemaName,
   page,
@@ -43,7 +57,7 @@ export async function getCoursesList({
     const totalResult = await queryUniversity<any>(
       schemaName,
       `SELECT COUNT(*) as count FROM courses where ${searchCondition}`,
-      { search: `%${search}%` }
+      { search: `%${search}%` },
     );
     const totalCourses = totalResult[0].count;
     const totalPages = Math.ceil(totalCourses / limit);
@@ -66,7 +80,7 @@ export async function getEachCourse({
       schemaName,
       `SELECT * FROM courses
         WHERE id = :id`,
-      { id }
+      { id },
     );
 
     if (rows.length === 0) {
@@ -78,7 +92,7 @@ export async function getEachCourse({
       `SELECT u.id, u.name, u.email, u.phoneNumber, u.age, u.created_at, u.updated_at, u.image FROM users as u
         LEFT JOIN users_courses uc ON u.id = uc.user_id
         WHERE uc.course_id = :id and u.role = 'teacher'`,
-      { id }
+      { id },
     );
 
     const students = await queryUniversity<RowDataPacket[]>(
@@ -86,13 +100,13 @@ export async function getEachCourse({
       `SELECT u.id, u.name, u.email, u.phoneNumber, u.age, u.created_at, u.updated_at, u.image, u.studentId FROM users as u
         LEFT JOIN users_courses uc ON u.id = uc.user_id
         WHERE uc.course_id = :id and u.role = 'student'`,
-      { id }
+      { id },
     );
 
     const topicsRow = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT id FROM course_topics WHERE course_id = :id`,
-      { id }
+      { id },
     );
     const topicsIds = topicsRow.map((topic) => topic.id);
     const topics = [];
@@ -126,7 +140,7 @@ export async function createCourse({
       schemaName,
       `INSERT INTO courses (name, description) 
         VALUES (:name, :description)`,
-      { name, description }
+      { name, description },
     );
 
     return {
@@ -156,7 +170,7 @@ export async function updateCourse({
       `UPDATE courses 
        SET name = :name, description = :description
        WHERE id = :id`,
-      { name, description, id }
+      { name, description, id },
     );
 
     return {
@@ -180,7 +194,7 @@ export async function deleteCourse({
     const course = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT * FROM courses WHERE id = :id`,
-      { id }
+      { id },
     );
 
     if (course.length === 0) {
@@ -190,7 +204,7 @@ export async function deleteCourse({
     const rows = await queryUniversity<ResultSetHeader>(
       schemaName,
       `DELETE FROM courses WHERE id = :id`,
-      { id }
+      { id },
     );
 
     return {
@@ -214,7 +228,7 @@ export async function getCourseUsers({
     const course = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT name, id FROM courses WHERE id = :id`,
-      { id: courseId }
+      { id: courseId },
     );
 
     const rows = await queryUniversity<RowDataPacket[]>(
@@ -222,7 +236,7 @@ export async function getCourseUsers({
       `SELECT u.id, u.name, u.email, u.phoneNumber, u.age, u.created_at, u.updated_at, u.image, u.studentId FROM users as u
         LEFT JOIN users_courses uc ON u.id = uc.user_id
         WHERE uc.course_id = :id and u.role = '${role}'`,
-      { id: courseId }
+      { id: courseId },
     );
 
     if (rows.length === 0) {
@@ -252,7 +266,7 @@ export async function getCourseTopicsList({
       schemaName,
       `SELECT * FROM course_topics
         WHERE course_id = :courseId`,
-      { courseId }
+      { courseId },
     );
 
     if (rows.length === 0) {
@@ -281,7 +295,7 @@ export async function createCourseTopic({
       schemaName,
       `INSERT INTO course_topics (course_id, title, description) 
         VALUES (:courseId, :title, :description)`,
-      { courseId, title, description }
+      { courseId, title, description },
     );
 
     const updateCourse = await queryUniversity<ResultSetHeader>(
@@ -289,7 +303,7 @@ export async function createCourseTopic({
       `UPDATE courses 
         SET has_topics = 1
         WHERE id = :courseId`,
-      { courseId }
+      { courseId },
     );
 
     return {
@@ -332,7 +346,7 @@ export async function createBothCourseAndTopic({
       schemaName,
       `INSERT INTO course_topics (course_id, title, description) 
         VALUES (:courseId, :title, :description)`,
-      { courseId, title: topicTitle, description: topicDescription }
+      { courseId, title: topicTitle, description: topicDescription },
     );
 
     const updateCourse = await queryUniversity<ResultSetHeader>(
@@ -340,7 +354,7 @@ export async function createBothCourseAndTopic({
       `UPDATE courses 
         SET has_topics = 1
         WHERE id = :courseId`,
-      { courseId }
+      { courseId },
     );
 
     return {
@@ -370,28 +384,28 @@ export async function getCourseTopic({
       schemaName,
       `SELECT ct.* FROM course_topics as ct
         WHERE course_id = :courseId AND id = :topicId`,
-      { courseId, topicId }
+      { courseId, topicId },
     );
 
     const assignments = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT * FROM assignments
         WHERE course_id = :courseId AND topic_id = :topicId`,
-      { courseId, topicId }
+      { courseId, topicId },
     );
 
     const lectures = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT * FROM lectures
         WHERE course_id = :courseId AND topic_id = :topicId`,
-      { courseId, topicId }
+      { courseId, topicId },
     );
 
     const presentations = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT * FROM presentations
         WHERE course_id = :courseId AND topic_id = :topicId`,
-      { courseId, topicId }
+      { courseId, topicId },
     );
 
     if (couserTopics.length === 0) {
@@ -419,7 +433,7 @@ export async function getCourseTopicById({
   const rows = await queryUniversity<any[]>(
     schemaName,
     `SELECT * FROM course_topics WHERE id = :topicId`,
-    { topicId }
+    { topicId },
   );
 
   return rows?.[0] || null;
@@ -442,7 +456,7 @@ export async function updateCourseTopic({
       `UPDATE course_topics
        SET title = :title, description = :description
        WHERE id = :id`,
-      { title, description, id }
+      { title, description, id },
     );
 
     return {
@@ -467,7 +481,7 @@ export async function getCourseTopicLectures({
       schemaName,
       `SELECT * FROM lectures
         WHERE topic_id = :topicId`,
-      { topicId }
+      { topicId },
     );
 
     if (rows.length === 0) {
@@ -492,7 +506,7 @@ export async function getCourseTopicPresentations({
       schemaName,
       `SELECT * FROM presentations
         WHERE topic_id = :topicId`,
-      { topicId }
+      { topicId },
     );
 
     if (rows.length === 0) {
@@ -502,7 +516,7 @@ export async function getCourseTopicPresentations({
     return rows;
   } catch (err: any) {
     throw new Error(
-      err.message || "Error fetching course topic presentations:"
+      err.message || "Error fetching course topic presentations:",
     );
   }
 }
@@ -519,7 +533,7 @@ export async function getCourseTopicAssignments({
       schemaName,
       `SELECT * FROM assignments
         WHERE topic_id = :topicId`,
-      { topicId }
+      { topicId },
     );
 
     if (rows.length === 0) {
@@ -544,7 +558,7 @@ export async function getEachLecture({
       schemaName,
       `SELECT * FROM lectures
         WHERE id = :lectureId`,
-      { lectureId }
+      { lectureId },
     );
 
     if (rows.length === 0) {
@@ -569,7 +583,7 @@ export async function getEachPresentation({
       schemaName,
       `SELECT * FROM presentations
         WHERE id = :presentationId`,
-      { presentationId }
+      { presentationId },
     );
 
     if (rows.length === 0) {
@@ -594,7 +608,7 @@ export async function getEachAssignment({
       schemaName,
       `SELECT * FROM assignments
         WHERE id = :assignmentId`,
-      { assignmentId }
+      { assignmentId },
     );
 
     if (rows.length === 0) {
@@ -647,7 +661,7 @@ export async function createCourseTopicAssignment({
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
       sql,
-      params
+      params,
     );
 
     return {
@@ -707,7 +721,7 @@ export async function createCourseTopicLectures({
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
       sql,
-      params
+      params,
     );
 
     return {
@@ -753,7 +767,7 @@ export async function createCourseTopicPresentations({
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
       sql,
-      params
+      params,
     );
 
     return {
@@ -778,13 +792,13 @@ export async function deleteCourseTopic({
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
       `DELETE FROM course_topics WHERE course_id = :courseId AND id = :topicId`,
-      { courseId, topicId }
+      { courseId, topicId },
     );
 
     const course = await queryUniversity<RowDataPacket[]>(
       schemaName,
       `SELECT Count(*) as count FROM course_topics WHERE course_id = :courseId`,
-      { courseId }
+      { courseId },
     );
 
     if (course[0].count === 0) {
@@ -793,7 +807,7 @@ export async function deleteCourseTopic({
         `UPDATE courses 
           SET has_topics = 0
           WHERE id = :courseId`,
-        { courseId }
+        { courseId },
       );
     }
 
@@ -816,7 +830,7 @@ export async function deleteCourseTopicAssignment({
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
       `DELETE FROM assignments WHERE id = :assignmentId`,
-      { assignmentId }
+      { assignmentId },
     );
 
     return {
@@ -838,7 +852,7 @@ export async function deleteCourseTopicLecture({
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
       `DELETE FROM lectures WHERE id = :lectureId`,
-      { lectureId }
+      { lectureId },
     );
 
     return {
@@ -859,7 +873,7 @@ export async function deleteCourseTopicPresentation({
     const result = await queryUniversity<ResultSetHeader>(
       schemaName,
       `DELETE FROM presentations WHERE id = :presentationId`,
-      { presentationId }
+      { presentationId },
     );
 
     return {
@@ -896,7 +910,7 @@ export async function updateCourseTopicAssignment({
       `UPDATE assignments 
         SET title = :title, description = :description, images = :images, due_date = :due_date
         WHERE id = :assignmentId`,
-      { title, description, images: imagesJson, due_date, assignmentId }
+      { title, description, images: imagesJson, due_date, assignmentId },
     );
 
     return {
@@ -934,7 +948,7 @@ export async function updateCourseTopicLecture({
       `UPDATE lectures 
         SET title = :title, content = :content, image_url = :image, video_url = :video
         WHERE id = :lectureId`,
-      { title, content, image, video, lectureId }
+      { title, content, image, video, lectureId },
     );
 
     return {
@@ -966,7 +980,7 @@ export async function updateCourseTopicPresentation({
       `UPDATE presentations 
         SET title = :title, file_url = :file_url
         WHERE id = :presentationId`,
-      { title, file_url, presentationId }
+      { title, file_url, presentationId },
     );
 
     return {
@@ -976,4 +990,113 @@ export async function updateCourseTopicPresentation({
   } catch (err: any) {
     throw new Error(err.message || "Error updating course topic assignment:");
   }
+}
+
+export async function getNotEnrolledUsersList({
+  schemaName,
+  role,
+  courseId,
+  page,
+  limit,
+  search,
+}: {
+  schemaName: string;
+  role: string;
+  courseId: string;
+  page: number;
+  limit: number;
+  search: string;
+}) {
+  try {
+    const searchCondition = search
+      ? `AND (name LIKE :search OR email LIKE :search OR studentId LIKE :search)`
+      : "";
+
+    // Fetch users NOT enrolled in the course
+    const rows = await queryUniversity<RowDataPacket[]>(
+      schemaName,
+      `
+      SELECT * FROM users u
+      WHERE u.role = :role
+        AND u.id NOT IN (
+          SELECT user_id FROM users_courses
+          WHERE course_id = :courseId
+        )
+        ${searchCondition}
+      ORDER BY u.created_at DESC
+      LIMIT ${limit} OFFSET ${(page - 1) * limit}
+      `,
+      { role, courseId, search: `%${search}%` },
+    );
+
+    const totalResult = await queryUniversity<any>(
+      schemaName,
+      `
+      SELECT COUNT(*) as count FROM users u
+      WHERE u.role = :role
+        AND u.id NOT IN (
+          SELECT user_id FROM users_courses
+          WHERE course_id = :courseId
+        )
+        ${searchCondition}
+      `,
+      { role, courseId, search: `%${search}%` },
+    );
+
+    const totalUsers = totalResult[0].count;
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    return { users: rows, page, limit, totalUsers, totalPages };
+  } catch (error: any) {
+    throw new Error(error.message || "Error fetching not-enrolled users");
+  }
+}
+
+export async function updateCourseUsers({
+  courseId,
+  schemaName,
+  additions,
+  removals,
+}: {
+  courseId: string;
+  schemaName: string;
+  additions: UserProps[];
+  removals: UserProps[];
+}) {
+  const params: any = { courseId };
+
+  if (additions.length > 0) {
+    const values = additions
+      .map((_, i) => `(:courseId, :addUserId${i})`)
+      .join(", ");
+
+    additions.forEach((user, i) => {
+      params[`addUserId${i}`] = user.id;
+    });
+
+    await queryUniversity(
+      schemaName,
+      `INSERT INTO users_courses (course_id, user_id)
+       VALUES ${values}`,
+      params,
+    );
+  }
+
+  if (removals.length > 0) {
+    const keys = removals.map((_, i) => `:removeUserId${i}`).join(", ");
+
+    removals.forEach((user, i) => {
+      params[`removeUserId${i}`] = user.id;
+    });
+
+    await queryUniversity(
+      schemaName,
+      `DELETE FROM users_courses
+       WHERE course_id = :courseId
+       AND user_id IN (${keys})`,
+      params,
+    );
+  }
+
+  return { message: "Course users updated successfully" };
 }
